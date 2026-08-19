@@ -1,0 +1,10 @@
+export const BRAND_NAME = "Enchanted Havens"
+export const BRAND_CONTACT_EMAIL = "stays@enchantedhavens.com"
+export const BRAND_CONTACT_PHONE = "+13602308143"
+export const BRAND_CONTACT_PHONE_DISPLAY = "(360) 230-8143"
+export const BRAND_LOGO_PATH = "/images/enchanted-havens-logo-small.webp"
+export const BRAND_INSTAGRAM_URL = "https://www.instagram.com/enchanted.havens/"
+export const BRAND_AIRBNB_URL = "https://www.airbnb.com/users/show/446442992"
+export const BRAND_BOOKING_ENGINE_URL = "https://enchantedhavens.com/havens"
+export const HOSTAWAY_BOOKING_ENGINE_DOMAIN = "book.enchantedhavens.com"
+export const BRAND_SAME_AS = [BRAND_INSTAGRAM_URL, BRAND_AIRBNB_URL]
