@@ -7,6 +7,14 @@ import { LoaderCircle, Mail, MessageCircle, Phone, RefreshCw, Send, X } from "lu
 import { BRAND_CONTACT_PHONE, BRAND_CONTACT_PHONE_DISPLAY } from "@/lib/brand"
 import { formatUsPhoneInput } from "@/lib/phone"
 import { trackConversionEvent } from "@/lib/analytics"
+import {
+  classifyGuestChatConnectionError,
+  getGuestChatErrorStatus,
+  GuestChatRequestError,
+  GUEST_CHAT_REQUEST_TIMEOUT_MS,
+  isRetryableGuestChatError,
+  retryGuestChatRequest,
+} from "@/lib/chat-connection"
 import { GUEST_CHAT_SENDER_LABEL } from "@/lib/guest-chat-utils"
 import type {
   CreateGuestChatThreadInput,
@@ -22,6 +30,69 @@ const intentOptions: Array<{ value: GuestChatIntent; label: string }> = [
   { value: "special_request", label: "Special request" },
   { value: "general", label: "General question" },
 ]
+
+const CHAT_RECONNECT_FAILED_MESSAGE = "We couldn’t reconnect. Check your connection and try again—we’ll keep checking automatically."
+
+type ChatConnectionAction = "load" | "start" | "send"
+
+function reportChatConnectionIssue(
+  action: ChatConnectionAction,
+  error: unknown,
+  details: { attempt?: number; maxAttempts?: number; willRetry?: boolean } = {},
+) {
+  const online = typeof navigator === "undefined" ? true : navigator.onLine
+  const reason = classifyGuestChatConnectionError(error, online)
+  const status = getGuestChatErrorStatus(error)
+  const diagnostic = {
+    action,
+    reason,
+    online,
+    visibility: typeof document === "undefined" ? "unknown" : document.visibilityState,
+    errorName: error instanceof Error ? error.name : "UnknownError",
+    errorMessage: error instanceof Error ? error.message : "Unknown error",
+    ...(status === null ? {} : { status }),
+    ...details,
+  }
+
+  console.warn("[guest-chat] Connection attempt failed", diagnostic)
+  trackConversionEvent(details.willRetry ? "Chat Connection Retry" : "Chat Connection Unavailable", {
+    action,
+    reason,
+    online,
+    ...(status === null ? {} : { status }),
+    ...(details.attempt ? { attempt: details.attempt } : {}),
+    ...(details.maxAttempts ? { maxAttempts: details.maxAttempts } : {}),
+  })
+}
+
+function friendlyChatActionError(error: unknown, action: Exclude<ChatConnectionAction, "load">) {
+  const status = getGuestChatErrorStatus(error)
+  if (status !== null && status < 500 && status !== 408 && status !== 429) {
+    return error instanceof Error ? error.message : "We couldn’t complete that request. Please try again."
+  }
+  return action === "start"
+    ? "We couldn’t connect to start the chat. Check your connection and try again."
+    : "We couldn’t connect to send your message. Your message is still here—please try again."
+}
+
+async function fetchGuestChatThread() {
+  const controller = new AbortController()
+  const timeout = window.setTimeout(() => controller.abort(), GUEST_CHAT_REQUEST_TIMEOUT_MS)
+  try {
+    const response = await fetch("/api/chat/thread", {
+      credentials: "same-origin",
+      cache: "no-store",
+      signal: controller.signal,
+    })
+    if (response.status === 404) return { response, data: null }
+
+    const data = await response.json().catch(() => null)
+    if (!response.ok) throw new GuestChatRequestError(data?.error || "Chat is currently unavailable", response.status)
+    return { response, data }
+  } finally {
+    window.clearTimeout(timeout)
+  }
+}
 
 type GuestChatPanelProps = {
   open: boolean
@@ -69,6 +140,7 @@ export function GuestChatPanel({
 }: GuestChatPanelProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isReconnecting, setIsReconnecting] = useState(false)
   const [isUnavailable, setIsUnavailable] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [selectedIntent, setSelectedIntent] = useState<GuestChatIntent>(initialIntent)
@@ -78,20 +150,37 @@ export function GuestChatPanel({
   const panelRef = useRef<HTMLDivElement>(null)
   const transcriptRef = useRef<HTMLDivElement>(null)
   const previousStaffMessageCount = useRef(countStaffMessages(thread))
+  const visibleLoadInFlightRef = useRef(false)
 
   const loadThread = useCallback(async (silent = false) => {
-    if (!silent) setIsLoading(true)
+    if (visibleLoadInFlightRef.current) return
+    if (!silent) {
+      visibleLoadInFlightRef.current = true
+      setIsLoading(true)
+      setIsReconnecting(false)
+      setIsUnavailable(false)
+      setError(null)
+    }
     try {
-      const response = await fetch("/api/chat/thread", { credentials: "same-origin", cache: "no-store" })
+      const result = await retryGuestChatRequest(fetchGuestChatThread, {
+        retryDelaysMs: silent ? [] : undefined,
+        onFailure: ({ attempt, error: loadError, maxAttempts, willRetry }) => {
+          if (silent) return
+          reportChatConnectionIssue("load", loadError, { attempt, maxAttempts, willRetry })
+          setIsLoading(false)
+          setIsReconnecting(willRetry)
+        },
+      })
+      const { response, data } = result.value
       if (response.status === 404) {
         previousStaffMessageCount.current = 0
         onThreadChange(null)
+        if (result.attempts > 1 && !silent) trackConversionEvent("Chat Connection Recovered", { attempts: result.attempts })
+        setIsReconnecting(false)
         setIsUnavailable(false)
         setError(null)
         return
       }
-      const data = await response.json().catch(() => null)
-      if (!response.ok) throw new Error(data?.error || "Chat is currently unavailable")
       const nextThread = (data.thread || null) as GuestChatThreadDetail | null
       const staffCount = countStaffMessages(nextThread)
       if (nextThread && previousStaffMessageCount.current > 0 && staffCount > previousStaffMessageCount.current) {
@@ -99,13 +188,21 @@ export function GuestChatPanel({
       }
       previousStaffMessageCount.current = staffCount
       onThreadChange(nextThread)
+      if (result.attempts > 1 && !silent) trackConversionEvent("Chat Connection Recovered", { attempts: result.attempts })
+      setIsReconnecting(false)
       setIsUnavailable(false)
       setError(null)
-    } catch (loadError) {
-      setIsUnavailable(true)
-      if (!silent) setError(loadError instanceof Error ? loadError.message : "Chat is currently unavailable")
+    } catch {
+      if (!silent) {
+        setIsReconnecting(false)
+        setIsUnavailable(true)
+        setError(CHAT_RECONNECT_FAILED_MESSAGE)
+      }
     } finally {
-      if (!silent) setIsLoading(false)
+      if (!silent) {
+        visibleLoadInFlightRef.current = false
+        setIsLoading(false)
+      }
     }
   }, [onThreadChange])
 
@@ -119,6 +216,13 @@ export function GuestChatPanel({
     if (!open) return
     const interval = window.setInterval(() => void loadThread(true), 10_000)
     return () => window.clearInterval(interval)
+  }, [loadThread, open])
+
+  useEffect(() => {
+    if (!open) return
+    const handleOnline = () => void loadThread()
+    window.addEventListener("online", handleOnline)
+    return () => window.removeEventListener("online", handleOnline)
   }, [loadThread, open])
 
   useEffect(() => {
@@ -205,13 +309,14 @@ export function GuestChatPanel({
         method: "POST", headers: { "Content-Type": "application/json" }, credentials: "same-origin", body: JSON.stringify(payload),
       })
       const data = await response.json().catch(() => null)
-      if (!response.ok) throw new Error(data?.error || "Failed to start chat")
+      if (!response.ok) throw new GuestChatRequestError(data?.error || "Failed to start chat", response.status)
       onThreadChange(data.thread)
       previousStaffMessageCount.current = countStaffMessages(data.thread)
       setDraftMessage("")
       trackConversionEvent("Chat Started", { threadId: data.thread.id, intent: selectedIntent })
     } catch (submitError) {
-      setError(submitError instanceof Error ? submitError.message : "Failed to start chat")
+      if (isRetryableGuestChatError(submitError)) reportChatConnectionIssue("start", submitError)
+      setError(friendlyChatActionError(submitError, "start"))
     } finally {
       setIsSubmitting(false)
     }
@@ -228,13 +333,14 @@ export function GuestChatPanel({
         body: JSON.stringify({ message, guestPhone: guestPhone.trim() || null, context: context || undefined }),
       })
       const data = await response.json().catch(() => null)
-      if (!response.ok) throw new Error(data?.error || "Failed to send message")
+      if (!response.ok) throw new GuestChatRequestError(data?.error || "Failed to send message", response.status)
       onThreadChange(data.thread)
       previousStaffMessageCount.current = countStaffMessages(data.thread)
       setDraftMessage("")
       trackConversionEvent("Chat Message Sent", { threadId: data.thread.id })
     } catch (submitError) {
-      setError(submitError instanceof Error ? submitError.message : "Failed to send message")
+      if (isRetryableGuestChatError(submitError)) reportChatConnectionIssue("send", submitError)
+      setError(friendlyChatActionError(submitError, "send"))
     } finally {
       setIsSubmitting(false)
     }
@@ -312,6 +418,14 @@ export function GuestChatPanel({
               )}
             </div>
           </>
+        ) : isReconnecting ? (
+          <div className="grid flex-1 place-items-center p-5" role="status" aria-live="polite">
+            <div className="max-w-sm border border-[#805a27]/20 bg-[#f3eee3] p-6 text-center text-[#173c33]">
+              <LoaderCircle className="mx-auto size-6 animate-spin text-[#805a27]" />
+              <p className="mt-4 font-semibold">Reconnecting…</p>
+              <p className="mt-2 text-xs leading-5 text-black/60">We’re restoring your chat connection. Personal stay support remains available 24/7.</p>
+            </div>
+          </div>
         ) : isUnavailable ? (
           <div className="flex flex-1 flex-col justify-between p-5">
             <div className="border border-[#805a27]/25 bg-[#f3eee3] p-5 text-sm leading-6 text-[#173c33]"><strong>Chat is temporarily unavailable.</strong><p className="mt-2 text-black/60">You can still reach us directly and we&apos;ll help with your stay.</p></div>
@@ -338,6 +452,7 @@ export function GuestChatPanel({
             </div>
           </div>
         )}
+        {isReconnecting && thread ? <div role="status" aria-live="polite" className="flex items-center gap-2 border-t border-[#805a27]/20 bg-[#f3eee3] px-5 py-3 text-xs leading-5 text-[#173c33]"><LoaderCircle className="size-4 animate-spin text-[#805a27]" /> Reconnecting…</div> : null}
         {error ? <div role="alert" className="border-t border-[#a4452f]/20 bg-[#fff1ed] px-5 py-3 text-xs leading-5 text-[#8a3321]">{error}</div> : null}
       </div>
     </>,
