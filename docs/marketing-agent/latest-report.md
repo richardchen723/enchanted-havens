@@ -1,13 +1,13 @@
 # Enchanted Havens Growth Report
 
 Run date: 2026-08-24 (Asia/Kuala_Lumpur)
-Status: two owned-site experiments implemented locally; no deployment or external account change made
+Status: two owned-site experiments deployed to production from commit `0196a5d`; no Clarity or Hostaway account change made
 
 ## Executive outcome
 
 This run repaired the largest actionable measurement gap and converted a demonstrated mobile friction point into four qualified discovery journeys. Future Clarity sessions can be isolated to Enchanted Havens and filtered by safe property, variant, placement, and funnel-stage labels. On `/havens`, proof points that produced dead taps now lead to the full collection, destinations, 12-guest options, and waterfront options with explicit conversion tracking.
 
-These changes target booking intent, not session volume. They are awaiting production deployment, so measured impact is not yet available.
+These changes target booking intent, not session volume. They reached production at 2026-08-24 10:06:12 +08, so measured impact is not yet available.
 
 ## Clarity evidence
 
@@ -102,15 +102,18 @@ No funnel was configured in Clarity. The account is ready for a hostname-filtere
 - TypeScript `tsc --noEmit`: passed.
 - Next.js 16.2.9 production build: passed; 74 static pages generated and all dynamic routes compiled.
 - Rendered QA: all four proof points were visible with the expected label and destination; the responsive journey test confirmed mobile navigation.
+- GitHub: commit `0196a5d` pushed to `origin/main`.
+- Vercel: Git-triggered production deployment `dpl_Cih5W47HxAKzCFoVP3ZtyUMpEwp9` reached Ready and received `www.enchantedhavens.com`, `enchantedhavens.com`, `book.enchantedhavens.com`, and the project aliases.
+- Production smoke test: `/havens`, `/destinations`, the 12-guest collection URL, and the waterfront collection URL returned HTTP 200; live HTML contained all four proof-point destinations plus `eh_site` and `eh_hostname` Clarity tags.
 
-## Ready for approval; not executed
+## Deployment completed and remaining approvals
 
-### 1. Deploy the two owned-site experiments
+### 1. Deploy the two owned-site experiments — completed
 
 - Audience: all Enchanted Havens visitors; analysis priority is mobile Google/GVR/Instagram/Linktree traffic.
 - Budget: $0 media spend; normal deployment only.
 - Destination URLs: `https://www.enchantedhavens.com/havens`, `https://www.enchantedhavens.com/destinations`, `https://www.enchantedhavens.com/havens?guests=12#collection`, and `https://www.enchantedhavens.com/havens?experience=waterfront#collection`.
-- Approval request: approve production deployment. The 14-day observation clock starts only after the deployment timestamp is known.
+- Result: approved by the user and deployed through the GitHub/Vercel integration. The observation clock starts at 2026-08-24 10:06:12 +08.
 
 ### 2. Configure Clarity reporting after deployment
 
@@ -129,4 +132,4 @@ No funnel was configured in Clarity. The account is ready for a hostname-filtere
 
 ## Next run
 
-Confirm whether the changes reached production, establish the post-deployment cutoff, verify `eh_site`/`eh_hostname` coverage, create or review the Clarity funnels if approved, and compare property/source/device/new-returning behavior. Recheck mobile `/havens` dead taps and stat-link downstream intent, then audit at least five GVR and five Instagram/Linktree exact-date sessions. Do not judge either experiment before its sample floor.
+Use the recorded production cutoff, verify `eh_site`/`eh_hostname` coverage, create or review the Clarity funnels if approved, and compare property/source/device/new-returning behavior. Recheck mobile `/havens` dead taps and stat-link downstream intent, then audit at least five GVR and five Instagram/Linktree exact-date sessions. Do not judge either experiment before its sample floor.

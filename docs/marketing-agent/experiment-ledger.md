@@ -1,6 +1,6 @@
 # Enchanted Havens Growth Experiment Ledger
 
-Last updated: 2026-08-24 (Asia/Kuala_Lumpur)
+Last updated: 2026-08-24 10:07 +08 (Asia/Kuala_Lumpur)
 
 This ledger is the durable source of truth for owned-site guest-acquisition experiments. Revenue and qualified direct-booking intent take priority over raw traffic. Production deployment, paid media, pricing, availability, Hostaway, Clarity account configuration, outreach, and sends require explicit approval.
 
@@ -14,7 +14,7 @@ This ledger is the durable source of truth for owned-site guest-acquisition expe
 
 ### EH-2026-08-24-01 — Clarity attribution dimensions
 
-- Status: running; awaiting production deployment
+- Status: running; deployed to production from commit `0196a5d` on 2026-08-24 10:06:12 +08
 - Decision date: no earlier than 2026-09-07, or after at least 20 `eh_checkout_started` sessions, whichever is later
 - Hypothesis: if every Enchanted Havens session and existing conversion event receive privacy-safe site, hostname, property, variant, placement, and funnel-stage tags, the team can identify which acquisition and property journeys produce qualified inquiries and completed checkouts instead of optimizing mixed, unattributable sessions.
 - Audience: all Enchanted Havens visitors, with primary attention to mobile Google, Google Vacation Rentals, Linktree, and Instagram arrivals.
@@ -27,11 +27,11 @@ This ledger is the durable source of truth for owned-site guest-acquisition expe
 - Revise rule: revise if labels are missing from more than 5% of eligible sessions or tag values are too high-cardinality to filter usefully.
 - Stop/rollback rule: roll back the tag calls if they cause a client exception, block a conversion handler, or expose dates, internal inquiry IDs, chat thread IDs, contact data, or payment data.
 - Implementation: `components/microsoft-clarity.tsx` queues `eh_site` and `eh_hostname` on allowed production hosts. `lib/analytics.ts` forwards only a bounded allowlist of non-PII event dimensions and a defined funnel stage before the existing event. Dates and internal IDs remain excluded.
-- Measured impact: not yet measurable; changes are local and have not been deployed.
+- Measured impact: not yet measurable; production verification passed, but no post-deployment observation sample exists yet.
 
 ### EH-2026-08-24-02 — Collection proof-point journeys
 
-- Status: running; awaiting production deployment
+- Status: running; deployed to production from commit `0196a5d` on 2026-08-24 10:06:12 +08
 - Decision date: no earlier than 2026-09-07 and after at least 200 mobile `/havens` pageviews
 - Hypothesis: if the proof-point cards that guests already tap become clearly styled, tracked links to the full collection, destinations, 12-guest results, and waterfront results, mobile guests will move into relevant inventory journeys and dead taps will fall.
 - Audience: mobile visitors to `/havens`, especially Google, Linktree, and Instagram arrivals choosing by group size or waterfront setting.
@@ -44,7 +44,7 @@ This ledger is the durable source of truth for owned-site guest-acquisition expe
 - Revise rule: revise labels or destinations when a link receives at least 10 clicks but fewer than 10% reach a property or availability action.
 - Stop/rollback rule: restore static proof points if mobile `/havens` quick backs rise more than 5 percentage points versus the pre-deployment baseline, navigation loses query state, or any link/query fails.
 - Implementation: the entire proof-point area is now an accessible Next.js link with visible “Explore” affordance, focus styling, and `Collection Stat Clicked` tracking. Destinations are `#collection`, `/destinations`, `/havens?guests=12#collection`, and `/havens?experience=waterfront#collection`.
-- Measured impact: not yet measurable; changes are local and have not been deployed.
+- Measured impact: not yet measurable; production verification passed, but no post-deployment observation sample exists yet.
 
 ## Decision history
 
@@ -52,7 +52,7 @@ This ledger is the durable source of truth for owned-site guest-acquisition expe
 
 ## Next observation checklist
 
-1. Confirm production deployment time before starting either observation window.
+1. Use 2026-08-24 10:06:12 +08 as the post-deployment cutoff for both observation windows.
 2. Filter Clarity to `eh_site=enchanted_havens` and compare tag coverage with untagged sessions after deployment.
 3. Build the direct-booking funnel and report source/landing/property/device/new-returning splits only where Clarity supplies the dimension.
 4. Recheck mobile `/havens` dead taps, quick backs, stat-link clicks, and downstream stay/availability events.
