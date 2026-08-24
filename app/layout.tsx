@@ -68,7 +68,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <main id="main-content" className="site-main">{children}</main>
           <SiteFooter />
         </TextInquiryProvider>
-        <MicrosoftClarity projectId={clarityProjectId} allowedHosts={["enchantedhavens.com", "www.enchantedhavens.com"]} />
+        <MicrosoftClarity projectId={clarityProjectId} allowedHosts={["enchantedhavens.com", "www.enchantedhavens.com"]} siteLabel="enchanted_havens" />
         {analyticsEnabled ? <Analytics /> : null}
       </body>
     </html>

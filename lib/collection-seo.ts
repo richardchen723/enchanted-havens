@@ -252,10 +252,10 @@ export function getHavensCollectionStats(catalog: Property[]) {
   const waterfrontHomes = catalog.filter((property) => /water|lake|ocean|beach|dock|canal/i.test([...property.experienceTags, property.eyebrow].join(" "))).length
 
   return [
-    { value: formatCount(catalog.length, "haven"), label: "curated private stays" },
-    { value: formatCount(destinations.size, "setting"), label: "across water, forest, coast, and estate landscapes" },
-    { value: `Up to ${formatCount(maxGuests, "guest")}`, label: "for larger family and friend stays" },
-    { value: formatCount(waterfrontHomes, "waterfront haven"), label: "with lake, ocean, beach, canal, or dock-led experiences" },
+    { value: formatCount(catalog.length, "haven"), label: "curated private stays", href: "#collection", trackingKey: "all_havens" },
+    { value: formatCount(destinations.size, "setting"), label: "across water, forest, coast, and estate landscapes", href: "/destinations", trackingKey: "settings" },
+    { value: `Up to ${formatCount(maxGuests, "guest")}`, label: "for larger family and friend stays", href: `/havens?guests=${maxGuests}#collection`, trackingKey: "large_groups" },
+    { value: formatCount(waterfrontHomes, "waterfront haven"), label: "with lake, ocean, beach, canal, or dock-led experiences", href: "/havens?experience=waterfront#collection", trackingKey: "waterfront" },
   ]
 }
 

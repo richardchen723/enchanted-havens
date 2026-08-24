@@ -4,6 +4,7 @@ import { ArrowRight, Check } from "lucide-react"
 import { CollectionBrowser } from "@/components/collection-browser"
 import { PageHero } from "@/components/page-hero"
 import { SearchForm } from "@/components/search-form"
+import { TrackedInternalLink } from "@/components/tracked-contact-link"
 import { getCatalog } from "@/lib/catalog"
 import {
   HAVENS_COLLECTION_DESCRIPTION,
@@ -74,9 +75,19 @@ export default async function HavensPage({ searchParams }: { searchParams: Promi
         <div className="container-shell grid gap-8 border-y border-[#173c33]/12 py-8 md:grid-cols-4">
           {stats.map((stat, index) => (
             <div key={stat.label} className="md:border-l md:border-[#173c33]/12 md:pl-6 first:md:border-l-0 first:md:pl-0">
-              <p className="text-[0.61rem] font-bold uppercase tracking-[0.18em] text-[#805a27]">0{index + 1}</p>
-              <p className="mt-3 font-display text-4xl leading-none text-[#173c33]">{stat.value}</p>
-              <p className="mt-3 text-sm leading-6 text-black/58">{stat.label}</p>
+              <TrackedInternalLink
+                href={stat.href}
+                eventName="Collection Stat Clicked"
+                data={{ stat: stat.trackingKey, destination: stat.href, location: "havens_collection_stats" }}
+                className="group block rounded-sm py-1 outline-none focus-visible:ring-2 focus-visible:ring-[#805a27] focus-visible:ring-offset-4 focus-visible:ring-offset-[#f3eee3]"
+              >
+                <p className="text-[0.61rem] font-bold uppercase tracking-[0.18em] text-[#805a27]">0{index + 1}</p>
+                <p className="mt-3 font-display text-4xl leading-none text-[#173c33] transition-colors group-hover:text-[#805a27]">{stat.value}</p>
+                <p className="mt-3 text-sm leading-6 text-black/58">{stat.label}</p>
+                <span className="mt-4 inline-flex items-center gap-2 text-[0.64rem] font-bold uppercase tracking-[0.16em] text-[#173c33]">
+                  Explore <ArrowRight aria-hidden="true" className="size-3.5 transition-transform group-hover:translate-x-1" />
+                </span>
+              </TrackedInternalLink>
             </div>
           ))}
         </div>

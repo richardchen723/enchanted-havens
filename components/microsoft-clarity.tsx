@@ -3,9 +3,10 @@ import Script from "next/script"
 type MicrosoftClarityProps = {
   projectId?: string
   allowedHosts?: string[]
+  siteLabel?: string
 }
 
-export function MicrosoftClarity({ projectId, allowedHosts = [] }: MicrosoftClarityProps) {
+export function MicrosoftClarity({ projectId, allowedHosts = [], siteLabel }: MicrosoftClarityProps) {
   if (!projectId) return null
 
   return (
@@ -20,6 +21,8 @@ export function MicrosoftClarity({ projectId, allowedHosts = [] }: MicrosoftClar
               t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
               y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
             })(window,document,"clarity","script",${JSON.stringify(projectId)});
+            window.clarity("set","eh_hostname",window.location.hostname.toLowerCase());
+            ${siteLabel ? `window.clarity("set","eh_site",${JSON.stringify(siteLabel)});` : ""}
           }
         `,
       }}

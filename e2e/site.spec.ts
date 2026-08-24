@@ -145,6 +145,27 @@ test("homepage guest control matches the stay date control", async ({ page }) =>
   await expect(page.getByRole("group", { name: "Search guests" })).toContainText("Guests")
 })
 
+test("Havens collection proof points open measurable discovery journeys", async ({ page }) => {
+  await page.goto("/havens")
+
+  const journeys = [
+    { name: /7 havens.*Explore/i, href: "#collection" },
+    { name: /4 settings.*Explore/i, href: "/destinations" },
+    { name: /Up to 12 guests.*Explore/i, href: "/havens?guests=12#collection" },
+    { name: /6 waterfront havens.*Explore/i, href: "/havens?experience=waterfront#collection" },
+  ]
+
+  for (const journey of journeys) {
+    const link = page.getByRole("link", { name: journey.name })
+    await expect(link).toBeVisible()
+    await expect(link).toHaveAttribute("href", journey.href)
+    await expect(link.getByText("Explore", { exact: true })).toBeVisible()
+  }
+
+  await page.getByRole("link", { name: journeys[3].name }).click()
+  await expect(page).toHaveURL(/\/havens\?experience=waterfront#collection$/)
+})
+
 test("homepage calendar stays above the header while changing months", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name === "mobile", "Desktop header CTA is hidden at the mobile breakpoint")
   await page.setViewportSize({ width: 1024, height: 760 })

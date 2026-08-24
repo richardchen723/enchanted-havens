@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link"
 import type { MouseEventHandler, ReactNode } from "react"
 import { trackConversionEvent } from "@/lib/analytics"
 
@@ -13,4 +14,8 @@ export function TrackedContactLink({ href, eventName, location, className, child
 
 export function TrackedEventLink({ href, eventName, data, className, children, target, rel, ariaLabel }: { href: string; eventName: string; data?: Record<string, string | number | boolean>; className?: string; children: ReactNode; target?: string; rel?: string; ariaLabel?: string }) {
   return <a href={href} target={target} rel={rel} aria-label={ariaLabel} className={className} onClick={() => trackConversionEvent(eventName, data)}>{children}</a>
+}
+
+export function TrackedInternalLink({ href, eventName, data, className, children, ariaLabel }: { href: string; eventName: string; data?: Record<string, string | number | boolean>; className?: string; children: ReactNode; ariaLabel?: string }) {
+  return <Link href={href} aria-label={ariaLabel} className={className} onClick={() => trackConversionEvent(eventName, data)}>{children}</Link>
 }

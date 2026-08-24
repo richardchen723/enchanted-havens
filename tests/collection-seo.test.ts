@@ -93,6 +93,18 @@ describe("Havens collection SEO", () => {
     expect(stats.some((stat) => stat.value === "Up to 42 guests")).toBe(true)
   })
 
+  it("routes collection proof points into useful, measurable discovery journeys", () => {
+    const collection = fallbackProperties.filter((property) => property.slug !== "whidbey-estate")
+    const stats = getHavensCollectionStats(collection)
+
+    expect(stats.map(({ href, trackingKey }) => ({ href, trackingKey }))).toEqual([
+      { href: "#collection", trackingKey: "all_havens" },
+      { href: "/destinations", trackingKey: "settings" },
+      { href: "/havens?guests=12#collection", trackingKey: "large_groups" },
+      { href: "/havens?experience=waterfront#collection", trackingKey: "waterfront" },
+    ])
+  })
+
   it("builds CollectionPage, WebSite, brand LodgingBusiness, ItemList, BreadcrumbList, Organization, and FAQ schema", () => {
     const graph = buildHavensCollectionJsonLd(fallbackProperties, featuredReviews)["@graph"] as JsonObject[]
     const website = graph.find((item) => item["@type"] === "WebSite") as JsonObject | undefined

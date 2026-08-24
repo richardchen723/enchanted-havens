@@ -10,9 +10,12 @@ describe("analytics integrations", () => {
     expect(layout).toContain(".trim()")
     expect(layout).toContain("<MicrosoftClarity")
     expect(layout).toContain('allowedHosts={["enchantedhavens.com", "www.enchantedhavens.com"]}')
+    expect(layout).toContain('siteLabel="enchanted_havens"')
     expect(clarity).toContain("https://www.clarity.ms/tag/")
     expect(clarity).toContain('strategy="afterInteractive"')
     expect(clarity).toContain("window.location.hostname.toLowerCase()")
+    expect(clarity).toContain('window.clarity("set","eh_hostname"')
+    expect(clarity).toContain('window.clarity("set","eh_site"')
   })
 
   it("allows Clarity collection endpoints through the content security policy", () => {
