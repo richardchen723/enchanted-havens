@@ -43,6 +43,10 @@ export async function sendBookingConfirmation(input: { guest: Guest; property: P
 
 type ContactInquiryEmail = { reference: string; name: string; email: string; phone?: string; tripType?: string; message: string }
 
+function escapeEmailHtml(value: string) {
+  return value.replace(/[&<>'"]/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" })[character] || character)
+}
+
 export async function sendContactNotification(input: ContactInquiryEmail) {
   const mail = await googleTransport()
   if (!mail) return false
@@ -69,6 +73,32 @@ export async function sendContactAcknowledgement(input: ContactInquiryEmail) {
     replyTo: process.env.BOOKING_REPLY_TO_EMAIL || DEFAULT_CONTACT_TO_EMAIL,
     subject: `We received your Enchanted Havens inquiry · ${input.reference}`,
     html: `<div style="font-family:Arial,sans-serif;color:#18221f;max-width:640px;margin:auto;padding:36px"><p style="text-transform:uppercase;letter-spacing:.16em;color:#805a27;font-size:12px">Enchanted Havens</p><h1 style="font-family:Georgia,serif;color:#173c33;font-size:42px;font-weight:400">Your stay inquiry is with us.</h1><p>Dear ${input.name},</p><p>Thank you for sharing the shape of your trip. Our stay team will review your note and reply personally.</p><p><strong>Inquiry reference:</strong> ${input.reference}</p><p>You can reply directly to this email or call (360) 230-8143 if your dates are time-sensitive.</p><p style="color:#6f746f;font-size:13px">Your note: ${input.message || "No additional stay details were included."}</p></div>`,
+  })
+  return true
+}
+
+export async function sendAdminAccessEmail(input: {
+  email: string
+  fullName: string
+  accessUrl: string
+  purpose: "sign_in" | "invite"
+  invitedBy?: string
+}) {
+  const mail = await googleTransport()
+  if (!mail) return false
+  const greeting = input.fullName.trim() ? `Hi ${input.fullName.trim()},` : "Hello,"
+  const isInvite = input.purpose === "invite"
+  const subject = isInvite ? "You have been invited to Enchanted Havens Admin" : "Your Enchanted Havens admin sign-in link"
+  const introduction = isInvite
+    ? `${input.invitedBy || "The Enchanted Havens owner"} invited you to help manage the Enchanted Havens website.`
+    : "Use the secure link below to sign in to the Enchanted Havens admin portal."
+  await mail.transporter.sendMail({
+    from: mail.from,
+    to: input.email,
+    replyTo: process.env.BOOKING_REPLY_TO_EMAIL || DEFAULT_CONTACT_TO_EMAIL,
+    subject,
+    text: `${greeting}\n\n${introduction}\n\nOpen the admin portal: ${input.accessUrl}\n\nThis one-time link expires in 20 minutes. If you did not request it, you can ignore this email.`,
+    html: `<div style="font-family:Arial,sans-serif;color:#18221f;max-width:620px;margin:auto;padding:36px"><p style="text-transform:uppercase;letter-spacing:.16em;color:#805a27;font-size:12px">Enchanted Havens · Private Admin</p><h1 style="font-family:Georgia,serif;color:#173c33;font-size:42px;font-weight:400">${isInvite ? "Welcome to the team." : "Your private sign-in link."}</h1><p>${escapeEmailHtml(greeting)}</p><p style="line-height:1.7">${escapeEmailHtml(introduction)}</p><p style="margin:30px 0"><a href="${escapeEmailHtml(input.accessUrl)}" style="display:inline-block;background:#173c33;color:#fff;text-decoration:none;padding:15px 22px;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase">Open admin portal</a></p><p style="color:#6f746f;font-size:13px;line-height:1.6">This one-time link expires in 20 minutes. If you did not request it, you can ignore this email.</p></div>`,
   })
   return true
 }

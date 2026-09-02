@@ -15,6 +15,9 @@ export default async function BookingPage({ params, searchParams }: { params: Pr
   const variantSlug = typeof query.variant === "string" ? query.variant : undefined
   const variant = property.variants.find((item) => item.slug === variantSlug) || property.variants[0]
   const sandboxMode = isSandboxBooking()
+  const initialCouponCode = typeof query.coupon === "string" && /^[A-Za-z0-9_-]{3,24}$/.test(query.coupon)
+    ? query.coupon.toUpperCase()
+    : ""
   const bookingLive = bookingIsLiveFor(variant.id)
   if (!bookingLive) {
     const contactParams = new URLSearchParams({ property: property.slug, variant: variant.slug })
@@ -23,5 +26,5 @@ export default async function BookingPage({ params, searchParams }: { params: Pr
     if (typeof query.guests === "string") contactParams.set("guests", query.guests)
     redirect(`/contact?${contactParams.toString()}`)
   }
-  return <BookingCheckout property={property} variant={variant} initialCheckIn={typeof query.checkIn === "string" ? query.checkIn : ""} initialCheckOut={typeof query.checkOut === "string" ? query.checkOut : ""} initialGuests={typeof query.guests === "string" ? Number(query.guests) || 2 : 2} bookingLive={bookingLive} quoteAvailable={isHostawayConfigured() || sandboxMode} sandboxMode={sandboxMode} publishableKey={process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY} />
+  return <BookingCheckout property={property} variant={variant} initialCheckIn={typeof query.checkIn === "string" ? query.checkIn : ""} initialCheckOut={typeof query.checkOut === "string" ? query.checkOut : ""} initialGuests={typeof query.guests === "string" ? Number(query.guests) || 2 : 2} initialCouponCode={initialCouponCode} bookingLive={bookingLive} quoteAvailable={isHostawayConfigured() || sandboxMode} sandboxMode={sandboxMode} publishableKey={process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY} />
 }

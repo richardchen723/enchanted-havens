@@ -15,6 +15,10 @@ export type BookingSessionRow = {
   guests: number
   guest: Guest
   quote: Quote
+  base_quote: Quote | null
+  coupon_id: string | null
+  coupon_code: string | null
+  coupon_discount_amount: number | null
   stripe_customer_id: string | null
   stripe_setup_intent_id: string | null
   stripe_payment_method_id: string | null
@@ -29,10 +33,11 @@ export type BookingSessionRow = {
 
 type RawBookingSessionRow = Omit<
   BookingSessionRow,
-  "check_in" | "check_out" | "consent_at" | "expires_at" | "confirmed_at" | "updated_at"
+  "check_in" | "check_out" | "coupon_discount_amount" | "consent_at" | "expires_at" | "confirmed_at" | "updated_at"
 > & {
   check_in: string | Date
   check_out: string | Date
+  coupon_discount_amount: number | string | null
   consent_at: string | Date | null
   expires_at: string | Date
   confirmed_at: string | Date | null
@@ -55,6 +60,7 @@ export function normalizeBookingSessionRow(row: RawBookingSessionRow): BookingSe
     ...row,
     check_in: dateOnly(row.check_in),
     check_out: dateOnly(row.check_out),
+    coupon_discount_amount: row.coupon_discount_amount === null ? null : Number(row.coupon_discount_amount),
     consent_at: row.consent_at ? timestamp(row.consent_at) : null,
     expires_at: timestamp(row.expires_at),
     confirmed_at: row.confirmed_at ? timestamp(row.confirmed_at) : null,
@@ -71,6 +77,8 @@ export async function createBookingSession(input: {
   guests: number
   guest: Guest
   quote: Quote
+  baseQuote?: Quote
+  coupon?: { id: string; code: string; discountAmount: number }
   stripeCustomerId: string
   stripeSetupIntentId: string
 }) {
@@ -80,11 +88,14 @@ export async function createBookingSession(input: {
   await db()`
     insert into booking_sessions (
       id, status, property_slug, variant_slug, listing_id, check_in, check_out, guests,
-      guest, quote, stripe_customer_id, stripe_setup_intent_id, expires_at
+      guest, quote, base_quote, coupon_id, coupon_code, coupon_discount_amount,
+      stripe_customer_id, stripe_setup_intent_id, expires_at
     ) values (
       ${id}, 'pending', ${input.propertySlug}, ${input.variantSlug}, ${input.listingId},
       ${input.checkIn}, ${input.checkOut}, ${input.guests}, ${db().json(input.guest as never)},
-      ${db().json(input.quote as never)}, ${input.stripeCustomerId}, ${input.stripeSetupIntentId}, ${expiresAt}
+      ${db().json(input.quote as never)}, ${input.baseQuote ? db().json(input.baseQuote as never) : null},
+      ${input.coupon?.id || null}, ${input.coupon?.code || null}, ${input.coupon?.discountAmount || null},
+      ${input.stripeCustomerId}, ${input.stripeSetupIntentId}, ${expiresAt}
     )
   `
   return { id, expiresAt }
@@ -120,6 +131,7 @@ export async function markBookingConfirmed(input: { id: string; paymentMethodId:
       returning id
     `
     if (!rows[0]) return false
+    await transaction`update property_coupon_redemptions set confirmed_at = coalesce(confirmed_at, now()) where booking_session_id = ${input.id}`
     await transaction`
       insert into outbox_events (id, topic, payload)
       values (${randomUUID()}, 'booking.confirmed', ${transaction.json({ sessionId: input.id, reservationId: input.reservationId } as never)})

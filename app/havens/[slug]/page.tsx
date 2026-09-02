@@ -31,10 +31,10 @@ export default async function HavenPage({ params, searchParams }: { params: Prom
   const [{ slug }, query] = await Promise.all([params, searchParams])
   const [property, catalog] = await Promise.all([getProperty(slug), getCatalog()])
   if (!property) notFound()
-  if (property.estate) return <EstateHub property={property} similar={catalog.filter((item) => item.slug !== slug)} />
   const variant = property.variants[0]
-  const sandboxMode = isSandboxBooking()
   const initialSelection = parseStaySelection(query, Math.min(2, variant.guests))
   const preservedQuery = buildStayQuery(query, initialSelection)
+  if (property.estate) return <EstateHub property={property} similar={catalog.filter((item) => item.slug !== slug)} preservedQuery={preservedQuery} />
+  const sandboxMode = isSandboxBooking()
   return <PropertyDetail property={property} variant={variant} bookingLive={bookingIsLiveFor(variant.id)} quoteAvailable={isHostawayConfigured() || sandboxMode} pagePath={`/havens/${property.slug}`} initialSelection={initialSelection} preservedQuery={preservedQuery} />
 }

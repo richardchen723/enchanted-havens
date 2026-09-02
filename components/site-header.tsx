@@ -4,6 +4,7 @@ import Link from "next/link"
 import { Menu, Phone, X } from "lucide-react"
 import { usePathname } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
+import { CouponPromotion } from "@/components/coupon-promotion"
 import { InstagramBrandIcon } from "@/components/instagram-brand-icon"
 import { TrackedContactLink } from "@/components/tracked-contact-link"
 import { BRAND_CONTACT_PHONE, BRAND_CONTACT_PHONE_DISPLAY, BRAND_INSTAGRAM_URL } from "@/lib/brand"
@@ -139,6 +140,8 @@ export function SiteHeader() {
           </button>
         </div>
       </div>
+
+      <CouponPromotion pathname={pathname || "/"} />
 
       {open && (
         <nav ref={mobileNavRef} id="mobile-navigation" aria-label="Mobile navigation" className="fixed inset-x-0 top-[var(--header-height)] max-h-[calc(100dvh-var(--header-height))] min-h-[calc(100dvh-var(--header-height))] overflow-y-auto border-t border-black/8 bg-[#faf7f0] px-5 py-10 text-[#173c33] lg:hidden">

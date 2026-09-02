@@ -2,15 +2,17 @@ import { readFileSync } from "node:fs"
 import { describe, expect, it } from "vitest"
 
 describe("analytics integrations", () => {
-  it("loads Microsoft Clarity site-wide from the configured project", () => {
+  it("loads Microsoft Clarity on the public site but not the private admin surface", () => {
     const layout = readFileSync("app/layout.tsx", "utf8")
+    const siteFrame = readFileSync("components/site-frame.tsx", "utf8")
     const clarity = readFileSync("components/microsoft-clarity.tsx", "utf8")
 
     expect(layout).toContain("NEXT_PUBLIC_CLARITY_PROJECT_ID")
     expect(layout).toContain(".trim()")
-    expect(layout).toContain("<MicrosoftClarity")
-    expect(layout).toContain('allowedHosts={["enchantedhavens.com", "www.enchantedhavens.com"]}')
-    expect(layout).toContain('siteLabel="enchanted_havens"')
+    expect(siteFrame).toContain('pathname?.startsWith("/admin")')
+    expect(siteFrame.indexOf("if (isAdmin)")).toBeLessThan(siteFrame.indexOf("<MicrosoftClarity"))
+    expect(siteFrame).toContain('allowedHosts={["enchantedhavens.com", "www.enchantedhavens.com"]}')
+    expect(siteFrame).toContain('siteLabel="enchanted_havens"')
     expect(clarity).toContain("https://www.clarity.ms/tag/")
     expect(clarity).toContain('strategy="afterInteractive"')
     expect(clarity).toContain("window.location.hostname.toLowerCase()")

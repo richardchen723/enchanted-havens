@@ -2,7 +2,7 @@
 
 import { Elements, PaymentElement, useElements, useStripe } from "@stripe/react-stripe-js"
 import { loadStripe } from "@stripe/stripe-js"
-import { AlertCircle, ArrowLeft, ArrowRight, Check, CheckCircle2, LoaderCircle, LockKeyhole, ShieldCheck } from "lucide-react"
+import { AlertCircle, ArrowLeft, ArrowRight, Check, CheckCircle2, LoaderCircle, LockKeyhole, ShieldCheck, Tag, X } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
@@ -14,7 +14,8 @@ import { formatUsPhoneInput } from "@/lib/phone"
 import type { Property, PropertyVariant, Quote } from "@/lib/schemas"
 import { formatCurrency } from "@/lib/utils"
 
-type SetupData = { clientSecret: string; sessionId: string }
+type AppliedCoupon = { id: string; code: string; discountAmount: number; label: string }
+type SetupData = { clientSecret: string; sessionId: string; coupon?: AppliedCoupon | null }
 type QuoteSource = "hostaway" | "sandbox"
 
 function FieldLabel({ label, required = false, children }: { label: string; required?: boolean; children: React.ReactNode }) {
@@ -46,10 +47,11 @@ type ReservationDetailsFormProps = {
   guest: GuestFormState
   setGuest: React.Dispatch<React.SetStateAction<GuestFormState>>
   sandboxMode: boolean
-  onQuoteReady: (quote: Quote, source: QuoteSource) => void
+  couponCode?: string
+  onQuoteReady: (quote: Quote, source: QuoteSource, coupon?: AppliedCoupon | null) => void
 }
 
-function ReservationDetailsForm({ property, variant, checkIn, checkOut, guests, guest, setGuest, sandboxMode, onQuoteReady }: ReservationDetailsFormProps) {
+function ReservationDetailsForm({ property, variant, checkIn, checkOut, guests, guest, setGuest, sandboxMode, couponCode, onQuoteReady }: ReservationDetailsFormProps) {
   const stripe = useStripe()
   const elements = useElements()
   const [consent, setConsent] = useState(false)
@@ -79,13 +81,14 @@ function ReservationDetailsForm({ property, variant, checkIn, checkOut, guests, 
           checkIn,
           checkOut,
           guests,
+          couponCode,
           guest: { ...guest, country: "US" },
         }),
       })
       const setup = await setupResponse.json().catch(() => ({})) as Partial<SetupData> & { error?: string; quote?: Quote; source?: QuoteSource }
       if (!setupResponse.ok) throw new Error(setup.error || "Secure checkout could not start.")
       if (!setup.clientSecret || !setup.sessionId) throw new Error("Stripe did not return a secure checkout session. Please try again.")
-      if (setup.quote) onQuoteReady(setup.quote, setup.source === "sandbox" ? "sandbox" : "hostaway")
+      if (setup.quote) onQuoteReady(setup.quote, setup.source === "sandbox" ? "sandbox" : "hostaway", setup.coupon)
 
       const result = await stripe.confirmSetup({
         elements,
@@ -182,13 +185,14 @@ type BookingCheckoutProps = {
   initialCheckIn?: string
   initialCheckOut?: string
   initialGuests?: number
+  initialCouponCode?: string
   bookingLive: boolean
   quoteAvailable: boolean
   sandboxMode?: boolean
   publishableKey?: string
 }
 
-export function BookingCheckout({ property, variant, initialCheckIn = "", initialCheckOut = "", initialGuests = 2, bookingLive, quoteAvailable, sandboxMode = false, publishableKey }: BookingCheckoutProps) {
+export function BookingCheckout({ property, variant, initialCheckIn = "", initialCheckOut = "", initialGuests = 2, initialCouponCode = "", bookingLive, quoteAvailable, sandboxMode = false, publishableKey }: BookingCheckoutProps) {
   const [checkIn, setCheckIn] = useState(initialCheckIn)
   const [checkOut, setCheckOut] = useState(initialCheckOut)
   const [guests, setGuests] = useState(Math.min(Math.max(initialGuests, 1), variant.guests))
@@ -196,6 +200,10 @@ export function BookingCheckout({ property, variant, initialCheckIn = "", initia
   const [quoteSource, setQuoteSource] = useState<QuoteSource | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
+  const [couponInput, setCouponInput] = useState(initialCouponCode)
+  const [appliedCoupon, setAppliedCoupon] = useState<AppliedCoupon | null>(null)
+  const [couponError, setCouponError] = useState("")
+  const [applyingCoupon, setApplyingCoupon] = useState(false)
   const [guest, setGuest] = useState<GuestFormState>(emptyGuestForm)
   const checkoutTracked = useRef(false)
   const stripePromise = useMemo(() => publishableKey ? loadStripe(publishableKey) : null, [publishableKey])
@@ -252,8 +260,43 @@ export function BookingCheckout({ property, variant, initialCheckIn = "", initia
     setQuote(null)
     setQuoteSource(null)
     setError("")
+    setAppliedCoupon(null)
+    setCouponError("")
     setCheckIn(arrival)
     setCheckOut(departure)
+  }
+
+  async function applyCoupon() {
+    const code = couponInput.trim().toUpperCase()
+    if (!code || !checkIn || !checkOut) return
+    setApplyingCoupon(true)
+    setCouponError("")
+    try {
+      const response = await fetch("/api/quotes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ listingId: variant.id, checkIn, checkOut, guests, couponCode: code }),
+      })
+      const data = await response.json()
+      if (!response.ok) throw new Error(data.error || "This coupon could not be applied.")
+      if (!data.coupon) throw new Error("This coupon could not be applied.")
+      setQuote(data.quote)
+      setQuoteSource(data.source === "sandbox" ? "sandbox" : "hostaway")
+      setAppliedCoupon(data.coupon)
+      setCouponInput(data.coupon.code)
+      trackConversionEvent("Coupon Applied", { property: property.slug, variant: variant.slug })
+    } catch (couponRequestError) {
+      setCouponError(couponRequestError instanceof Error ? couponRequestError.message : "This coupon could not be applied.")
+    } finally {
+      setApplyingCoupon(false)
+    }
+  }
+
+  async function removeCoupon() {
+    setAppliedCoupon(null)
+    setCouponInput("")
+    setCouponError("")
+    await requestQuote()
   }
 
   return (
@@ -280,7 +323,7 @@ export function BookingCheckout({ property, variant, initialCheckIn = "", initia
           <p className="eyebrow mb-5 text-[#805a27]">Step 1 · Your stay</p>
           <div className="grid gap-5 sm:grid-cols-[minmax(0,1fr)_12rem]">
             <DateRangePicker listingId={variant.id} checkIn={checkIn} checkOut={checkOut} onChange={updateDates} />
-            <GuestCountControl value={guests} onChange={(value) => { setQuote(null); setQuoteSource(null); setError(""); setGuests(value) }} max={variant.guests} appearance="stay" ariaLabel="Checkout guests" label="Guests" />
+            <GuestCountControl value={guests} onChange={(value) => { setQuote(null); setQuoteSource(null); setError(""); setAppliedCoupon(null); setCouponError(""); setGuests(value) }} max={variant.guests} appearance="stay" ariaLabel="Checkout guests" label="Guests" />
           </div>
           {!hasDates && <p data-testid="checkout-price-prompt" className="mt-5 text-sm leading-7 text-black/48">Select arrival and departure dates to reveal the complete stay total.</p>}
           {hasDates && loading && !quote && <p className="mt-5 flex items-center gap-3 text-sm text-black/48"><LoaderCircle className="size-4 animate-spin text-[#805a27]" /> Calculating the complete stay...</p>}
@@ -298,6 +341,11 @@ export function BookingCheckout({ property, variant, initialCheckIn = "", initia
             <div className="mt-6 divide-y divide-black/8 border-y border-black/8">
               {quote.components.filter((component) => component.isIncludedInTotalPrice !== 0 && component.total !== 0).map((component) => <div key={`${component.name}-${component.total}`} className="flex justify-between gap-5 py-3.5 text-sm text-black/58"><span>{component.title}</span><span>{formatCurrency(component.total, quote.currency, { cents: true })}</span></div>)}
             </div>
+            <div className="mt-6 border border-[#173c33]/14 bg-[#f3eee3] p-5">
+              <div className="flex items-start gap-3"><Tag className="mt-0.5 size-4 shrink-0 text-[#805a27]" /><div className="min-w-0 flex-1"><p className="text-sm font-semibold text-[#173c33]">Have a coupon?</p><p className="mt-1 text-xs leading-5 text-black/48">Enter the code from your offer. Discounts apply to accommodation charges; taxes and fees are unchanged.</p></div></div>
+              {appliedCoupon ? <div className="mt-4 flex flex-col gap-3 rounded-lg border border-[#63806a]/25 bg-[#e7efe8] p-4 sm:flex-row sm:items-center sm:justify-between"><div><p className="font-mono text-sm font-bold tracking-[0.08em] text-[#173c33]">{appliedCoupon.code}</p><p className="mt-1 text-xs text-[#43634b]">Applied · You save {formatCurrency(appliedCoupon.discountAmount, quote.currency, { cents: true })}</p></div><button type="button" onClick={() => void removeCoupon()} disabled={loading} className="inline-flex min-h-9 items-center gap-2 text-xs font-semibold text-[#43634b] disabled:opacity-50"><X className="size-3.5" />Remove</button></div> : <div className="mt-4 flex gap-2"><input value={couponInput} onChange={(event) => { setCouponInput(event.target.value.toUpperCase()); setCouponError("") }} onKeyDown={(event) => { if (event.key === "Enter") { event.preventDefault(); void applyCoupon() } }} aria-label="Coupon code" maxLength={24} autoComplete="off" className="min-h-11 min-w-0 flex-1 rounded-lg border border-black/12 bg-white px-4 font-mono text-sm uppercase tracking-[0.08em]" placeholder="COUPON CODE" /><button type="button" onClick={() => void applyCoupon()} disabled={!couponInput.trim() || applyingCoupon} className="inline-flex min-h-11 items-center justify-center rounded-lg bg-[#173c33] px-5 text-xs font-bold uppercase tracking-[0.1em] text-white disabled:opacity-45">{applyingCoupon ? "Checking…" : "Apply"}</button></div>}
+              {couponError ? <p role="alert" className="mt-3 text-xs leading-5 text-[#8b4032]">{couponError}</p> : null}
+            </div>
             <div className="mt-5 flex justify-end"><Link href={inquiryHref} className="inline-flex items-center gap-2 text-[0.64rem] font-bold uppercase tracking-[0.14em] text-[#173c33]">Prefer personal help? Send Inquiry <ArrowRight className="size-4" /></Link></div>
 
             {bookingLive && stripePromise ? (
@@ -311,7 +359,8 @@ export function BookingCheckout({ property, variant, initialCheckIn = "", initia
                   guest={guest}
                   setGuest={setGuest}
                   sandboxMode={sandboxMode}
-                  onQuoteReady={(nextQuote, source) => { setQuote(nextQuote); setQuoteSource(source) }}
+                  couponCode={appliedCoupon?.code}
+                  onQuoteReady={(nextQuote, source, coupon) => { setQuote(nextQuote); setQuoteSource(source); setAppliedCoupon(coupon || null) }}
                 />
               </Elements>
             ) : (

@@ -135,6 +135,7 @@ export const searchRequestSchema = z.object({
 
 export const quoteRequestSchema = searchRequestSchema.extend({
   listingId: z.coerce.number().int().positive(),
+  couponCode: z.string().trim().max(24).optional(),
 })
 
 export const guestSchema = z.object({

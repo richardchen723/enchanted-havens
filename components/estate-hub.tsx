@@ -6,9 +6,10 @@ import { buildInquiryHref } from "@/lib/contact-handoff"
 import { getEditorialVariantDescription, getEditorialVariantHero } from "@/lib/editorial"
 import { buildPropertyJsonLd, getPropertySeoContent } from "@/lib/property-seo"
 import type { Property } from "@/lib/schemas"
+import { appendQuery } from "@/lib/stay-search"
 import { formatCount } from "@/lib/utils"
 
-export function EstateHub({ property, similar }: { property: Property; similar: Property[] }) {
+export function EstateHub({ property, similar, preservedQuery = "" }: { property: Property; similar: Property[]; preservedQuery?: string }) {
   const fullEstate = property.variants.find((variant) => variant.slug === "full-estate") || property.variants[0]
   const mainHouse = property.variants.find((variant) => variant.slug === "main-house")
   const estateResidences = property.variants.filter((variant) => variant.id !== fullEstate.id)
@@ -21,6 +22,7 @@ export function EstateHub({ property, similar }: { property: Property; similar: 
   const estateInquiryHref = buildInquiryHref({
     property: property.slug,
     tripType: "The Cove Club",
+    preservedQuery,
     returnTo: `/havens/${property.slug}#estate-residences`,
   })
 
@@ -93,7 +95,7 @@ export function EstateHub({ property, similar }: { property: Property; similar: 
               return (
                 <Link
                   key={variant.id}
-                  href={`/havens/${property.slug}/${variant.slug}`}
+                  href={appendQuery(`/havens/${property.slug}/${variant.slug}`, preservedQuery)}
                   data-testid={`estate-residence-${variant.slug}`}
                   className={`image-lift group relative overflow-hidden bg-[#173c33] text-white ${index === 0 ? "lg:col-span-2" : ""}`}
                 >
@@ -163,7 +165,7 @@ export function EstateHub({ property, similar }: { property: Property; similar: 
               </div>
               <div className="grid gap-3 sm:grid-cols-3">
                 <Link href={estateInquiryHref} className="button-primary justify-center">Contact the Stay Team <ArrowRight className="size-4" /></Link>
-                <Link href={`/havens/${property.slug}/full-estate`} className="button-outline justify-center text-[#173c33]">Explore Full Estate <ArrowRight className="size-4" /></Link>
+                <Link href={appendQuery(`/havens/${property.slug}/full-estate`, preservedQuery)} className="button-outline justify-center text-[#173c33]">Explore Full Estate <ArrowRight className="size-4" /></Link>
                 <a href="#estate-residences" className="button-outline justify-center text-[#173c33]">Compare Residences <ArrowRight className="size-4" /></a>
               </div>
             </div>
@@ -174,7 +176,7 @@ export function EstateHub({ property, similar }: { property: Property; similar: 
       <section className="overflow-hidden bg-[#173c33] py-20 text-white lg:py-28">
         <div className="container-shell grid gap-14 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
           <div className="grid grid-cols-2 gap-3"><div className="relative aspect-[3/4]"><Image src={property.gallery[8] || property.gallery[2]} alt={`${property.displayName} residence`} fill sizes="(max-width: 1024px) 50vw, 27vw" className="object-cover" /></div><div className="relative mt-16 aspect-[3/4]"><Image src={property.gallery[13] || property.gallery[3]} alt={`${property.displayName} waterfront living`} fill sizes="(max-width: 1024px) 50vw, 27vw" className="object-cover" /></div></div>
-          <div className="lg:pl-14"><p className="eyebrow text-[#d4b47d]">Gathering, Considered</p><h2 className="display-balance mt-5 font-display text-6xl leading-[0.9] lg:text-7xl">Grand in scale. Personal in feeling.</h2><p className="copy-balance mt-8 text-base leading-8 text-white/64 sm:text-lg sm:leading-9">Milestone weekends, multigenerational gatherings, and long-awaited reunions have room to unfold without sacrificing intimacy. Our stay team will help you choose the right combination of residences and understand the estate before you arrive.</p><div className="mt-9 flex flex-wrap gap-3"><Link href={estateInquiryHref} className="button-light">Plan an Estate Stay <ArrowRight className="size-4" /></Link><Link href={`/havens/${property.slug}/full-estate`} className="button-outline text-white">Explore Full Estate</Link></div></div>
+          <div className="lg:pl-14"><p className="eyebrow text-[#d4b47d]">Gathering, Considered</p><h2 className="display-balance mt-5 font-display text-6xl leading-[0.9] lg:text-7xl">Grand in scale. Personal in feeling.</h2><p className="copy-balance mt-8 text-base leading-8 text-white/64 sm:text-lg sm:leading-9">Milestone weekends, multigenerational gatherings, and long-awaited reunions have room to unfold without sacrificing intimacy. Our stay team will help you choose the right combination of residences and understand the estate before you arrive.</p><div className="mt-9 flex flex-wrap gap-3"><Link href={estateInquiryHref} className="button-light">Plan an Estate Stay <ArrowRight className="size-4" /></Link><Link href={appendQuery(`/havens/${property.slug}/full-estate`, preservedQuery)} className="button-outline text-white">Explore Full Estate</Link></div></div>
         </div>
       </section>
 

@@ -1,10 +1,6 @@
 import type { Metadata } from "next"
-import { Analytics } from "@vercel/analytics/next"
 import { Cormorant_Garamond, Manrope } from "next/font/google"
-import { MicrosoftClarity } from "@/components/microsoft-clarity"
-import { SiteFooter } from "@/components/site-footer"
-import { SiteHeader } from "@/components/site-header"
-import { TextInquiryProvider } from "@/components/text-inquiry/text-inquiry-provider"
+import { SiteFrame } from "@/components/site-frame"
 import { isDatabaseConfigured } from "@/lib/db"
 import { isHostawayConfigured } from "@/lib/hostaway"
 import { absoluteUrl } from "@/lib/utils"
@@ -60,16 +56,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         {clarityProjectId ? <link rel="dns-prefetch" href="https://c.bing.com" /> : null}
       </head>
       <body>
-        <TextInquiryProvider enabled={chatEnabled} smsFallbackEnabled={textMessagingEnabled}>
-          <a href="#main-content" className="fixed left-4 top-4 z-[100] -translate-y-24 bg-white px-4 py-3 text-sm focus:translate-y-0">
-            Skip to content
-          </a>
-          <SiteHeader />
-          <main id="main-content" className="site-main">{children}</main>
-          <SiteFooter />
-        </TextInquiryProvider>
-        <MicrosoftClarity projectId={clarityProjectId} allowedHosts={["enchantedhavens.com", "www.enchantedhavens.com"]} siteLabel="enchanted_havens" />
-        {analyticsEnabled ? <Analytics /> : null}
+        <SiteFrame chatEnabled={chatEnabled} textMessagingEnabled={textMessagingEnabled} analyticsEnabled={analyticsEnabled} clarityProjectId={clarityProjectId}>{children}</SiteFrame>
       </body>
     </html>
   )

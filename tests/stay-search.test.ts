@@ -9,12 +9,13 @@ describe("stay search continuity", () => {
       guests: "5",
       utm_source: "instagram",
       utm_campaign: "spring",
+      coupon: "RETURN15",
       unrelated: "discarded",
     }
     const selection = parseStaySelection(params)
 
     expect(selection).toEqual({ checkIn: "2027-04-15", checkOut: "2027-04-19", guests: 5 })
-    expect(buildStayQuery(params, selection)).toBe("checkIn=2027-04-15&checkOut=2027-04-19&guests=5&utm_source=instagram&utm_campaign=spring")
+    expect(buildStayQuery(params, selection)).toBe("checkIn=2027-04-15&checkOut=2027-04-19&guests=5&utm_source=instagram&utm_campaign=spring&coupon=RETURN15")
   })
 
   it("rejects invalid date ranges and avoids query noise for casual browsing", () => {

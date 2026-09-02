@@ -6,6 +6,7 @@ import { getProperty } from "@/lib/catalog"
 import { sendBookingConfirmation } from "@/lib/email"
 import { quoteHasChanged } from "@/lib/utils"
 import { confirmSandboxBookingSession, getSandboxBookingSession, isSandboxBooking } from "@/lib/sandbox-booking"
+import { applyPropertyCoupon, claimCouponRedemption, CouponValidationError } from "@/lib/coupons"
 
 const RECONCILIATION_GRACE_MS = 60_000
 
@@ -43,6 +44,7 @@ export async function POST(request: Request) {
     }
     const guest = guestSchema.parse(session.guest)
     const storedQuote = quoteSchema.parse(session.quote)
+    const storedBaseQuote = quoteSchema.parse(session.base_quote || session.quote)
     const finishConfirmation = async (reservationId: number, quote = storedQuote) => {
       const newlyConfirmed = await markBookingConfirmed({ id: bookingSessionId, paymentMethodId, reservationId })
       if (newlyConfirmed) {
@@ -79,10 +81,10 @@ export async function POST(request: Request) {
     }
 
     let stillAvailable: boolean
-    let freshQuote
+    let freshBaseQuote
     try {
       stillAvailable = await isListingAvailable(session.listing_id, session.check_in, session.check_out)
-      freshQuote = await getHostawayQuote(session.listing_id, session.check_in, session.check_out, session.guests)
+      freshBaseQuote = await getHostawayQuote(session.listing_id, session.check_in, session.check_out, session.guests)
     } catch (error) {
       const detail = error instanceof Error ? error.message : "Hostaway availability verification failed"
       console.error("Hostaway pre-confirmation verification failed", error)
@@ -96,7 +98,27 @@ export async function POST(request: Request) {
       }
       return Response.json({ error: "These dates were just reserved by another guest. Your card was not charged." }, { status: 409 })
     }
-    if (quoteHasChanged(storedQuote, freshQuote)) {
+    let freshQuote = freshBaseQuote
+    if (session.coupon_id && session.coupon_code) {
+      try {
+        const application = await applyPropertyCoupon({
+          propertySlug: session.property_slug,
+          code: session.coupon_code,
+          quote: freshBaseQuote,
+          guestEmail: guest.email,
+          bookingSessionId: session.id,
+        })
+        if (application.coupon.id !== session.coupon_id) throw new CouponValidationError("This coupon is no longer available.")
+        freshQuote = application.quote
+      } catch (error) {
+        if (error instanceof CouponValidationError) {
+          await markBookingError(session.id, "pending", error.message)
+          return Response.json({ error: error.message }, { status: 409 })
+        }
+        throw error
+      }
+    }
+    if (quoteHasChanged(storedBaseQuote, freshBaseQuote) || quoteHasChanged(storedQuote, freshQuote)) {
       await markBookingError(session.id, "pending", "Hostaway quote changed before confirmation")
       return Response.json({ error: "The price changed while you were checking out. Review the updated total before confirming.", quote: freshQuote }, { status: 409 })
     }
@@ -105,6 +127,21 @@ export async function POST(request: Request) {
       session = await getBookingSession(session.id)
       if (session?.status === "confirmed") return Response.json({ ok: true, confirmationUrl: `/confirmation/${session.id}` })
       return Response.json({ error: "This booking is already being confirmed. Please wait a moment and refresh." }, { status: 409 })
+    }
+    if (session.coupon_id) {
+      try {
+        await claimCouponRedemption({
+          couponId: session.coupon_id,
+          propertySlug: session.property_slug,
+          bookingSessionId: session.id,
+          guestEmail: guest.email,
+          baseQuote: freshBaseQuote,
+        })
+      } catch (error) {
+        const detail = error instanceof Error ? error.message : "Coupon redemption could not be reserved"
+        await markBookingError(session.id, "pending", detail)
+        return Response.json({ error: error instanceof CouponValidationError ? error.message : "This coupon could not be reserved. Please try again." }, { status: 409 })
+      }
     }
     try {
       const listingMapId = await getListingMapId(session.listing_id)

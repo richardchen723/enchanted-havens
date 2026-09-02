@@ -9,7 +9,7 @@ export type StaySelection = {
 }
 
 const attributionParameter = /^(utm_[a-z0-9_]+|gclid|fbclid|msclkid)$/i
-const intentParameter = /^(intent|matches|experience)$/i
+const intentParameter = /^(intent|matches|experience|coupon)$/i
 const isoDate = /^\d{4}-\d{2}-\d{2}$/
 
 function singleValue(value: string | string[] | undefined) {

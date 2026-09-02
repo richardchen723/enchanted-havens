@@ -4,6 +4,7 @@ import { getHostawayQuote, isHostawayConfigured, isListingAvailable } from "@/li
 import { stripe } from "@/lib/stripe"
 import { createBookingSession } from "@/lib/booking-sessions"
 import { createSandboxBookingSession, getSandboxQuote, isSandboxBooking } from "@/lib/sandbox-booking"
+import { applyPropertyCoupon, type CouponApplication } from "@/lib/coupons"
 
 function getCustomerAddress(guest: Guest) {
   if (!guest.address && !guest.city && !guest.state && !guest.zipCode) return undefined
@@ -34,12 +35,17 @@ export async function POST(request: Request) {
       } else {
         quote = getSandboxQuote(variant.id, input.checkIn, input.checkOut, input.guests)
       }
+      let couponApplication: CouponApplication | null = null
+      if (input.couponCode) {
+        couponApplication = await applyPropertyCoupon({ propertySlug: property.slug, code: input.couponCode, quote, guestEmail: input.guest.email })
+        quote = couponApplication.quote
+      }
       const customer = await stripe().customers.create({
         email: input.guest.email,
         name: `${input.guest.firstName} ${input.guest.lastName}`,
         phone: input.guest.phone,
         address: getCustomerAddress(input.guest),
-        metadata: { source: "enchanted-havens-sandbox", environment: "test-only" },
+        metadata: { source: "enchanted-havens-sandbox", environment: "test-only", couponCode: couponApplication?.coupon.code || "" },
       })
       const setupIntent = await stripe().setupIntents.create({
         customer: customer.id,
@@ -49,23 +55,27 @@ export async function POST(request: Request) {
       })
       if (!setupIntent.client_secret) throw new Error("Stripe did not return a checkout secret")
       const session = createSandboxBookingSession({ propertySlug: property.slug, variantSlug: variant.slug, listingId: variant.id, checkIn: input.checkIn, checkOut: input.checkOut, guests: input.guests, guest: input.guest, quote, stripeCustomerId: customer.id, stripeSetupIntentId: setupIntent.id })
-      return Response.json({ sessionId: session.id, expiresAt: session.expiresAt, clientSecret: setupIntent.client_secret, quote, source, sandboxWrites: true })
+      return Response.json({ sessionId: session.id, expiresAt: session.expiresAt, clientSecret: setupIntent.client_secret, quote, coupon: couponApplication?.coupon || null, source, sandboxWrites: true })
     }
     const available = await isListingAvailable(variant.id, input.checkIn, input.checkOut)
     if (!available) return Response.json({ error: "The selected dates are no longer available." }, { status: 409 })
-    const quote = await getHostawayQuote(variant.id, input.checkIn, input.checkOut, input.guests)
+    const baseQuote = await getHostawayQuote(variant.id, input.checkIn, input.checkOut, input.guests)
+    const couponApplication = input.couponCode
+      ? await applyPropertyCoupon({ propertySlug: property.slug, code: input.couponCode, quote: baseQuote, guestEmail: input.guest.email })
+      : null
+    const quote = couponApplication?.quote || baseQuote
     const customer = await stripe().customers.create({
       email: input.guest.email,
       name: `${input.guest.firstName} ${input.guest.lastName}`,
       phone: input.guest.phone,
       address: getCustomerAddress(input.guest),
-      metadata: { source: "enchanted-havens-direct" },
+      metadata: { source: "enchanted-havens-direct", couponCode: couponApplication?.coupon.code || "" },
     })
     const setupIntent = await stripe().setupIntents.create({
       customer: customer.id,
       usage: "off_session",
       payment_method_types: ["card"],
-      metadata: { listingId: String(variant.id), propertySlug: property.slug, variantSlug: variant.slug, checkIn: input.checkIn, checkOut: input.checkOut },
+      metadata: { listingId: String(variant.id), propertySlug: property.slug, variantSlug: variant.slug, checkIn: input.checkIn, checkOut: input.checkOut, couponCode: couponApplication?.coupon.code || "" },
     })
     if (!setupIntent.client_secret) throw new Error("Stripe did not return a checkout secret")
     const session = await createBookingSession({
@@ -77,10 +87,12 @@ export async function POST(request: Request) {
       guests: input.guests,
       guest: input.guest,
       quote,
+      baseQuote: couponApplication ? baseQuote : undefined,
+      coupon: couponApplication?.coupon,
       stripeCustomerId: customer.id,
       stripeSetupIntentId: setupIntent.id,
     })
-    return Response.json({ sessionId: session.id, expiresAt: session.expiresAt, clientSecret: setupIntent.client_secret, quote, source: "hostaway" })
+    return Response.json({ sessionId: session.id, expiresAt: session.expiresAt, clientSecret: setupIntent.client_secret, quote, coupon: couponApplication?.coupon || null, source: "hostaway" })
   } catch (error) {
     console.error("Checkout setup failed", error)
     return Response.json({ error: error instanceof Error ? error.message : "Unable to start secure checkout." }, { status: 400 })
