@@ -19,6 +19,7 @@ const SESSION_LIFETIME_MS = 14 * 24 * 60 * 60 * 1000
 
 export type AdminRole = "owner" | "admin"
 export type AdminStatus = "invited" | "active" | "removed"
+export type AdminAccessTokenFailureReason = "expired" | "invalid" | "used"
 
 export type AdminUser = {
   id: string
@@ -110,7 +111,11 @@ export async function createAdminAccessToken(userId: string, purpose: "sign_in" 
 
   const token = newAdminToken()
   const expiresAt = new Date(Date.now() + ACCESS_TOKEN_LIFETIME_MS)
-  await db()`delete from admin_access_tokens where expires_at < now() or used_at is not null`
+  await db()`
+    delete from admin_access_tokens
+    where expires_at < now() - interval '7 days'
+      or used_at < now() - interval '7 days'
+  `
   await db()`
     insert into admin_access_tokens (id, user_id, purpose, token_hash, expires_at)
     values (${randomUUID()}, ${userId}, ${purpose}, ${hashAdminToken(token)}, ${expiresAt})
@@ -125,8 +130,9 @@ export async function revokeAdminAccessToken(token: string) {
 }
 
 export async function consumeAdminAccessToken(token: string) {
-  if (!token || !isDatabaseConfigured()) return null
+  if (!token || !isDatabaseConfigured()) return { ok: false as const, reason: "invalid" as const }
   await ensureAdminBackend()
+  const tokenHash = hashAdminToken(token)
   const sessionToken = newAdminToken()
   const sessionHash = hashAdminToken(sessionToken)
   const expiresAt = new Date(Date.now() + SESSION_LIFETIME_MS)
@@ -135,10 +141,23 @@ export async function consumeAdminAccessToken(token: string) {
     const consumed = await transaction<Array<{ user_id: string }>>`
       update admin_access_tokens
       set used_at = now()
-      where token_hash = ${hashAdminToken(token)} and used_at is null and expires_at > now()
+      where token_hash = ${tokenHash} and used_at is null and expires_at > now()
       returning user_id
     `
-    if (!consumed[0]) return null
+    if (!consumed[0]) {
+      const tokenState = await transaction<Array<{ expired: boolean; used: boolean }>>`
+        select expires_at <= now() as expired, used_at is not null as used
+        from admin_access_tokens
+        where token_hash = ${tokenHash}
+        limit 1
+      `
+      const reason: AdminAccessTokenFailureReason = tokenState[0]?.used
+        ? "used"
+        : tokenState[0]?.expired
+          ? "expired"
+          : "invalid"
+      return { ok: false as const, reason }
+    }
 
     const users = await transaction<AdminUserRow[]>`
       update admin_users
@@ -146,28 +165,27 @@ export async function consumeAdminAccessToken(token: string) {
       where id = ${consumed[0].user_id} and status in ('invited', 'active')
       returning id, email, full_name, role, status, invited_at, accepted_at, last_signed_in_at, created_at
     `
-    if (!users[0]) return null
+    if (!users[0]) return { ok: false as const, reason: "invalid" as const }
 
     await transaction`
       insert into admin_sessions (token_hash, user_id, expires_at)
       values (${sessionHash}, ${users[0].id}, ${expiresAt})
     `
-    return { user: adminUserDto(users[0]), sessionToken, expiresAt }
+    return { ok: true as const, user: adminUserDto(users[0]), sessionToken, expiresAt }
   })
 
   return result
 }
 
-export async function setAdminSessionCookie(sessionToken: string, expiresAt: Date) {
-  const cookieStore = await cookies()
-  cookieStore.set(ADMIN_SESSION_COOKIE, sessionToken, {
+export function adminSessionCookieOptions(expiresAt: Date) {
+  return {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
+    sameSite: "strict" as const,
     path: "/admin",
     expires: expiresAt,
-    priority: "high",
-  })
+    priority: "high" as const,
+  }
 }
 
 export const getCurrentAdminUser = cache(async () => {

@@ -22,4 +22,23 @@ describe("admin authentication utilities", () => {
     expect(completionRoute).toContain("export async function POST")
     expect(completionRoute).toContain("consumeAdminAccessToken")
   })
+
+  it("completes sign-in with a guarded client request and explicit navigation", () => {
+    const confirmation = readFileSync("components/admin/admin-access-confirmation.tsx", "utf8")
+    const completionRoute = readFileSync("app/admin/auth/verify/complete/route.ts", "utf8")
+
+    expect(confirmation).toContain("submitting.current")
+    expect(confirmation).toContain('credentials: "same-origin"')
+    expect(confirmation).toContain("window.location.replace")
+    expect(completionRoute).toContain("response.cookies.set")
+  })
+
+  it("treats repeat confirmation as successful when the browser already has a session", () => {
+    const completionRoute = readFileSync("app/admin/auth/verify/complete/route.ts", "utf8")
+    const adminAuth = readFileSync("lib/admin-auth.ts", "utf8")
+
+    expect(completionRoute).toContain("if (await getCurrentAdminUser()) return successResponse(request)")
+    expect(adminAuth).toContain('? "used"')
+    expect(adminAuth).toContain('? "expired"')
+  })
 })

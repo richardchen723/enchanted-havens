@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { redirect } from "next/navigation"
-import { ArrowLeft, ArrowRight, KeyRound, Leaf, LockKeyhole, ShieldCheck } from "lucide-react"
+import { ArrowLeft, KeyRound, Leaf, LockKeyhole, ShieldCheck } from "lucide-react"
+import { AdminAccessConfirmation } from "@/components/admin/admin-access-confirmation"
 import { getCurrentAdminUser } from "@/lib/admin-auth"
 
 export const dynamic = "force-dynamic"
@@ -32,10 +33,7 @@ export default async function VerifyAdminAccessPage({ searchParams }: { searchPa
             <h2 className="mt-3 font-display text-5xl leading-none text-[#173c33]">{token ? "Confirm your sign-in." : "This link isn’t valid."}</h2>
             <p className="mt-5 text-sm leading-7 text-black/52">{token ? "Press continue to use this one-time link. This extra step prevents email security checks from signing in before you do." : "The link may be incomplete or expired. Request a fresh email from the admin sign-in page."}</p>
             {token ? (
-              <form action="/admin/auth/verify/complete" method="post" className="mt-7">
-                <input type="hidden" name="token" value={token} />
-                <button type="submit" className="inline-flex min-h-13 w-full items-center justify-center gap-2 rounded-lg bg-[#173c33] px-5 text-xs font-bold uppercase tracking-[0.13em] text-white transition hover:bg-[#0b2922]">Continue to dashboard <ArrowRight className="size-4" /></button>
-              </form>
+              <AdminAccessConfirmation token={token} />
             ) : <Link href="/admin/login" className="mt-7 inline-flex min-h-13 w-full items-center justify-center rounded-lg bg-[#173c33] px-5 text-xs font-bold uppercase tracking-[0.13em] text-white">Request a new link</Link>}
           </div>
         </div>

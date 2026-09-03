@@ -13,6 +13,8 @@ const errors: Record<string, string> = {
   "email-not-configured": "Email delivery is not configured yet. Please contact the site owner.",
   "send-failed": "We could not send the sign-in link. Please try again in a moment.",
   "invalid-link": "That sign-in link is invalid or has expired. Request a fresh link below.",
+  "expired-link": "That sign-in link has expired. Request a fresh link below and use it within 20 minutes.",
+  "used-link": "That link has already been used. If you pressed Continue, try opening the dashboard before requesting another link.",
 }
 
 export default async function AdminLoginPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
