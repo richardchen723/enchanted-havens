@@ -42,7 +42,11 @@ export async function GET(request: Request, { params }: { params: Promise<{ list
     }
 
     const result = await getCachedPublicCalendar(listingId, input.startDate, input.endDate)
-    const calendar = normalizeHostawayCalendarResult(result)
+    const calendar = Object.fromEntries(Object.entries(normalizeHostawayCalendarResult(result)).map(([date, entry]) => [date, {
+      ...entry,
+      // The date picker needs stay boundaries, but never internal reservation IDs.
+      reservations: entry.reservations.map(({ arrivalDate, departureDate, status }) => ({ arrivalDate, departureDate, status })),
+    }]))
     return Response.json(
       { listingId, calendar, source: "hostaway", dateRange: input },
       { headers: { "Cache-Control": "public, s-maxage=60, stale-while-revalidate=120" } },
