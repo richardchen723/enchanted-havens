@@ -1,4 +1,5 @@
 import { readFileSync } from "node:fs"
+import { resolveSitemap } from "next/dist/build/webpack/loaders/metadata/resolve-route-data"
 import { describe, expect, it } from "vitest"
 import { buildSitemap } from "@/app/sitemap"
 import { metadata as contactMetadata } from "@/app/contact/page"
@@ -42,6 +43,18 @@ function expectLargeShareCard(metadata: { openGraph?: unknown; twitter?: unknown
 }
 
 describe("technical SEO", () => {
+  it("serializes image query parameters as XML without changing the source URLs", () => {
+    const image = "https://images.example.com/haven.webp?width=3840&quality=92&format=webp&v=2"
+    const catalog = fallbackProperties.map((property) => ({ ...property, heroImage: image, gallery: [image] }))
+    const xml = resolveSitemap(buildSitemap(catalog))
+
+    expect(xml).toContain("<image:loc>https://images.example.com/haven.webp?width=3840&amp;quality=92&amp;format=webp&amp;v=2</image:loc>")
+    expect(xml).not.toContain("&amp;amp;")
+    expect(xml).not.toMatch(/&(?!amp;|lt;|gt;|quot;|apos;)/)
+    expect(catalog[0].heroImage).toBe(image)
+    expect(catalog[0].gallery).toEqual([image])
+  })
+
   it("adds image sitemap coverage to core collection and support pages", () => {
     expectAbsoluteImages("", 3)
     expectAbsoluteImages("/havens", 7)

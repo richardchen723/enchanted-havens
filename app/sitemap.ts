@@ -18,6 +18,9 @@ function sitemapImages(sources: Array<string | undefined>, limit = 8) {
     .map(absoluteImageUrl)
     .filter((url, index, all) => all.indexOf(url) === index)
     .slice(0, limit)
+    // Next.js 16.2 serializes image locations directly into XML. Escape only
+    // the sitemap value so query parameters remain intact in catalog URLs.
+    .map((url) => url.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&apos;"))
 }
 
 function propertyHero(catalog: Property[], slug: string, index = 0) {
