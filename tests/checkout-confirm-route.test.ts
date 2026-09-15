@@ -47,6 +47,7 @@ const mocks = vi.hoisted(() => ({
   getListingMapId: vi.fn(),
   isListingAvailable: vi.fn(),
   retrieveSetupIntent: vi.fn(),
+  updateSetupIntent: vi.fn(),
   createPaymentIntent: vi.fn(),
   getProperty: vi.fn(),
   sendBookingConfirmation: vi.fn(),
@@ -69,7 +70,7 @@ vi.mock("@/lib/hostaway", () => ({
 
 vi.mock("@/lib/stripe", () => ({
   stripe: () => ({
-    setupIntents: { retrieve: mocks.retrieveSetupIntent },
+    setupIntents: { retrieve: mocks.retrieveSetupIntent, update: mocks.updateSetupIntent },
     paymentIntents: { create: mocks.createPaymentIntent },
   }),
 }))
@@ -97,6 +98,7 @@ describe("checkout confirmation API", () => {
     vi.clearAllMocks()
     mocks.getBookingSession.mockResolvedValue({ ...baseSession })
     mocks.retrieveSetupIntent.mockResolvedValue({ status: "succeeded", payment_method: "pm_123", customer: "cus_123" })
+    mocks.updateSetupIntent.mockResolvedValue({ id: setupIntentId })
     mocks.getProperty.mockResolvedValue({
       slug: "emerald-haven",
       displayName: "Emerald Haven",
@@ -120,6 +122,13 @@ describe("checkout confirmation API", () => {
     expect(response.status).toBe(200)
     expect(await response.json()).toEqual({ ok: true, confirmationUrl: `/confirmation/${sessionId}` })
     expect(mocks.findHostawayReservationByReference).toHaveBeenCalledWith(expect.objectContaining({ bookingReference: sessionId }))
+    expect(mocks.updateSetupIntent).toHaveBeenCalledWith(setupIntentId, {
+      description: "Hostaway reservation 987654",
+      metadata: {
+        hostawayReservationId: "987654",
+        bookingSessionId: sessionId,
+      },
+    })
     expect(mocks.markBookingConfirmed).toHaveBeenCalledWith({ id: sessionId, paymentMethodId: "pm_123", reservationId: 987654 })
     expect(mocks.createHostawayReservation).not.toHaveBeenCalled()
     expect(mocks.isListingAvailable).not.toHaveBeenCalled()
@@ -187,5 +196,20 @@ describe("checkout confirmation API", () => {
       paymentCollected: expect.anything(),
     }))
     expect(mocks.sendBookingConfirmation).toHaveBeenCalledWith(expect.objectContaining({ confirmationReference: sessionId }))
+  })
+
+  it("requires the Hostaway reservation ID to be linked to Stripe before confirming", async () => {
+    mocks.createHostawayReservation.mockResolvedValue({ id: 987654 })
+    mocks.updateSetupIntent.mockRejectedValue(new Error("Stripe request failed"))
+
+    const response = await POST(request())
+
+    expect(response.status).toBe(502)
+    expect(await response.json()).toEqual({
+      error: "Your reservation was created, but we could not finish linking it to Stripe. Your card was not charged. Please wait a moment and try again.",
+    })
+    expect(mocks.markBookingError).toHaveBeenCalledWith(sessionId, "reconciliation_required", "Stripe reservation linkage failed: Stripe request failed")
+    expect(mocks.markBookingConfirmed).not.toHaveBeenCalled()
+    expect(mocks.sendBookingConfirmation).not.toHaveBeenCalled()
   })
 })

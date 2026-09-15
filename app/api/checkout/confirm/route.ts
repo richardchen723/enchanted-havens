@@ -46,6 +46,20 @@ export async function POST(request: Request) {
     const storedQuote = quoteSchema.parse(session.quote)
     const storedBaseQuote = quoteSchema.parse(session.base_quote || session.quote)
     const finishConfirmation = async (reservationId: number, quote = storedQuote) => {
+      try {
+        await stripe().setupIntents.update(input.setupIntentId, {
+          description: `Hostaway reservation ${reservationId}`,
+          metadata: {
+            hostawayReservationId: String(reservationId),
+            bookingSessionId,
+          },
+        })
+      } catch (error) {
+        const detail = error instanceof Error ? error.message : "Stripe reservation linkage failed"
+        console.error("Stripe reservation linkage failed", error)
+        await markBookingError(bookingSessionId, "reconciliation_required", `Stripe reservation linkage failed: ${detail}`)
+        return Response.json({ error: "Your reservation was created, but we could not finish linking it to Stripe. Your card was not charged. Please wait a moment and try again." }, { status: 502 })
+      }
       const newlyConfirmed = await markBookingConfirmed({ id: bookingSessionId, paymentMethodId, reservationId })
       if (newlyConfirmed) {
         await sendBookingConfirmation({ guest, property, variant, quote, confirmationReference: bookingSessionId }).catch((error) => console.error("Confirmation email failed", error))
