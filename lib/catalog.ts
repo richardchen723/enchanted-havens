@@ -77,7 +77,7 @@ async function fetchCatalog(): Promise<Property[]> {
   }
 }
 
-const getCachedCatalog = unstable_cache(fetchCatalog, ["enchanted-havens-catalog-v19"], {
+const getCachedCatalog = unstable_cache(fetchCatalog, ["enchanted-havens-catalog-v20"], {
   revalidate: 3600,
   tags: ["catalog"],
 })
@@ -118,6 +118,7 @@ export async function getFeaturedReviews() {
 }
 
 export function bookingIsLiveFor(listingId: number) {
+  if (!allowedListingIds.includes(listingId)) return false
   if (isSandboxBooking()) {
     return process.env.ALLOW_SANDBOX_CHECKOUT === "true" && isStripeSandboxConfigured()
   }

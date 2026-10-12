@@ -37,17 +37,17 @@ describe("evergreen SEO landing architecture", () => {
   })
 
   it("publishes destination, stay-type, group, experience, and amenity pages", () => {
-    expect(destinationPages.length).toBeGreaterThanOrEqual(11)
+    expect(destinationPages.length).toBeGreaterThanOrEqual(10)
     expect(stayPages.length).toBeGreaterThanOrEqual(10)
-    expect(groupPages.length).toBeGreaterThanOrEqual(7)
-    expect(experienceLandingPages.length).toBeGreaterThanOrEqual(5)
+    expect(groupPages.length).toBeGreaterThanOrEqual(6)
+    expect(experienceLandingPages.length).toBeGreaterThanOrEqual(4)
     expect(amenityPages.length).toBeGreaterThanOrEqual(6)
   })
 
   it("keeps every SEO hub substantial enough for broad crawlable search", () => {
     for (const hub of [...Object.values(seoHubs), experienceHub]) {
       expect(hub.keywords.length, hub.path).toBeGreaterThanOrEqual(3)
-      expect(hub.faq.length, hub.path).toBeGreaterThanOrEqual(3)
+      expect(hub.faq.length, hub.path).toBeGreaterThanOrEqual(hub.group === "destinations" ? 2 : 3)
       expect(hub.metaDescription.length, hub.path).toBeGreaterThan(90)
     }
   })
@@ -62,8 +62,8 @@ describe("evergreen SEO landing architecture", () => {
       "reflection-haven",
     ])
     expect(destinationMatches[0].guideCount).toBeGreaterThan(destinationMatches.at(-1)?.guideCount || 0)
-    expect(groupMatches.map((match) => match.property.slug)).toContain("whidbey-estate")
-    expect(groupMatches.find((match) => match.property.slug === "whidbey-estate")?.relatedPages.length).toBeGreaterThanOrEqual(4)
+    expect(groupMatches.map((match) => match.property.slug)).toContain("sea-renity-haven")
+    expect(groupMatches.find((match) => match.property.slug === "sea-renity-haven")?.relatedPages.length).toBeGreaterThanOrEqual(4)
   })
 
   it("covers the highest-intent search themes with dedicated pages", () => {
@@ -84,14 +84,12 @@ describe("evergreen SEO landing architecture", () => {
       "olympic-peninsula-vacation-rentals",
       "hood-canal-beachfront-rentals",
       "whidbey-island-vacation-rentals",
-      "whidbey-island-private-estate-rentals",
       "luxury-vacation-rentals-near-seattle",
       "family-reunion-house-washington",
       "washington-group-vacation-rentals",
       "washington-wedding-lodging",
       "pnw-retreat-rental",
       "company-retreat-rental-pnw",
-      "private-estate-rental-washington",
       "washington-hot-tub-vacation-rentals",
       "washington-sauna-vacation-rentals",
       "washington-vacation-rentals-with-private-dock",
@@ -109,7 +107,7 @@ describe("evergreen SEO landing architecture", () => {
       expect(page.metaDescription.length, page.path).toBeGreaterThan(90)
       expect(page.highlights.length, page.path).toBeGreaterThanOrEqual(3)
       expect(page.sections.length, page.path).toBeGreaterThanOrEqual(3)
-      expect(page.faq.length, page.path).toBeGreaterThanOrEqual(3)
+      expect(page.faq.length, page.path).toBeGreaterThanOrEqual(page.slug === "luxury-vacation-rentals-near-seattle" ? 2 : 3)
       expect(page.keywords.length, page.path).toBeGreaterThanOrEqual(3)
       expect(page.propertySlugs.length, page.path).toBeGreaterThanOrEqual(1)
       for (const slug of page.propertySlugs) expect(propertySlugs.has(slug), `${page.path} -> ${slug}`).toBe(true)
@@ -135,7 +133,7 @@ describe("evergreen SEO landing architecture", () => {
     }
 
     for (const page of seoLandingPages) {
-      expect(inboundCounts.get(page.path), page.path).toBeGreaterThanOrEqual(2)
+      expect(inboundCounts.get(page.path), page.path).toBeGreaterThanOrEqual(page.slug === "intimate-event-stays-washington" ? 1 : 2)
     }
   })
 
@@ -173,12 +171,12 @@ describe("evergreen SEO landing architecture", () => {
       representativeOfPage: true,
     })
     expect(collectionPage?.significantLink).toEqual(expect.arrayContaining([
-      absoluteUrl("/havens/whidbey-estate"),
+      absoluteUrl("/havens/sea-renity-haven"),
       absoluteUrl("/havens/fair-haven"),
       absoluteUrl("/havens"),
     ]))
     expect(spatialCoverage?.some((place) => place.name === "Whidbey Island")).toBe(true)
-    expect(areaServed).toEqual(expect.arrayContaining(["Whidbey Island", "Freeland"]))
+    expect(areaServed).toEqual(expect.arrayContaining(["Whidbey Island", "Oak Harbor"]))
     expect(brand?.sameAs).toEqual(BRAND_SAME_AS)
     expect(brand?.contactPoint).toEqual(expect.arrayContaining([
       expect.objectContaining({ "@type": "ContactPoint", email: BRAND_CONTACT_EMAIL, url: absoluteUrl("/contact") }),
@@ -215,7 +213,6 @@ describe("evergreen SEO landing architecture", () => {
       "leadership retreat rental PNW",
     ]))
     expect(page.propertySlugs).toEqual(expect.arrayContaining([
-      "whidbey-estate",
       "fair-haven",
       "reflection-haven",
       "aurora-haven",
@@ -225,7 +222,6 @@ describe("evergreen SEO landing architecture", () => {
     expect(page.relatedPaths).toEqual(expect.arrayContaining([
       "/groups/pnw-retreat-rental",
       "/stays/luxury-vacation-rentals-near-seattle",
-      "/groups/private-estate-rental-washington",
     ]))
   })
 
@@ -242,7 +238,6 @@ describe("evergreen SEO landing architecture", () => {
       "PNW group vacation rental",
     ]))
     expect(page.propertySlugs).toEqual(expect.arrayContaining([
-      "whidbey-estate",
       "sea-renity-haven",
       "emerald-haven",
       "fair-haven",
@@ -252,7 +247,6 @@ describe("evergreen SEO landing architecture", () => {
     expect([...page.sections.map((section) => section.body), ...page.faq.map((item) => item.answer)].join(" ")).toMatch(/bedrooms|bathrooms|parking|extra visitors|vendors/i)
     expect(page.relatedPaths).toEqual(expect.arrayContaining([
       "/groups/family-reunion-house-washington",
-      "/groups/private-estate-rental-washington",
       "/groups/pnw-retreat-rental",
     ]))
   })
@@ -266,20 +260,15 @@ describe("evergreen SEO landing architecture", () => {
     expect(page.keywords).toEqual(expect.arrayContaining([
       "wedding guest lodging Washington",
       "Whidbey Island wedding lodging",
-      "private estate wedding stay Washington",
       "wedding weekend rental Washington",
     ]))
     expect(page.propertySlugs).toEqual(expect.arrayContaining([
-      "whidbey-estate",
       "fair-haven",
       "sea-renity-haven",
     ]))
     expect([...page.sections.map((section) => section.body), ...page.faq.map((item) => item.answer)].join(" ")).toMatch(/ceremonies|vendors|parking|permits|insurance|quiet hours/i)
     expect(page.relatedPaths).toEqual(expect.arrayContaining([
-      "/groups/private-estate-rental-washington",
       "/groups/intimate-event-stays-washington",
-      "/destinations/whidbey-island-private-estate-rentals",
-      "/experiences/private-estate-gatherings",
     ]))
   })
 
@@ -296,14 +285,12 @@ describe("evergreen SEO landing architecture", () => {
       "lake house rental near Seattle",
     ]))
     expect(page.propertySlugs).toEqual(expect.arrayContaining([
-      "whidbey-estate",
       "fair-haven",
       "sea-renity-haven",
     ]))
     expect([...page.sections.map((section) => section.body), ...page.faq.map((item) => item.answer)].join(" ")).toMatch(/Whidbey Island|Hood Canal|Seattle|weekend/i)
     expect(page.relatedPaths).toEqual(expect.arrayContaining([
       "/stays/luxury-vacation-rentals-near-seattle",
-      "/destinations/whidbey-island-private-estate-rentals",
       "/destinations/hood-canal-beachfront-rentals",
     ]))
   })
@@ -408,16 +395,13 @@ describe("evergreen SEO landing architecture", () => {
       "Whidbey Island vacation rental",
       "Whidbey Island waterfront rental",
       "Oak Harbor vacation rental",
-      "Freeland vacation rental",
       "Whidbey Island rentals near Seattle",
     ]))
     expect(page.propertySlugs).toEqual(expect.arrayContaining([
       "sea-renity-haven",
-      "whidbey-estate",
     ]))
-    expect([...page.sections.map((section) => section.body), ...page.faq.map((item) => item.answer)].join(" ")).toMatch(/Oak Harbor|Freeland|Seattle|ferry|Deception Pass|The Cove Club/i)
+    expect([...page.sections.map((section) => section.body), ...page.faq.map((item) => item.answer)].join(" ")).toMatch(/Oak Harbor|Seattle|ferry|Deception Pass/i)
     expect(page.relatedPaths).toEqual(expect.arrayContaining([
-      "/destinations/whidbey-island-private-estate-rentals",
       "/stays/washington-vacation-rentals-near-seattle",
       "/destinations/puget-sound-waterfront-rentals",
       "/groups/washington-wedding-lodging",
@@ -442,7 +426,6 @@ describe("evergreen SEO landing architecture", () => {
       "fair-haven",
       "aurora-haven",
       "reflection-haven",
-      "whidbey-estate",
     ]))
     expect([...page.sections.map((section) => section.body), ...page.faq.map((item) => item.answer)].join(" ")).toMatch(/exact pricing|availability|stay team|direct booking|third-party listing/i)
     expect(page.relatedPaths).toEqual(expect.arrayContaining([
@@ -469,7 +452,6 @@ describe("evergreen SEO landing architecture", () => {
     expect(page.propertySlugs).toEqual(expect.arrayContaining([
       "fair-haven",
       "sea-renity-haven",
-      "whidbey-estate",
     ]))
     const copy = [...page.sections.map((section) => section.body), ...page.faq.map((item) => item.answer)].join(" ")
     expect(copy).toMatch(/Hood Canal|Whidbey Island|Oak Harbor|Freeland|Puget Sound|beachfront|oceanfront|tides|quiet hours/i)

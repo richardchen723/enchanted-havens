@@ -5,11 +5,6 @@ export const LEGACY_LISTING_DESTINATIONS: Record<number, string> = {
   178994: "/havens/fair-haven",
   184081: "/havens/aurora-haven",
   335403: "/havens/reflection-haven",
-  558675: "/havens/whidbey-estate/lighthouse",
-  558676: "/havens/whidbey-estate/lodge",
-  558677: "/havens/whidbey-estate/full-estate",
-  558678: "/havens/whidbey-estate/main-house",
-  571917: "/havens/whidbey-estate/guest-house",
   576478: "/havens/reflection-point",
 }
 

@@ -1,19 +1,10 @@
 import { BRAND_BOOKING_ENGINE_URL } from "@/lib/brand"
 import { propertySchema, reviewSchema, type Property, type Review } from "@/lib/schemas"
-import { getHighResolutionImageSet, getHighResolutionImageUrl } from "@/lib/images"
+import { getHighResolutionImageSet } from "@/lib/images"
 
 export const LOGO_URL = "/images/enchanted-havens-logo-small.webp"
 
 export const BRAND_HERO_URL = "/images/home-hero/pnw-sea-renity-ocean-bluff.webp"
-const COVE_CLUB_HERO_IMAGE = "/images/cove-club/cove-club-exterior-15.png"
-
-export const FULL_ESTATE_COVER_IMAGE = getHighResolutionImageUrl(
-  "https://bookingenginecdn.hostaway.com/listing/57690-558677-DhrTKC7z0PQmbFqnSaumXDswkVWooo-1GsK1CAC8tG4-6a3e39579eb04",
-)
-
-export const FULL_ESTATE_HERO_IMAGE = getHighResolutionImageUrl(
-  "https://bookingenginecdn.hostaway.com/listing/57690-558677-qi-uUdPJyqzEVkkXWdrTJ--c7P025-GExJArU7ykMzYw-6a3e395b8b12b",
-)
 
 type HomeHeroSlide = {
   name: string
@@ -104,44 +95,7 @@ const images = {
     "https://hostaway-platform.s3.us-west-2.amazonaws.com/listing/57690-576478-OVYf9ugimw8nexWXTzwl1OMKzcoX9YLC9VJXFzr--XvE-6a7937c6e5a6c",
     "https://hostaway-platform.s3.us-west-2.amazonaws.com/listing/57690-576478-6XhgAiMTpLPVy7saOSeGyav--msA9QbCzR37AusjuyRo-6a7937c61c526",
   ]),
-  lighthouse: getHighResolutionImageSet([
-    "https://bookingenginecdn.hostaway.com/listing/57690-558675-aXkSzxNwNG4EVJaMrk--YBI4azQHwnkhcUyptclGqDGo-6a2a40e6b30d2?width=2400&quality=82&format=webp&v=2",
-    "https://bookingenginecdn.hostaway.com/listing/57690-558675-O-V9--uDfVpg3ZiYXt4OlUOvErIcNa6e5PdEurNPMHi8-6a2a40f1a4c82?width=2400&quality=82&format=webp&v=2",
-    "https://bookingenginecdn.hostaway.com/listing/57690-558675-cegIjLR8W1QPw3czvE-qwNAjCvi-iedWoEzDjo--8WP0-6a2a486863c46?width=2400&quality=82&format=webp&v=2",
-    "https://bookingenginecdn.hostaway.com/listing/57690-558675-pP-2ytNTZDC9yjSoeByv0U4auLm10-dWqJQ68IpSqVI-6a2a40e7c2a66?width=2400&quality=82&format=webp&v=2",
-    "https://bookingenginecdn.hostaway.com/listing/57690-558675-eHDd-fkV-vfPtkaLwNl6PwOr92Dy6-rXEdMgePdYyPI-6a2a486aa6c42?width=2400&quality=82&format=webp&v=2",
-  ]),
-  lodge: getHighResolutionImageSet([
-    "https://bookingenginecdn.hostaway.com/listing/57690-558676-blZpHqLPWHDrr----9R7rhVaSSNgyWsROxz5IVwTHpFY-6a2a4866c84b9?width=2400&quality=82&format=webp&v=2",
-    "https://bookingenginecdn.hostaway.com/listing/57690-558676-QPeZmr21XMRTi4fsFbWmBu9MJ3V1FwTWTYHaNjDcaWY-6a2a4865d4e59?width=2400&quality=82&format=webp&v=2",
-    "https://bookingenginecdn.hostaway.com/listing/57690-558676-mmXMFvaj7yGBTzwlmzI6qXjVkmPkfdB3fKwVfBt79iE-6a2a4865061f1?width=2400&quality=82&format=webp&v=2",
-    "https://bookingenginecdn.hostaway.com/listing/57690-558676-Hh1-JuzGB2ZCGPV0wBoskqSWbMDqFryzXD8EAlr1Pow-6a2a4863e9241?width=2400&quality=82&format=webp&v=2",
-    "https://bookingenginecdn.hostaway.com/listing/57690-558676-fwkJhHUK6cPLEzq6fXVfuz0rEvRI1gRpOf--ja2ZIgtE-6a2a4f351be8b?width=2400&quality=82&format=webp&v=2",
-  ]),
-  estate: getHighResolutionImageSet([
-    "https://bookingenginecdn.hostaway.com/listing/57690-558677-lq2Z5BwVDHuGlCn93k9a1d-6scR7CVBQQBL--zt8R8Pc-6a2a485cad3cb?width=2400&quality=82&format=webp&v=2",
-    "https://bookingenginecdn.hostaway.com/listing/57690-558677-Dkb1BY6xPFScg5B89nychpWehppeKPPYjSCFIeEjUu0-6a2a4f3353da3?width=2400&quality=82&format=webp&v=2",
-    "https://bookingenginecdn.hostaway.com/listing/57690-558677-ThLwQ0owwNL7RhyF7ZzEoEpgjBkQibGrGP8Egvi--v5o-6a2a4859522d3?width=2400&quality=82&format=webp&v=2",
-    "https://bookingenginecdn.hostaway.com/listing/57690-558677-yaNb8fKD5hsHxFxG0afuIEoGbIsJYD6lFhmd5UjWasM-6a2a4f325f6ff?width=2400&quality=82&format=webp&v=2",
-    "https://bookingenginecdn.hostaway.com/listing/57690-558677---c4CG6RnC9C0BA6oU6zT6z2j3E6SxEyn7Xz5ntkKWpM-6a2a4855b2f49?width=2400&quality=82&format=webp&v=2",
-  ]),
-  mainHouse: getHighResolutionImageSet([
-    "https://bookingenginecdn.hostaway.com/listing/57690-558678-16h7xQ--2--ptEkuQxm40tgWt5akuXzBOSX16RTddvmt8-6a378515002b7?width=2400&quality=82&format=webp&v=2",
-    "https://bookingenginecdn.hostaway.com/listing/57690-558678-3GG8UQ4--CFmBtJmvRPeRIqbCr0spQXU7wdsle--bcrqo-6a3785145409a?width=2400&quality=82&format=webp&v=2",
-    "https://bookingenginecdn.hostaway.com/listing/57690-558678-isat9lzf72iA2ODBYxyn43ofCkP8NYWbE9iLPsrA16c-6a378513a514a?width=2400&quality=82&format=webp&v=2",
-    "https://bookingenginecdn.hostaway.com/listing/57690-558678-T7Y58nKO5dknxMjBlSMBYzqIIlsq--uSwLfq9Tl6mv0A-6a378512e3858?width=2400&quality=82&format=webp&v=2",
-    "https://bookingenginecdn.hostaway.com/listing/57690-558678-S3w6E6O3WVEoHm0Rh4U6X309CXyI0OfWiNBqpVje3B4-6a2a4f1ced802?width=2400&quality=82&format=webp&v=2",
-  ]),
-  guestHouse: getHighResolutionImageSet([
-    "https://hostaway-platform.s3.us-west-2.amazonaws.com/listing/57690-571917-5Wi6nd6fLyMEkcuguzQl3ZVUNHTkEThp4H3njoJHN8o-6a5d9670537c6",
-    "https://hostaway-platform.s3.us-west-2.amazonaws.com/listing/57690-571917-Yqw8TtDIF34-v1RlLmRyagWOzsYNU-XpUaelw9p7HtQ-6a5d887e7046b",
-    "https://hostaway-platform.s3.us-west-2.amazonaws.com/listing/57690-571917-POK-dKkrf25-TKZiwaxtmxh2x7fWYWcOfbCDX-GpuCo-6a5d8fbd74771",
-    "https://hostaway-platform.s3.us-west-2.amazonaws.com/listing/57690-571917-HqjSqf9XEjfwfH5Umu2dWjRmCukN5--kJ4PcMJPJjj3c-6a5d81b274fa5",
-    "https://hostaway-platform.s3.us-west-2.amazonaws.com/listing/57690-571917-1H-x9V--OwpWGeYSPyzaBHB--bIL-oYZZJWB5K-7ohrQU-6a5d887d38a1e",
-  ]),
 }
-
-const fullEstateImages = [FULL_ESTATE_COVER_IMAGE, FULL_ESTATE_HERO_IMAGE, ...images.estate]
 
 function variant(
   id: number,
@@ -294,29 +248,6 @@ export const fallbackProperties: Property[] = propertySchema.array().parse([
     seoDescription: "A three-bedroom Lake Sutherland vacation rental near Olympic National Park with a private dock, kayaks, paddleboards, and waterfront fire pit.",
     variants: [variant(576478, "reflection-point", "Reflection Point: Lake House & Private Dock", "Reflection Point", "A private Lake Sutherland home with three king bedrooms, a dock, kayaks, paddleboards, and a waterfront fire pit.", "Lake Sutherland", "Port Angeles", 6, 3, 2, images.reflectionPoint, ["Private dock", "Waterfront", "Lake access", "Kayaks", "Paddleboards", "Fire pit", "Fireplace", "Pet-friendly"], 5, 0)],
   },
-  {
-    slug: "whidbey-estate",
-    displayName: "The Cove Club",
-    eyebrow: "Whidbey Island",
-    location: "Freeland",
-    narrative: "Twenty-three gated waterfront acres, composed as a private estate for intimate stays, milestone gatherings, and full-property escapes.",
-    longNarrative: "The Cove Club is Enchanted Havens at its most expansive: a private waterfront world with multiple residences and the freedom to shape the stay around your group. Reserve the Lighthouse for an intimate retreat, the Guest House for a quiet family stay, the Main House for a gathering by the water, the Lodge for a grand occasion, or the entire estate for complete privacy.",
-    heroImage: COVE_CLUB_HERO_IMAGE,
-    gallery: [COVE_CLUB_HERO_IMAGE, ...fullEstateImages, ...images.mainHouse, ...images.lodge, ...images.guestHouse, ...images.lighthouse],
-    experienceTags: ["Waterfront estate", "23 private acres", "Multiple residences", "Events", "Large groups", "Gated"],
-    featuredOrder: 8,
-    featured: true,
-    seoTitle: "The Cove Club | Private Waterfront Estate",
-    seoDescription: "A gated 23-acre waterfront estate in Freeland on Whidbey Island with multiple residences and options for intimate or full-property stays.",
-    estate: true,
-    variants: [
-      variant(558675, "lighthouse", "The Lighthouse at The Cove Club", "The Lighthouse", "An intimate one-bedroom stay within the private waterfront estate.", "Whidbey Island", "Whidbey Island", 3, 1, 1, images.lighthouse, ["Waterfront estate", "Kitchen", "Air conditioning", "Pet-friendly"], null, 0),
-      variant(571917, "guest-house", "The Guest House at The Cove Club", "The Guest House", "A light-filled three-bedroom retreat with a private deck and access to the estate's beach, dock, tennis court, and gardens.", "Whidbey Island", "Freeland", 5, 3, 2, images.guestHouse, ["Private estate", "Private beach access", "Deep-water dock", "Tennis court", "Putting green", "Kitchen", "Washing machine", "Pet-friendly"], null, 0),
-      variant(558676, "lodge", "The Lodge at The Cove Club", "The Lodge", "The estate's grand gathering residence, designed for large groups.", "Whidbey Island", "Whidbey Island", 16, 11, 12, images.lodge, ["Waterfront estate", "Large groups", "Kitchen", "Air conditioning", "Pet-friendly"], null, 0),
-      variant(558677, "full-estate", "23 Acres Gated Waterfront Estate on Whidbey Island", "The Full Estate", "Exclusive use of the gated waterfront estate and its residences.", "Whidbey Island", "Whidbey Island", 42, 19, 19, fullEstateImages, ["23 private acres", "Gated", "Waterfront", "Multiple residences", "Large groups", "Pet-friendly"], null, 0),
-      variant(558678, "main-house", "Waterfront Main House on 23-Acre Estate", "The Main House", "A spacious waterfront home at the heart of the estate.", "Whidbey Island", "Whidbey Island", 12, 4, 5, images.mainHouse, ["Waterfront", "Private estate", "Kitchen", "Air conditioning", "Pet-friendly"], null, 0),
-    ],
-  },
 ])
 
 export function getEditorialVariantDescription(listingId: number) {
@@ -333,20 +264,9 @@ const editorialHeroIndexes: Record<number, number> = {
   184081: 0,
   335403: 0,
   576478: 0,
-  558675: 0,
-  558676: 2,
-  558678: 0,
-  571917: 0,
-}
-
-const editorialHeroOverrides: Record<number, string> = {
-  558676: "https://bookingenginecdn.hostaway.com/listing/57690-558676-3MeQ0x357poeQsFcEcOSlWypqdnRdS82TYU2g--LoV8Q-6a38d6a602ab6?width=3840&quality=92&format=webp&v=2",
-  558677: FULL_ESTATE_HERO_IMAGE,
 }
 
 export function getEditorialVariantHero(listingId: number) {
-  if (editorialHeroOverrides[listingId]) return editorialHeroOverrides[listingId]
-
   const variantItem = fallbackProperties
     .flatMap((property) => property.variants)
     .find((variant) => variant.id === listingId)
@@ -384,7 +304,7 @@ export const featuredReviews: Review[] = reviewSchema.array().parse([
 export const experienceTiles = [
   { title: "At the water's edge", text: "Private docks, beaches, kayaks, and long afternoons on clear PNW water.", image: images.blue[0], href: "/experiences/waterfront-stays" },
   { title: "Rituals of restoration", text: "Hot tubs, barrel saunas, firelight, and quiet spaces designed for a deeper exhale.", image: images.fair[0], href: "/experiences/wellness-hot-tub-sauna" },
-  { title: "Gather beautifully", text: "Generous homes and a private estate for reunions, celebrations, and time together.", image: COVE_CLUB_HERO_IMAGE, href: "/groups/family-reunion-house-washington" },
+  { title: "Gather beautifully", text: "Generous homes for reunions, celebrations, and time together.", image: images.sea[0], href: "/groups/family-reunion-house-washington" },
 ]
 
 export function getFallbackProperty(slug: string) {

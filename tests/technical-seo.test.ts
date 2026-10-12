@@ -131,7 +131,6 @@ describe("technical SEO", () => {
       "/havens/aurora-haven",
       "/havens/reflection-haven",
       "/havens/reflection-point",
-      "/havens/whidbey-estate",
       "/experiences",
       "/story",
       "/contact",
@@ -146,7 +145,7 @@ describe("technical SEO", () => {
   it("keeps primary navigation brand-first while leaving SEO hubs off the menu", () => {
     const headerSource = readFileSync("components/site-header.tsx", "utf8")
 
-    for (const href of ["/havens", "/havens/whidbey-estate", "/experiences", "/story", "/contact"]) {
+    for (const href of ["/havens", "/experiences", "/story", "/contact"]) {
       expect(headerSource).toContain(`"${href}"`)
     }
     for (const tuple of [
@@ -178,7 +177,7 @@ describe("technical SEO", () => {
 
     expect(source).toContain('imageFor("blue-haven"')
     expect(source).toContain('imageFor("emerald-haven"')
-    expect(source).toContain('imageFor("whidbey-estate"')
+    expect(source).toContain('imageFor("sea-renity-haven"')
     expect(source).toContain('imageFor("reflection-haven"')
     expect(source).toContain("properties: catalog")
     expect(source).not.toMatch(/Experience-Matched Havens|Homes this path returns to again and again\./)

@@ -47,7 +47,7 @@ function staticPageImages(path: string, catalog: Property[]) {
   if (path === "/havens") return sitemapImages([HAVENS_HERO_IMAGE, ...catalog.map((property) => property.heroImage)], 10)
   if (path === "/experiences") return sitemapImages([propertyHero(catalog, "sea-renity-haven"), ...experienceTiles.map((tile) => tile.image)], 6)
   if (path === "/story") return sitemapImages([propertyHero(catalog, "aurora-haven"), propertyHero(catalog, "emerald-haven", 1), BRAND_HERO_URL], 5)
-  if (path === "/contact") return sitemapImages(["/images/sea-renity/sea-renity-living-view.webp", propertyHero(catalog, "whidbey-estate")], 4)
+  if (path === "/contact") return sitemapImages(["/images/sea-renity/sea-renity-living-view.webp"], 4)
   return sitemapImages([BRAND_HERO_URL], 1)
 }
 

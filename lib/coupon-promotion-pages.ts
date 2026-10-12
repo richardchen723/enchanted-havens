@@ -84,7 +84,7 @@ export function buildCouponPromotionPageGroups(catalog: Property[]): CouponPromo
     {
       id: "properties",
       label: "Property pages",
-      description: "Individual haven and Cove Club residence pages.",
+      description: "Individual haven pages.",
       pages: propertyPages,
     },
     ...guideGroups,

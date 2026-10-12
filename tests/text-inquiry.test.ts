@@ -78,10 +78,10 @@ describe("text inquiries", () => {
   it("splits guest names and maps every public Hostaway listing", () => {
     expect(splitGuestName("Sarah Chen")).toEqual({ firstName: "Sarah", lastName: "Chen" })
     expect(splitGuestName("Prince")).toEqual({ firstName: "Prince", lastName: "Guest" })
-    expect(textInquiryListings).toHaveLength(12)
+    expect(textInquiryListings).toHaveLength(7)
     expect(textInquiryListings.map((listing) => listing.listingId).sort()).toEqual([...allowedListingIds].sort())
-    expect(getTextInquiryListing("full-estate")?.listingId).toBe(558677)
-    expect(inferTextInquiryListing("/havens/whidbey-estate/main-house")?.listingSlug).toBe("main-house")
+    expect(getTextInquiryListing("full-estate")).toBeUndefined()
+    expect(inferTextInquiryListing("/havens/whidbey-estate/main-house")).toBeUndefined()
     expect(inferTextInquiryListing("/havens/emerald-haven")?.listingSlug).toBe("emerald-haven")
   })
 })

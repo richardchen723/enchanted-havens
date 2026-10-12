@@ -14,7 +14,7 @@ export async function GET(request: Request) {
     if (!getCouponPromotionPagePaths(catalog).has(requestedPath)) {
       return NextResponse.json({ promotion: null }, { headers: { "Cache-Control": "private, no-store" } })
     }
-    const promotion = await getAdvertisedCouponForPage(requestedPath)
+    const promotion = await getAdvertisedCouponForPage(requestedPath, catalog.map((property) => property.slug))
     return NextResponse.json({ promotion }, { headers: { "Cache-Control": "private, no-store" } })
   } catch (error) {
     console.error("Unable to load coupon promotion", error)

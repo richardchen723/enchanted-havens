@@ -16,9 +16,9 @@ const CONTACT_HERO_IMAGE = "/images/sea-renity/sea-renity-living-view.webp"
 
 export const metadata: Metadata = shareMetadata({
   title: "Plan Your Stay",
-  description: "Let Enchanted Havens help you choose a private Pacific Northwest vacation rental, compare waterfront homes, or plan a special Whidbey Island estate stay.",
+  description: "Let Enchanted Havens help you choose a private Pacific Northwest vacation rental, compare waterfront homes, or plan a special Whidbey Island stay.",
   path: "/contact",
-  keywords: ["book Pacific Northwest vacation rental direct", "Enchanted Havens contact", "plan Whidbey Island estate stay", "PNW retreat rental inquiry"],
+  keywords: ["book Pacific Northwest vacation rental direct", "Enchanted Havens contact", "plan Whidbey Island stay", "PNW retreat rental inquiry"],
   image: CONTACT_HERO_IMAGE,
   imageAlt: "A sunset ocean view from the living room at Sea-Renity Haven",
   openGraphTitle: "Plan Your Stay | Enchanted Havens",
@@ -34,7 +34,9 @@ export default async function ContactPage({ searchParams }: { searchParams: Prom
   const checkOut = selection.checkOut
   const guests = typeof query.guests === "string" ? String(selection.guests) : ""
   const requestedTripType = typeof query.tripType === "string" ? query.tripType : ""
-  const initialTripType = requestedTripType || (property?.slug === "whidbey-estate" ? "The Cove Club" : property ? "Help choosing a home" : "")
+  const initialTripType = ["Romantic escape", "Family gathering", "Celebration", "Help choosing a home"].includes(requestedTripType)
+    ? requestedTripType
+    : property ? "Help choosing a home" : ""
   const selectedName = variant?.shortName || property?.displayName || ""
   const selectedPath = property
     ? property.estate && variant
@@ -83,7 +85,7 @@ export default async function ContactPage({ searchParams }: { searchParams: Prom
         <PageHero
           eyebrow="Plan Your Stay"
           title="Tell us what you want to remember."
-          body="Choosing between a lake, the ocean, and a private estate is a lovely problem. Share the shape of your trip and we will guide you toward the right haven."
+          body="Choosing between a lake, the ocean, and a forest retreat is a lovely problem. Share the shape of your trip and we will guide you toward the right haven."
           image={CONTACT_HERO_IMAGE}
         />
       )}

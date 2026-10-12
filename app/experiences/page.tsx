@@ -28,7 +28,7 @@ export const metadata: Metadata = shareMetadata({
 export default async function ExperiencesPage() {
   const catalog = await getCatalog()
   const propertyBySlug = new Map(catalog.map((property) => [property.slug, property]))
-  const imageFor = (slug: string, index = 0, fallback = "/images/cove-club/cove-club-exterior-15.png") => {
+  const imageFor = (slug: string, index = 0, fallback = "/images/home-hero/heros-zip/hero-08.webp") => {
     const property = propertyBySlug.get(slug)
     return property?.gallery[index] || property?.heroImage || fallback
   }
@@ -36,13 +36,13 @@ export default async function ExperiencesPage() {
   const rituals = [
     ["Water", "Docks, beaches, kayaks, cold plunges, and horizon-facing decks."],
     ["Stillness", "Hot tubs, saunas, firelight, deep quiet, and slow mornings."],
-    ["Together", "Long tables, generous homes, estate privacy, and room to gather."],
+    ["Together", "Long tables, generous homes, privacy, and room to gather."],
     ["Wildness", "Olympic trails, island coastlines, forest edges, and mountain air."],
   ] as const
   const experiences = [
     { title: "Water, entirely yours", body: "Private docks, lake beaches, ocean frontage, kayaks, and paddle boards turn the shoreline into part of the home.", image: imageFor("blue-haven", 0), link: "/experiences/waterfront-stays" },
     { title: "The restorative outdoors", body: "Hot tubs under the trees, a barrel sauna by the beach, firepits, and decks designed for slow evenings outside.", image: imageFor("emerald-haven", 1), link: "/experiences/wellness-hot-tub-sauna" },
-    { title: "Gatherings with a horizon", body: "Homes for family reunions, milestone weekends, and private estate stays where everyone can arrive and truly settle in.", image: imageFor("whidbey-estate"), link: "/experiences/private-estate-gatherings" },
+    { title: "Gatherings with a horizon", body: "Homes for family reunions and milestone weekends where everyone can arrive and truly settle in.", image: imageFor("sea-renity-haven"), link: "/groups/family-reunion-house-washington" },
     { title: "At the edge of the wild", body: "Olympic National Park, island coastlines, forest paths, mountain views, and wildlife are never far from the door.", image: imageFor("reflection-haven"), link: "/experiences/olympic-national-park-basecamp" },
   ]
   const heroImage = propertyBySlug.get("sea-renity-haven")?.gallery[0] || catalog[0].heroImage

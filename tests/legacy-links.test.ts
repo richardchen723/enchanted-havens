@@ -4,7 +4,7 @@ import { canonicalLegacyQuery, legacyListingDestination } from "@/lib/legacy-lin
 describe("legacy booking link cleanup", () => {
   it("maps old listing paths to the canonical Haven routes", () => {
     expect(legacyListingDestination("/listings/146889")).toBe("/havens/blue-haven")
-    expect(legacyListingDestination("/listing/558677/")).toBe("/havens/whidbey-estate/full-estate")
+    expect(legacyListingDestination("/listing/558677/")).toBeNull()
     expect(legacyListingDestination("/listings/576478")).toBe("/havens/reflection-point")
   })
 

@@ -27,10 +27,7 @@ vi.mock("@/lib/hostaway", () => ({
 import {
   fallbackProperties,
   featuredReviews,
-  FULL_ESTATE_COVER_IMAGE,
-  FULL_ESTATE_HERO_IMAGE,
   getEditorialVariantDescription,
-  getEditorialVariantHero,
 } from "@/lib/editorial"
 import { bookingIsLiveFor, getCatalog, getFeaturedReviews, mergeCatalogVariants } from "@/lib/catalog"
 
@@ -46,18 +43,15 @@ afterEach(() => {
 })
 
 describe("curated inventory", () => {
-  it("publishes seven standalone homes plus one grouped estate", () => {
-    expect(fallbackProperties).toHaveLength(8)
+  it("publishes seven standalone homes", () => {
+    expect(fallbackProperties).toHaveLength(7)
     expect(fallbackProperties.find((property) => property.slug === "reflection-point")?.variants[0]).toMatchObject({
       id: 576478,
       guests: 6,
       bedrooms: 3,
       bathrooms: 2,
     })
-    const estate = fallbackProperties.find((property) => property.slug === "whidbey-estate")
-    expect(estate?.variants.map((variant) => variant.slug).sort()).toEqual(["full-estate", "guest-house", "lighthouse", "lodge", "main-house"])
-    expect(estate?.variants.find((variant) => variant.slug === "guest-house")).toMatchObject({ id: 571917, guests: 5, bedrooms: 3, bathrooms: 2 })
-    expect(estate?.variants.find((variant) => variant.slug === "full-estate")?.guests).toBe(42)
+    expect(fallbackProperties.every((property) => !property.estate)).toBe(true)
   })
 
   it("keeps editorial slugs and images while applying live facts", () => {
@@ -72,21 +66,9 @@ describe("curated inventory", () => {
   })
 
   it("keeps concise editorial copy available for collection cards", () => {
-    expect(getEditorialVariantDescription(558677)).toBe(
-      "Exclusive use of the gated waterfront estate and its residences.",
+    expect(getEditorialVariantDescription(146889)).toBe(
+      "A photogenic lakefront cabin with private beach access and panoramic Olympic Peninsula views.",
     )
-  })
-
-  it("uses distinct high-resolution cover and hero photography for the full estate", () => {
-    const fullEstate = fallbackProperties
-      .find((property) => property.slug === "whidbey-estate")
-      ?.variants.find((variant) => variant.id === 558677)
-
-    expect(fullEstate?.images[0]).toBe(FULL_ESTATE_COVER_IMAGE)
-    expect(getEditorialVariantHero(558677)).toBe(FULL_ESTATE_HERO_IMAGE)
-    expect(FULL_ESTATE_COVER_IMAGE).not.toBe(FULL_ESTATE_HERO_IMAGE)
-    expect(FULL_ESTATE_COVER_IMAGE).toContain("width=3840")
-    expect(FULL_ESTATE_HERO_IMAGE).toContain("width=3840")
   })
 
   it("keeps sandbox checkout private unless it is explicitly enabled", () => {
@@ -180,5 +162,31 @@ describe("build-time catalog reads", () => {
 
     expect(mocks.getLatestCatalogSnapshot).toHaveBeenCalledTimes(1)
     expect(mocks.getHostawayListing).not.toHaveBeenCalled()
+  })
+})
+
+describe("retired inventory", () => {
+  it("does not resurrect a removed property from a saved catalog snapshot", async () => {
+    process.env.NEXT_PHASE = "phase-production-build"
+    const retired = {
+      ...fallbackProperties[0],
+      slug: "whidbey-estate",
+      displayName: "The Cove Club",
+      variants: [{ ...fallbackProperties[0].variants[0], id: 558677, slug: "full-estate" }],
+    }
+    mocks.getLatestCatalogSnapshot.mockResolvedValueOnce([...fallbackProperties, retired])
+
+    await expect(getCatalog()).resolves.toEqual(fallbackProperties)
+  })
+
+  it("never enables checkout for retired listings, including sandbox mode", () => {
+    process.env.BOOKING_WRITE_MODE = "sandbox"
+    process.env.ALLOW_SANDBOX_CHECKOUT = "true"
+    process.env.STRIPE_SECRET_KEY = "sk_test_configured"
+    process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY = "pk_test_configured"
+
+    for (const id of [558675, 558676, 558677, 558678, 571917]) {
+      expect(bookingIsLiveFor(id)).toBe(false)
+    }
   })
 })
