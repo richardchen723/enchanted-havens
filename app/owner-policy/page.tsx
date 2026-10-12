@@ -14,7 +14,6 @@ export default function OwnerPolicyPage() {
       eyebrow="For Property Owners"
       title="Property Owner Policy"
       introduction="Our framework for working with property owners, caring for guest commitments, and arranging a clear handover when management ends."
-      lastUpdated="October 12, 2026"
       contactEmail={BRAND_CONTACT_EMAIL}
       sections={[
         {
