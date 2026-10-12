@@ -1,12 +1,12 @@
+import type { Metadata } from "next"
 import { LegalPage } from "@/components/legal-page"
 import { BRAND_CONTACT_EMAIL } from "@/lib/brand"
-import { shareMetadata } from "@/lib/seo-metadata"
 
-export const metadata = shareMetadata({
+export const metadata: Metadata = {
   title: "Property Owner Policy",
   description: "Enchanted Havens property owner policy covering management responsibilities, booking channels, termination, future reservations, and final settlement.",
-  path: "/owner-policy",
-})
+  robots: { index: false, follow: false },
+}
 
 export default function OwnerPolicyPage() {
   return (
