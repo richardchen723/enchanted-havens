@@ -3,7 +3,7 @@
 import { format, parseISO } from "date-fns"
 import Link from "next/link"
 import { useEffect, useMemo, useState } from "react"
-import { ArrowRight, LoaderCircle, RotateCcw, SlidersHorizontal } from "lucide-react"
+import { LoaderCircle, RotateCcw, SlidersHorizontal } from "lucide-react"
 import { GuestCountControl } from "@/components/guest-count-control"
 import { PropertyCard } from "@/components/property-card"
 import { trackConversionEvent } from "@/lib/analytics"
@@ -13,12 +13,11 @@ type SearchQuote = { total: number; currency: string; nights: number }
 type SearchResult = { propertySlug: string; availableListingIds: number[]; variants?: Array<{ listingId: number; variantSlug: string; quote: SearchQuote }> }
 type CollectionEntry = { key: string; property: Property; variant?: PropertyVariant; quote?: SearchQuote }
 
-const experienceOptions = ["Waterfront", "Lakefront", "Oceanfront", "Hot tub", "Sauna", "Dock", "Pet-friendly", "Private estate"] as const
+const experienceOptions = ["Waterfront", "Lakefront", "Oceanfront", "Hot tub", "Sauna", "Dock", "Pet-friendly"] as const
 
 function normalizedExperience(value?: string) {
   if (value === "waterfront") return "Waterfront"
   if (value === "wellness") return "Hot tub"
-  if (value === "gatherings") return "Private estate"
   return experienceOptions.find((option) => option.toLowerCase() === value?.toLowerCase()) || ""
 }
 
@@ -28,7 +27,6 @@ function experienceMatches(property: Property, experience: string) {
   if (experience === "Waterfront") return /(water|lake|ocean|beach|dock)/.test(text)
   if (experience === "Lakefront") return /(lakefront|lakeside|lake view|lake access)/.test(text)
   if (experience === "Oceanfront") return /(ocean|beachfront|sea view|coast)/.test(text)
-  if (experience === "Private estate") return Boolean(property.estate) || text.includes("private estate")
   return text.includes(experience.toLowerCase())
 }
 
@@ -147,9 +145,8 @@ export function CollectionBrowser({ properties, initialGuests = 1, initialCheckI
       {!availabilityPending && filtered.length === 0 && (
         <div className="border border-black/10 bg-[#f3eee3] p-8 text-center sm:p-12">
           <h2 className="font-display text-4xl text-[#173c33]">Let us shape the right stay.</h2>
-          <p className="mx-auto mt-3 max-w-2xl text-sm leading-7 text-black/58">{guests >= 13 ? "The Cove Club can welcome groups of up to 42 across a private Whidbey Island estate. Large gatherings are planned personally so the right residences, dates, and spaces stay together." : "These exact preferences are not available together. Explore flexible dates, clear one preference, or ask our stay team to recommend the closest fit."}</p>
+          <p className="mx-auto mt-3 max-w-2xl text-sm leading-7 text-black/58">These exact preferences are not available together. Explore flexible dates, clear one preference, or ask our stay team to recommend the closest fit.</p>
           <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
-            {guests >= 13 ? <Link href={`/contact?tripType=The+Cove+Club&guests=${guests}`} className="button-primary">Plan a Cove Club Stay <ArrowRight className="size-4" /></Link> : null}
             {hasDateSearch ? <Link href="/havens#availability" className="button-outline text-[#173c33]">Explore flexible dates</Link> : null}
             <button type="button" onClick={() => { setGuests(1); setExperience("") }} className="button-outline text-[#173c33]">View every haven</button>
             <Link href="/contact" className="button-outline text-[#173c33]">Ask the stay team</Link>

@@ -228,7 +228,7 @@ function ProofCards({ properties }: { properties: Property[] }) {
     {
       icon: InstagramBrandIcon,
       title: "See the setting",
-      text: "The water, forest, estate grounds, and stay details are visible before you inquire.",
+      text: "The water, forest, and stay details are visible before you inquire.",
       href: BRAND_INSTAGRAM_URL,
       cta: "View @enchanted.havens",
     },

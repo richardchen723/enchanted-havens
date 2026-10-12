@@ -31,11 +31,10 @@ describe("Havens collection SEO", () => {
     expect(source).not.toContain("collectionGuides.map")
     expect(source).not.toContain("collectionInternalLinks.map")
     expect(source).not.toMatch(/Questions Guests Search|organic-search hub/)
-    expect(source).toContain('property.slug !== "whidbey-estate"')
   })
 
   it("includes Reflection Point in inventory while keeping The Cove Club out of the Havens collection", () => {
-    const collection = fallbackProperties.filter((property) => property.slug !== "whidbey-estate")
+    const collection = fallbackProperties
 
     expect(collection.map((property) => property.slug)).toContain("reflection-point")
     expect(collection.map((property) => property.slug)).not.toContain("whidbey-estate")
@@ -57,7 +56,6 @@ describe("Havens collection SEO", () => {
       "Port Angeles vacation rentals",
       "Hood Canal beachfront rental",
       "Whidbey Island beach house rental",
-      "Whidbey Island private estate rental",
       "family reunion house Washington",
       "PNW retreat rental",
     ]))
@@ -84,17 +82,17 @@ describe("Havens collection SEO", () => {
     }
   })
 
-  it("uses the combined full-estate capacity for Cove Club collection copy", () => {
-    const estate = fallbackProperties.find((property) => property.slug === "whidbey-estate")!
-    const summary = getCollectionPropertySummary(estate)
+  it("uses the largest remaining home for collection capacity", () => {
+    const property = fallbackProperties.find((property) => property.slug === "sea-renity-haven")!
+    const summary = getCollectionPropertySummary(property)
     const stats = getHavensCollectionStats(fallbackProperties)
 
-    expect(summary.capacity).toBe("Up to 42 guests")
-    expect(stats.some((stat) => stat.value === "Up to 42 guests")).toBe(true)
+    expect(summary.capacity).toBe("Up to 12 guests")
+    expect(stats.some((stat) => stat.value === "Up to 12 guests")).toBe(true)
   })
 
   it("routes collection proof points into useful, measurable discovery journeys", () => {
-    const collection = fallbackProperties.filter((property) => property.slug !== "whidbey-estate")
+    const collection = fallbackProperties
     const stats = getHavensCollectionStats(collection)
 
     expect(stats.map(({ href, trackingKey }) => ({ href, trackingKey }))).toEqual([
@@ -153,7 +151,6 @@ describe("Havens collection SEO", () => {
     expect(`${primaryImage?.caption}`).toContain("Pacific Northwest")
     expect(collectionPage?.significantLink).toEqual(expect.arrayContaining([
       "https://enchantedhavens.com/havens/blue-haven",
-      "https://enchantedhavens.com/havens/whidbey-estate",
       "https://enchantedhavens.com/stays/pacific-northwest-vacation-rentals",
     ]))
     expect(offerCatalog?.numberOfItems).toBe(fallbackProperties.length)

@@ -12,15 +12,13 @@ import { LOGO_DATA_URL } from "@/lib/logo-data"
 
 const links = [
   ["The Havens", "/havens"],
-  ["The Cove Club", "/havens/whidbey-estate"],
   ["Experiences", "/experiences"],
   ["Our Story", "/story"],
   ["Contact", "/contact"],
 ] as const
 
 function isActivePath(pathname: string, href: string) {
-  if (href === "/havens") return pathname === "/havens" || (pathname.startsWith("/havens/") && !pathname.startsWith("/havens/whidbey-estate"))
-  if (href === "/havens/whidbey-estate") return pathname.startsWith("/havens/whidbey-estate")
+  if (href === "/havens") return pathname === "/havens" || pathname.startsWith("/havens/")
   if (href === "/experiences") return pathname.startsWith("/experiences")
   return pathname === href
 }

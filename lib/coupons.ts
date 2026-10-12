@@ -476,7 +476,7 @@ export async function saveCouponPagePromotions(input: { couponId: string; pagePa
   })
 }
 
-export async function getAdvertisedCouponForPage(pagePath: string): Promise<PublicCouponPromotion | null> {
+export async function getAdvertisedCouponForPage(pagePath: string, activePropertySlugs: string[]): Promise<PublicCouponPromotion | null> {
   if (!isDatabaseConfigured()) return null
   await ensureSchema()
   const rows = await db()<PropertyCouponRow[]>`
@@ -509,6 +509,9 @@ export async function getAdvertisedCouponForPage(pagePath: string): Promise<Publ
   if (!rows[0]) return null
 
   const coupon = couponDto(rows[0])
+  coupon.propertySlugs = coupon.propertySlugs.filter((slug) => activePropertySlugs.includes(slug))
+  if (!coupon.propertySlugs.length) return null
+
   const promotionQuery = new URLSearchParams({ coupon: coupon.code })
   if (coupon.propertySlugs.length > 1) {
     promotionQuery.set("matches", coupon.propertySlugs.join(","))

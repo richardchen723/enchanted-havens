@@ -9,7 +9,6 @@ import { LOGO_URL } from "@/lib/editorial"
 
 const exploreLinks = [
   ["The Havens", "/havens"],
-  ["The Cove Club", "/havens/whidbey-estate"],
   ["Experiences", "/experiences"],
   ["Our Story", "/story"],
   ["Contact", "/contact"],

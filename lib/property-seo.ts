@@ -107,9 +107,8 @@ const propertyContent: Record<string, PropertySeoContent> = {
     relatedLinks: [
       { label: "Washington Coast vacation rentals", href: "/destinations/washington-coast-vacation-rentals", text: "Explore saltwater stays with horizon views and coastal atmosphere." },
       { label: "Washington beach house rentals", href: "/stays/washington-beach-house-rentals", text: "Compare Whidbey oceanfront, Hood Canal beachfront, and private shoreline stays." },
-      { label: "Whidbey Island vacation rentals", href: "/destinations/whidbey-island-vacation-rentals", text: "Compare Sea-Renity with The Cove Club and other Whidbey Island stay paths." },
+      { label: "Whidbey Island vacation rentals", href: "/destinations/whidbey-island-vacation-rentals", text: "Explore Sea-Renity and Whidbey Island stay paths." },
       { label: "Direct book vacation rentals", href: "/stays/direct-book-vacation-rentals-washington", text: "Book Sea-Renity directly with date-based pricing and stay-team support." },
-      { label: "Whidbey Island private estate rentals", href: "/destinations/whidbey-island-private-estate-rentals", text: "Compare Whidbey Island waterfront homes and estate stays." },
       { label: "Vacation rentals near Seattle", href: "/stays/washington-vacation-rentals-near-seattle", text: "Compare Whidbey and Hood Canal weekend getaways within reach of Seattle." },
       { label: "Washington wedding lodging", href: "/groups/washington-wedding-lodging", text: "Plan permit-aware wedding-weekend lodging with Whidbey Island waterfront atmosphere." },
       { label: "Washington group vacation rentals", href: "/groups/washington-group-vacation-rentals", text: "Compare larger homes and waterfront gathering stays across the collection." },
@@ -277,37 +276,6 @@ const propertyContent: Record<string, PropertySeoContent> = {
       { label: "Washington lake house rentals", href: "/stays/washington-lake-house-rentals", text: "Compare waterfront Washington stays with docks, paddling, and mountain views." },
       { label: "Private dock vacation rentals", href: "/amenities/washington-vacation-rentals-with-private-dock", text: "Find Washington stays where private dock access shapes the day." },
       { label: "Direct book vacation rentals", href: "/stays/direct-book-vacation-rentals-washington", text: "Book Reflection Point directly with date-based pricing and stay-team support." },
-    ],
-  },
-  "whidbey-estate": {
-    keywords: ["Whidbey Island private estate rental", "Whidbey Island beach house rental", "private estate rental Washington", "luxury vacation rental near Seattle", "family reunion house Washington"],
-    localSections: [
-      {
-        heading: "Freeland on Whidbey Island",
-        body: "The Cove Club places guests on private Whidbey Island waterfront acreage in Freeland, with island beaches, farms, ferries, and Puget Sound routes within reach.",
-      },
-      {
-        heading: "Estate scale with private-home rules",
-        body: "The property can support intimate residence stays or full-estate privacy, but gathering and event-style uses require advance approval and clear rule alignment.",
-      },
-    ],
-    faq: [
-      { question: "Can I rent the full Cove Club estate?", answer: "Yes, when available. The full-estate option is designed for guests who want the broadest access and privacy across the property." },
-      { question: "Where is The Cove Club located?", answer: "The Cove Club is in Freeland on Whidbey Island." },
-      { question: "Can The Cove Club host events?", answer: "Event-style use must be approved before booking and must follow property rules, parking limits, quiet hours, vendor requirements, and local permits." },
-    ],
-    relatedLinks: [
-      { label: "Whidbey Island vacation rentals", href: "/destinations/whidbey-island-vacation-rentals", text: "Compare The Cove Club with Sea-Renity and broader Whidbey Island stay paths." },
-      { label: "Whidbey Island private estate rentals", href: "/destinations/whidbey-island-private-estate-rentals", text: "Compare Whidbey estate and waterfront stay options." },
-      { label: "Washington beach house rentals", href: "/stays/washington-beach-house-rentals", text: "Compare The Cove Club with Hood Canal beachfront and Whidbey oceanfront stays." },
-      { label: "Direct book vacation rentals", href: "/stays/direct-book-vacation-rentals-washington", text: "Book The Cove Club directly with date-based pricing and stay-team support." },
-      { label: "Private estate rentals in Washington", href: "/groups/private-estate-rental-washington", text: "Plan full-property privacy with permit-safe event language." },
-      { label: "Vacation rentals near Seattle", href: "/stays/washington-vacation-rentals-near-seattle", text: "Compare Whidbey Island estate and waterfront weekends within reach of Seattle." },
-      { label: "Washington wedding lodging", href: "/groups/washington-wedding-lodging", text: "Use The Cove Club as the private-estate anchor for permit-aware wedding-weekend lodging." },
-      { label: "Washington group vacation rentals", href: "/groups/washington-group-vacation-rentals", text: "Use The Cove Club as the large-group and full-estate anchor in the collection." },
-      { label: "Private estate gatherings", href: "/experiences/private-estate-gatherings", text: "Explore milestone weekends, family gatherings, and permit-aware estate planning paths." },
-      { label: "Company retreat rentals", href: "/groups/company-retreat-rental-pnw", text: "Use The Cove Club as the anchor for near-Seattle leadership and company retreat searches." },
-      { label: "Luxury vacation rentals near Seattle", href: "/stays/luxury-vacation-rentals-near-seattle", text: "Explore premium stays reachable from the Seattle area." },
     ],
   },
 }

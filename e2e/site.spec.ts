@@ -31,17 +31,10 @@ test("homepage presents the brand and collection", async ({ page }) => {
   await expect(page.getByRole("link", { name: "Explore the Collection" })).toBeVisible()
   await expect(page.getByRole("heading", { name: "Aurora Haven" })).toBeVisible()
   await expect(page.getByRole("heading", { name: "Reflection Haven" })).toBeVisible()
-  await expect(page.getByRole("heading", { name: "The Cove Club" })).toBeVisible()
+  await expect(page.getByRole("heading", { name: "The Cove Club" })).toHaveCount(0)
   await expect(page.locator("article").filter({ hasText: "Aurora Haven" }).getByText("Olympic Peninsula")).toBeVisible()
   await expect(page.locator("article").filter({ hasText: "Aurora Haven" }).getByText("Port Angeles, Washington")).toBeVisible()
-  const coveClubCard = page.locator("article").filter({ hasText: "The Cove Club" })
-  await expect(coveClubCard.getByText("Freeland")).toBeVisible()
-  await expect(coveClubCard.getByText("Up to 42 guests")).toBeVisible()
-  await expect(coveClubCard.getByText("19 bedrooms")).toBeVisible()
-  await expect(coveClubCard.getByText("19 baths")).toBeVisible()
-  await expect(
-    page.getByRole("heading", { name: /Twenty-three acres\. One private world\./i }),
-  ).toBeVisible()
+  await expect(page.getByRole("link", { name: /Cove Club/ })).toHaveCount(0)
 })
 
 test("contact form requires email but permits empty phone and stay details", async ({ page }) => {
@@ -219,18 +212,6 @@ test("mobile calendar uses large tap targets and ignores repeated month taps", a
   expect(after).toEqual(["September 2026"])
 })
 
-test("Full Estate uses the same mobile calendar controls", async ({ page }, testInfo) => {
-  test.skip(testInfo.project.name !== "mobile", "The Full Estate mobile calendar is tested at the mobile breakpoint")
-  await page.clock.setFixedTime(new Date("2026-08-14T12:00:00"))
-  await page.goto("/havens/whidbey-estate/full-estate")
-  await page.locator('button[aria-label^="Arrival,"]').click()
-  const estateNext = page.getByRole("dialog", { name: "Choose stay dates" }).locator(".rdp-button_next")
-  const estateBox = await estateNext.boundingBox()
-  expect(estateBox).not.toBeNull()
-  expect(estateBox!.width).toBeGreaterThanOrEqual(48)
-  expect(estateBox!.height).toBeGreaterThanOrEqual(48)
-})
-
 test("property calendar uses Hostaway availability and minimum-stay rules", async ({ page }, testInfo) => {
   if (testInfo.project.name === "mobile") await page.emulateMedia({ reducedMotion: "reduce" })
   await page.clock.setFixedTime(new Date("2026-06-13T12:00:00"))
@@ -364,7 +345,8 @@ test("collection rescues large groups without relisting The Cove Club", async ({
   const guestFilter = page.getByRole("group", { name: "Filter by guests" })
   for (let count = 1; count < 16; count += 1) await guestFilter.getByRole("button", { name: "Increase guest count" }).click()
   await expect(page.locator("article").filter({ hasText: "The Cove Club" })).toHaveCount(0)
-  await expect(page.getByRole("link", { name: "Plan a Cove Club Stay" })).toBeVisible()
+  await expect(page.getByRole("link", { name: "Plan a Cove Club Stay" })).toHaveCount(0)
+  await expect(page.getByRole("link", { name: "Ask the stay team" })).toBeVisible()
 })
 
 test("search submission disables repeat clicks and lands on a clear result state", async ({ page }) => {
@@ -452,36 +434,6 @@ test("collection keeps result cards stable until live availability resolves", as
   await expect(page).toHaveURL(/\/havens\/emerald-haven\?checkIn=2026-09-01&checkOut=2026-09-04&guests=4&utm_source=instagram/)
 })
 
-test("collection search expands matching Cove Club residences", async ({ page }) => {
-  await page.route("**/api/search", async (route) => {
-    await route.fulfill({
-      contentType: "application/json",
-      body: JSON.stringify({
-        results: [{
-          propertySlug: "whidbey-estate",
-          availableListingIds: [571917, 558678],
-          variants: [
-            { listingId: 571917, variantSlug: "guest-house", quote: { total: 2400, currency: "USD", nights: 4 } },
-            { listingId: 558678, variantSlug: "main-house", quote: { total: 5000, currency: "USD", nights: 4 } },
-          ],
-        }],
-      }),
-    })
-  })
-  await page.goto("/havens?checkIn=2027-04-15&checkOut=2027-04-19&guests=5")
-
-  const results = page.locator("#collection")
-  await expect(results.getByText("2 private stays")).toBeVisible()
-  await expect(results.getByRole("heading", { name: "The Guest House" })).toBeVisible()
-  await expect(results.getByRole("heading", { name: "The Main House" })).toBeVisible()
-  const guestHouseCard = results.locator("article").filter({ hasText: "The Guest House" })
-  await expect(guestHouseCard.getByText("$2,400.00", { exact: true })).toBeVisible()
-  await expect(guestHouseCard.getByText("Complete total · 4 nights", { exact: true })).toBeVisible()
-  await expect(results.getByRole("heading", { name: "The Cove Club" })).toHaveCount(0)
-  await expect(results.getByRole("link", { name: /The Guest House/ })).toHaveAttribute("href", "/havens/whidbey-estate/guest-house?checkIn=2027-04-15&checkOut=2027-04-19&guests=5")
-  await expect(results.getByRole("link", { name: /The Main House/ })).toHaveAttribute("href", "/havens/whidbey-estate/main-house?checkIn=2027-04-15&checkOut=2027-04-19&guests=5")
-})
-
 test("legacy Hostaway listing URLs permanently redirect with stay and campaign parameters", async ({ page }) => {
   const legacyDestinations = [
     [146889, "/havens/blue-haven"],
@@ -490,11 +442,6 @@ test("legacy Hostaway listing URLs permanently redirect with stay and campaign p
     [178994, "/havens/fair-haven"],
     [184081, "/havens/aurora-haven"],
     [335403, "/havens/reflection-haven"],
-    [558675, "/havens/whidbey-estate/lighthouse"],
-    [571917, "/havens/whidbey-estate/guest-house"],
-    [558676, "/havens/whidbey-estate/lodge"],
-    [558677, "/havens/whidbey-estate/full-estate"],
-    [558678, "/havens/whidbey-estate/main-house"],
     [576478, "/havens/reflection-point"],
   ] as const
 
@@ -644,60 +591,6 @@ test("every visual-tour surface opens the property gallery", async ({ page }) =>
   await expect(page.getByRole("dialog", { name: "Blue Haven gallery" })).toBeVisible()
 })
 
-test("estate residence uses the Hostaway cover before gallery photos 2 through 4", async ({ page }, testInfo) => {
-  const galleryResponse = await page.request.get("/api/gallery/558678")
-  expect(galleryResponse.ok()).toBe(true)
-  const { images } = await galleryResponse.json() as { images: string[] }
-  expect(images.length).toBeGreaterThanOrEqual(4)
-
-  await page.goto("/havens/whidbey-estate/main-house")
-
-  const previews = page.locator("#gallery").getByRole("button", { name: /Open The Main House image gallery/ }).locator("img")
-  const previewCount = 3
-  await expect(previews).toHaveCount(previewCount)
-  for (const [index, image] of images.slice(1, previewCount + 1).entries()) {
-    await expect.poll(async () => decodeURIComponent((await previews.nth(index).getAttribute("src")) || "")).toContain(image)
-  }
-
-  if (testInfo.project.name === "mobile") return
-
-  await page.getByRole("button", { name: "View the complete The Main House gallery" }).click()
-  const fullGallery = page.getByRole("dialog", { name: "The Main House gallery" })
-  await expect(fullGallery.getByTestId("gallery-photo-count")).toContainText(`Photograph 1 of ${images.length}`)
-  await expect.poll(async () => decodeURIComponent((await fullGallery.getByTestId("gallery-active-image").locator("img").getAttribute("src")) || "")).toContain(images[0])
-})
-
-test("Lighthouse uses the Hostaway cover before gallery photos 2 through 4", async ({ page }, testInfo) => {
-  const galleryResponse = await page.request.get("/api/gallery/558675")
-  expect(galleryResponse.ok()).toBe(true)
-  const { images } = await galleryResponse.json() as { images: string[] }
-  expect(images.length).toBeGreaterThanOrEqual(4)
-
-  await page.goto("/havens/whidbey-estate/lighthouse")
-
-  const previews = page.locator("#gallery").getByRole("button", { name: /Open The Lighthouse image gallery/ }).locator("img")
-  const previewCount = 3
-  await expect(previews).toHaveCount(previewCount)
-  for (const [index, image] of images.slice(1, previewCount + 1).entries()) {
-    await expect.poll(async () => decodeURIComponent((await previews.nth(index).getAttribute("src")) || "")).toContain(image)
-  }
-
-  if (testInfo.project.name === "mobile") return
-
-  await page.getByRole("button", { name: "View the complete The Lighthouse gallery" }).click()
-  const fullGallery = page.getByRole("dialog", { name: "The Lighthouse gallery" })
-  await expect(fullGallery.getByTestId("gallery-photo-count")).toContainText(`Photograph 1 of ${images.length}`)
-  await expect.poll(async () => decodeURIComponent((await fullGallery.getByTestId("gallery-active-image").locator("img").getAttribute("src")) || "")).toContain(images[0])
-})
-
-test("Lodge uses the selected Hostaway residence image as its banner", async ({ page }) => {
-  await page.goto("/havens/whidbey-estate/lodge")
-  const cover = page.locator("#gallery").getByRole("button", { name: /Open The Lodge image gallery/ }).locator("img").first()
-  await expect.poll(async () => decodeURIComponent((await cover.getAttribute("src")) || "")).toContain(
-    "57690-558676-3MeQ0x357poeQsFcEcOSlWypqdnRdS82TYU2g--LoV8Q-6a38d6a602ab6",
-  )
-})
-
 test("mobile navigation presents the full brand journey", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "mobile", "Mobile navigation is only rendered below the desktop breakpoint")
   await page.emulateMedia({ reducedMotion: "reduce" })
@@ -730,28 +623,12 @@ test("collection cards keep prices hidden until dates are selected", async ({ pa
   await expect(page.locator("article").filter({ hasText: "The Cove Club" })).toHaveCount(0)
 })
 
-test("The Cove Club is an editorial hub for all four residences", async ({ page }) => {
-  await page.goto("/havens/whidbey-estate")
-  await expect(page.getByRole("heading", { name: "The Cove Club", level: 1 })).toBeVisible()
-  for (const residence of ["The Full Estate", "The Lighthouse", "The Lodge", "The Main House"]) {
-    await expect(page.getByRole("link", { name: new RegExp(residence) }).first()).toBeVisible()
-  }
-
-  const card = page.getByTestId("estate-residence-full-estate")
-  const content = page.getByTestId("estate-residence-content-full-estate")
-  const [cardBox, contentBox] = await Promise.all([card.boundingBox(), content.boundingBox()])
-  expect(cardBox).not.toBeNull()
-  expect(contentBox).not.toBeNull()
-  expect(contentBox!.y).toBeGreaterThanOrEqual(cardBox!.y)
-  expect(contentBox!.y + contentBox!.height).toBeLessThanOrEqual(cardBox!.y + cardBox!.height)
-})
-
 test("all public pages preserve visual layout integrity", async ({ page }) => {
   const routes = [
     "/", "/havens", "/havens/blue-haven", "/havens/sea-renity-haven", "/havens/emerald-haven",
-    "/havens/fair-haven", "/havens/aurora-haven", "/havens/reflection-haven", "/havens/whidbey-estate",
-    "/havens/whidbey-estate/lighthouse", "/havens/whidbey-estate/lodge", "/havens/whidbey-estate/full-estate",
-    "/havens/whidbey-estate/main-house", "/experiences", "/story", "/contact", "/privacy", "/terms",
+    "/havens/fair-haven", "/havens/aurora-haven", "/havens/reflection-haven",
+
+    "/experiences", "/story", "/contact", "/privacy", "/terms",
     "/amenities", "/amenities/washington-hot-tub-vacation-rentals",
   ]
   for (const route of routes) {

@@ -1,14 +1,4 @@
 const HIGH_RES_WIDTH = 3840
-const MAIN_HOUSE_WIDTH = 2400
-
-function targetWidthForHostawayPath(pathname: string) {
-  return pathname.includes("57690-558678-") ? MAIN_HOUSE_WIDTH : HIGH_RES_WIDTH
-}
-
-function qualityForHostawayPath(pathname: string) {
-  return pathname.includes("57690-558678-") ? 82 : 92
-}
-
 export function getHighResolutionImageUrl(image: string) {
   if (image.startsWith("/")) return image
 
@@ -24,8 +14,8 @@ export function getHighResolutionImageUrl(image: string) {
       url.hostname = "bookingenginecdn.hostaway.com"
     }
 
-    url.searchParams.set("width", String(targetWidthForHostawayPath(url.pathname)))
-    url.searchParams.set("quality", String(qualityForHostawayPath(url.pathname)))
+    url.searchParams.set("width", String(HIGH_RES_WIDTH))
+    url.searchParams.set("quality", "92")
     url.searchParams.set("format", "webp")
     url.searchParams.set("v", url.searchParams.get("v") || "2")
     return url.toString()

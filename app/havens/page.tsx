@@ -27,7 +27,7 @@ export const metadata: Metadata = shareMetadata({
   path: HAVENS_COLLECTION_PATH,
   keywords: havensCollectionKeywords,
   image: HAVENS_HERO_IMAGE,
-  imageAlt: "Pacific Northwest private vacation rental collection across water, forest, coast, and estate settings",
+  imageAlt: "Pacific Northwest private vacation rental collection across water, forest, and coast settings",
   openGraphTitle: "The Havens | Pacific Northwest Vacation Rentals",
 })
 
@@ -47,7 +47,6 @@ export default async function HavensPage({ searchParams }: { searchParams: Promi
   const matchedSlugs = typeof params.matches === "string" ? params.matches.split(",").filter(Boolean) : []
   const catalog = await getCatalog()
   const properties = catalog
-    .filter((property) => property.slug !== "whidbey-estate")
     .sort((a, b) => a.featuredOrder - b.featuredOrder)
   const searchableProperties = [...catalog].sort((a, b) => a.featuredOrder - b.featuredOrder)
   const stats = getHavensCollectionStats(properties)

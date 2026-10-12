@@ -28,7 +28,7 @@ export function brandEntityFields(input: BrandEntityInput = {}) {
     name: BRAND_NAME,
     url: absoluteUrl(),
     logo: absoluteUrl(BRAND_LOGO_PATH),
-    description: input.description || "A curated direct-book collection of rare Pacific Northwest waterfront, lakefront, forest, and private-estate vacation rentals.",
+    description: input.description || "A curated direct-book collection of rare Pacific Northwest waterfront, lakefront, and forest vacation rentals.",
     email: BRAND_CONTACT_EMAIL,
     telephone: BRAND_CONTACT_PHONE,
     contactPoint: brandContactPoint(),

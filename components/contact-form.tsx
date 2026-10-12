@@ -67,7 +67,6 @@ export function ContactForm({ initialTripType = "", initialMessage = "" }: { ini
               <option>Romantic escape</option>
               <option>Family gathering</option>
               <option>Celebration</option>
-              <option>The Cove Club</option>
               <option>Help choosing a home</option>
             </select>
             <ChevronDown aria-hidden="true" className="pointer-events-none absolute right-4 top-1/2 size-4 -translate-y-1/2 text-[#805a27]" />

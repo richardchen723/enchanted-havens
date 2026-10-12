@@ -11,7 +11,7 @@ export type BookingTermsSummary = {
   refundableDamageDeposit: number
 }
 
-const flexibleListingIds = new Set([335403, 576478, 558676, 558678])
+const flexibleListingIds = new Set([335403, 576478])
 const threePmListingIds = new Set([146889, 178994, 184081])
 const tenAmListingIds = new Set([146889, 178994, 184081])
 

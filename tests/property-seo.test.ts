@@ -7,7 +7,6 @@ import { propertyGalleryImageAlt } from "@/lib/property-image-seo"
 import { buildPropertyJsonLd, getPropertyKeywords, getPropertySeoContent } from "@/lib/property-seo"
 
 type JsonObject = { [key: string]: unknown }
-type BreadcrumbSchema = JsonObject & { itemListElement?: Array<{ name?: string }> }
 
 describe("individual property SEO", () => {
   it("keeps property pages focused on the information guests need to book", () => {
@@ -33,8 +32,6 @@ describe("individual property SEO", () => {
     expect(source).not.toContain(">airbnb<")
     expect(source).not.toContain("Collection Guest Reflections")
     expect(source).not.toContain("<blockquote")
-    expect(source).toContain("The Cove Club Residences")
-    expect(source).toContain("Compare ways to stay.")
     expect(source).toContain("aria-label=\"Breadcrumb\"")
     expect(source).toMatch(/<PropertyAmenities[\s\S]+<PropertyMap[\s\S]+<AirbnbReviews[\s\S]+<PropertyFaq/)
     expect(source).toContain("!property.estate ? <PropertyFaq")
@@ -51,18 +48,6 @@ describe("individual property SEO", () => {
     expect(gallerySource).not.toContain("full gallery image")
     expect(source).not.toMatch(/Questions Guests Search|Explore by Intent|Related Guides|Open Guide/)
     expect(source).not.toMatch(/Instagram-visible|live stay data|supplied by Hostaway|worth searching for/i)
-  })
-
-  it("keeps the dedicated Cove Club page out of SEO-guide-directory mode", () => {
-    const source = readFileSync("components/estate-hub.tsx", "utf8")
-
-    expect(source).toContain("Private Estate Planning")
-    expect(source).toContain("Plan the estate privately.")
-    expect(source).toContain("Contact the Stay Team")
-    expect(source).toContain("Explore Full Estate")
-    expect(source).toContain("Compare Residences")
-    expect(source).not.toContain("seo.relatedLinks.map")
-    expect(source).not.toMatch(/Open Guide|Related Guides/)
   })
 
   it("creates contextual gallery alt text for image search without generic labels", () => {
@@ -91,22 +76,16 @@ describe("individual property SEO", () => {
 
   it("does not load or pass the editorial review pool to individual property pages", () => {
     const havenSource = readFileSync("app/havens/[slug]/page.tsx", "utf8")
-    const variantSource = readFileSync("app/havens/[slug]/[variant]/page.tsx", "utf8")
 
     expect(havenSource).not.toContain("getFeaturedReviews")
-    expect(variantSource).not.toContain("getFeaturedReviews")
     expect(havenSource).not.toContain("reviews={reviews}")
-    expect(variantSource).not.toContain("reviews={reviews}")
   })
 
-  it("uses the shared metadata builder for property and estate residence share previews", () => {
+  it("uses the shared metadata builder for property share previews", () => {
     const havenSource = readFileSync("app/havens/[slug]/page.tsx", "utf8")
-    const variantSource = readFileSync("app/havens/[slug]/[variant]/page.tsx", "utf8")
 
     expect(havenSource).toContain("shareMetadata")
     expect(havenSource).toContain("image: property.heroImage")
-    expect(variantSource).toContain("shareMetadata")
-    expect(variantSource).toContain("image: variant.images[0]")
   })
 
   it("gives every published haven local content, FAQs, keywords, and internal SEO links", () => {
@@ -138,7 +117,7 @@ describe("individual property SEO", () => {
   })
 
   it("links retreat-suitable properties to the company retreat landing page", () => {
-    const retreatPropertySlugs = ["whidbey-estate", "fair-haven", "reflection-haven", "aurora-haven", "emerald-haven"]
+    const retreatPropertySlugs = ["fair-haven", "reflection-haven", "aurora-haven", "emerald-haven"]
 
     for (const slug of retreatPropertySlugs) {
       const property = fallbackProperties.find((item) => item.slug === slug)!
@@ -148,7 +127,7 @@ describe("individual property SEO", () => {
   })
 
   it("links group-suitable properties to the Washington group vacation rentals landing page", () => {
-    const groupPropertySlugs = ["whidbey-estate", "sea-renity-haven", "emerald-haven", "fair-haven", "reflection-haven", "aurora-haven"]
+    const groupPropertySlugs = ["sea-renity-haven", "emerald-haven", "fair-haven", "reflection-haven", "aurora-haven"]
 
     for (const slug of groupPropertySlugs) {
       const property = fallbackProperties.find((item) => item.slug === slug)!
@@ -205,7 +184,7 @@ describe("individual property SEO", () => {
   })
 
   it("links near-Seattle properties to the weekend getaway landing page", () => {
-    const nearSeattlePropertySlugs = ["whidbey-estate", "fair-haven", "sea-renity-haven"]
+    const nearSeattlePropertySlugs = ["fair-haven", "sea-renity-haven"]
 
     for (const slug of nearSeattlePropertySlugs) {
       const property = fallbackProperties.find((item) => item.slug === slug)!
@@ -215,7 +194,7 @@ describe("individual property SEO", () => {
   })
 
   it("links beach-house properties to the Washington beach house rentals landing page", () => {
-    const beachHousePropertySlugs = ["whidbey-estate", "fair-haven", "sea-renity-haven"]
+    const beachHousePropertySlugs = ["fair-haven", "sea-renity-haven"]
 
     for (const slug of beachHousePropertySlugs) {
       const property = fallbackProperties.find((item) => item.slug === slug)!
@@ -225,7 +204,7 @@ describe("individual property SEO", () => {
   })
 
   it("links Whidbey properties to the broad Whidbey Island destination page", () => {
-    const whidbeyPropertySlugs = ["whidbey-estate", "sea-renity-haven"]
+    const whidbeyPropertySlugs = ["sea-renity-haven"]
 
     for (const slug of whidbeyPropertySlugs) {
       const property = fallbackProperties.find((item) => item.slug === slug)!
@@ -235,7 +214,7 @@ describe("individual property SEO", () => {
   })
 
   it("links wedding-lodging properties to the permit-safe wedding landing page", () => {
-    const weddingPropertySlugs = ["whidbey-estate", "fair-haven", "sea-renity-haven"]
+    const weddingPropertySlugs = ["fair-haven", "sea-renity-haven"]
 
     for (const slug of weddingPropertySlugs) {
       const property = fallbackProperties.find((item) => item.slug === slug)!
@@ -256,10 +235,8 @@ describe("individual property SEO", () => {
 
   it("passes descriptive social image alt text from property metadata routes", () => {
     const havenSource = readFileSync("app/havens/[slug]/page.tsx", "utf8")
-    const variantSource = readFileSync("app/havens/[slug]/[variant]/page.tsx", "utf8")
 
     expect(havenSource).toContain("imageAlt: `${property.displayName} in ${property.location}`")
-    expect(variantSource).toContain("imageAlt: `${variant.shortName} at ${property.displayName} in ${property.location}`")
   })
 
   it("builds focused LodgingBusiness, BreadcrumbList, and gallery schema for property pages", () => {
@@ -338,18 +315,4 @@ describe("individual property SEO", () => {
     expect(graph.some((item) => item["@id"] === "https://enchantedhavens.com/havens/blue-haven#related-guides")).toBe(false)
   })
 
-  it("adds a variant breadcrumb only for estate residence URLs", () => {
-    const estate = fallbackProperties.find((item) => item.slug === "whidbey-estate")!
-    const variant = estate.variants.find((item) => item.slug === "lodge")!
-    const graph = buildPropertyJsonLd({
-      property: estate,
-      variant,
-      reviews: [],
-      path: `/havens/${estate.slug}/${variant.slug}`,
-      heroImage: variant.images[0],
-    })["@graph"] as JsonObject[]
-    const breadcrumb = graph.find((item) => item["@type"] === "BreadcrumbList") as BreadcrumbSchema | undefined
-    expect(breadcrumb?.itemListElement).toHaveLength(4)
-    expect(breadcrumb?.itemListElement?.at(-1)?.name).toBe("The Lodge")
-  })
 })

@@ -22,7 +22,7 @@ export type CollectionLink = {
 export const HAVENS_COLLECTION_PATH = "/havens"
 export const HAVENS_COLLECTION_TITLE = "Pacific Northwest Vacation Rentals | The Havens"
 export const HAVENS_COLLECTION_DESCRIPTION =
-  "Browse Enchanted Havens' curated Pacific Northwest vacation rentals, including Lake Sutherland cabins, Hood Canal beachfront homes, Whidbey Island estates, and Olympic Peninsula retreats."
+  "Browse Enchanted Havens' curated Pacific Northwest vacation rentals, including Lake Sutherland cabins, Hood Canal beachfront homes, Whidbey Island oceanfront homes, and Olympic Peninsula retreats."
 const HAVENS_COLLECTION_IMAGE = "/images/home-hero/heros-zip/hero-07.webp"
 
 export const havensCollectionKeywords = [
@@ -37,7 +37,6 @@ export const havensCollectionKeywords = [
   "Port Angeles vacation rentals",
   "Hood Canal beachfront rental",
   "Whidbey Island beach house rental",
-  "Whidbey Island private estate rental",
   "family reunion house Washington",
   "PNW retreat rental",
 ]
@@ -53,11 +52,11 @@ export const collectionGuides: CollectionGuide[] = [
   },
   {
     eyebrow: "Whidbey Island",
-    title: "Oceanfront homes and private estate stays near Seattle",
-    href: "/destinations/whidbey-island-private-estate-rentals",
-    text: "Island stays for horizon views, estate privacy, family reunions, and direct-book escapes within reach of Seattle ferry and road routes.",
-    propertySlugs: ["whidbey-estate", "sea-renity-haven"],
-    keywords: ["Whidbey Island private estate rental", "luxury vacation rentals near Seattle", "Oak Harbor oceanfront rental"],
+    title: "Oceanfront homes near Seattle",
+    href: "/destinations/whidbey-island-vacation-rentals",
+    text: "Island stays for horizon views, family reunions, and direct-book escapes within reach of Seattle ferry and road routes.",
+    propertySlugs: ["sea-renity-haven"],
+    keywords: ["Whidbey Island vacation rental", "luxury vacation rentals near Seattle", "Oak Harbor oceanfront rental"],
   },
   {
     eyebrow: "Hood Canal",
@@ -71,9 +70,9 @@ export const collectionGuides: CollectionGuide[] = [
     eyebrow: "Groups and Retreats",
     title: "Family reunion houses and permit-aware private retreats",
     href: "/groups/family-reunion-house-washington",
-    text: "Large homes and private estate options for groups that need bedrooms, gathering space, direct planning support, and clear rules before booking.",
-    propertySlugs: ["whidbey-estate", "sea-renity-haven", "aurora-haven", "emerald-haven"],
-    keywords: ["family reunion house Washington", "PNW retreat rental", "private estate rental Washington"],
+    text: "Large homes for groups that need bedrooms, gathering space, direct planning support, and clear rules before booking.",
+    propertySlugs: ["sea-renity-haven", "aurora-haven", "emerald-haven"],
+    keywords: ["family reunion house Washington", "PNW retreat rental"],
   },
 ]
 
@@ -101,7 +100,7 @@ export const havensCollectionFaq = [
   {
     question: "What kinds of Pacific Northwest vacation rentals are in the collection?",
     answer:
-      "Enchanted Havens includes lakefront cabins, oceanfront homes, beachfront retreats, forested Olympic Peninsula stays, and a private waterfront estate on Whidbey Island.",
+      "Enchanted Havens includes lakefront cabins, oceanfront homes, beachfront retreats, and forested Olympic Peninsula stays.",
   },
   {
     question: "Can I book directly instead of using an OTA?",
@@ -111,7 +110,7 @@ export const havensCollectionFaq = [
   {
     question: "Which havens are best for family reunions or retreats?",
     answer:
-      "The Cove Club, Sea-Renity Haven, Emerald Haven, Aurora Haven, Reflection Haven, and Fair Haven can each support different group styles. The right fit depends on overnight guests, bedrooms, parking, pets, quiet hours, vendors, and any event-style plans.",
+      "Sea-Renity Haven, Emerald Haven, Aurora Haven, Reflection Haven, and Fair Haven can each support different group styles. The right fit depends on overnight guests, bedrooms, parking, pets, quiet hours, vendors, and any event-style plans.",
   },
   {
     question: "Are events allowed at Enchanted Havens properties?",
@@ -129,7 +128,7 @@ export const collectionInternalLinks: CollectionLink[] = [
   {
     label: "Washington Waterfront Vacation Rentals",
     href: "/stays/washington-waterfront-vacation-rentals",
-    text: "Compare lakefront, oceanfront, beachfront, and private-estate water stays.",
+    text: "Compare lakefront, oceanfront, and beachfront stays.",
   },
   {
     label: "Washington Lake House Rentals",
@@ -177,11 +176,6 @@ export const collectionInternalLinks: CollectionLink[] = [
     text: "Find premium homes that feel resort-like without requiring a flight.",
   },
   {
-    label: "Private Estate Rentals in Washington",
-    href: "/groups/private-estate-rental-washington",
-    text: "Explore full-property privacy, estate gatherings, and permit-aware planning.",
-  },
-  {
     label: "Olympic National Park Basecamps",
     href: "/experiences/olympic-national-park-basecamp",
     text: "Choose a home that works after long days in the park, forest, and mountains.",
@@ -201,7 +195,6 @@ const propertyBestFits: Record<string, string> = {
   "aurora-haven": "Private Olympic Peninsula group escapes with sea views, games, and room for high-energy families.",
   "reflection-haven": "Lakeside Olympic National Park basecamp stays with hot tub recovery after days outside.",
   "reflection-point": "Lake Sutherland stays with three king bedrooms, a private dock, paddling gear, and firelit waterfront evenings.",
-  "whidbey-estate": "The Cove Club private estate stays, family reunions, full-property privacy, and approved gatherings.",
 }
 
 function primaryVariant(property: Property): PropertyVariant {
@@ -253,7 +246,7 @@ export function getHavensCollectionStats(catalog: Property[]) {
 
   return [
     { value: formatCount(catalog.length, "haven"), label: "curated private stays", href: "#collection", trackingKey: "all_havens" },
-    { value: formatCount(destinations.size, "setting"), label: "across water, forest, coast, and estate landscapes", href: "/destinations", trackingKey: "settings" },
+    { value: formatCount(destinations.size, "setting"), label: "across water, forest, and coast landscapes", href: "/destinations", trackingKey: "settings" },
     { value: `Up to ${formatCount(maxGuests, "guest")}`, label: "for larger family and friend stays", href: `/havens?guests=${maxGuests}#collection`, trackingKey: "large_groups" },
     { value: formatCount(waterfrontHomes, "waterfront haven"), label: "with lake, ocean, beach, canal, or dock-led experiences", href: "/havens?experience=waterfront#collection", trackingKey: "waterfront" },
   ]
@@ -316,7 +309,7 @@ export function buildHavensCollectionJsonLd(catalog: Property[], reviews: Review
           "@type": "ImageObject",
           url: absoluteImageUrl(HAVENS_COLLECTION_IMAGE),
           name: "The Havens Pacific Northwest vacation rental collection",
-          caption: "Pacific Northwest private vacation rental collection across water, forest, coast, and estate settings",
+          caption: "Pacific Northwest private vacation rental collection across water, forest, and coast settings",
           representativeOfPage: true,
         },
         isPartOf: { "@id": `${absoluteUrl()}#website` },

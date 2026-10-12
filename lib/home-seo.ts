@@ -27,7 +27,6 @@ export const homeKeywords = [
   "Hood Canal beachfront rental",
   "Whidbey Island beach house rental",
   "Whidbey Island vacation rentals",
-  "Whidbey Island private estate rental",
   "family reunion house Washington",
   "Washington group vacation rental",
   "large group vacation rental Washington",
@@ -53,7 +52,7 @@ export const homeFaq = [
   {
     question: "Which homes are best for family reunions or retreats?",
     answer:
-      "The Cove Club, Sea-Renity Haven, Emerald Haven, Fair Haven, Aurora Haven, and Reflection Haven can each fit different group styles. The right choice depends on guest count, bedroom needs, parking, pets, quiet hours, and any event-style plans.",
+      "Sea-Renity Haven, Emerald Haven, Fair Haven, Aurora Haven, and Reflection Haven can each fit different group styles. The right choice depends on guest count, bedroom needs, parking, pets, quiet hours, and any event-style plans.",
   },
   {
     question: "Are events or private retreats allowed?",
@@ -109,14 +108,9 @@ export const homeSeoLinks = [
     text: "Plan a Port Angeles-area lake stay near Lake Sutherland, Lake Crescent, and Olympic National Park.",
   },
   {
-    label: "Whidbey Island private estate rentals",
-    href: "/destinations/whidbey-island-private-estate-rentals",
-    text: "Explore The Cove Club and Whidbey Island oceanfront stays near Seattle.",
-  },
-  {
     label: "Whidbey Island vacation rentals",
     href: "/destinations/whidbey-island-vacation-rentals",
-    text: "Compare Oak Harbor oceanfront stays and Freeland private estate lodging.",
+    text: "Explore Oak Harbor oceanfront stays.",
   },
   {
     label: "Vacation rentals near Seattle",
@@ -156,17 +150,17 @@ export const homeSeoLinks = [
   {
     label: "Family reunion houses",
     href: "/groups/family-reunion-house-washington",
-    text: "Compare larger homes, estate options, and permit-aware gathering guidance.",
+    text: "Compare larger homes and permit-aware gathering guidance.",
   },
   {
     label: "Group vacation rentals",
     href: "/groups/washington-group-vacation-rentals",
-    text: "Compare large-group homes, estate stays, waterfront houses, and direct planning support.",
+    text: "Compare large-group homes, waterfront houses, and direct planning support.",
   },
   {
     label: "Wedding lodging",
     href: "/groups/washington-wedding-lodging",
-    text: "Plan permit-aware wedding-weekend lodging with private homes, estate stays, and clear approval steps.",
+    text: "Plan permit-aware wedding-weekend lodging with private homes and clear approval steps.",
   },
   {
     label: "Company retreat rentals",

@@ -13,7 +13,7 @@ import { getEditorialVariantHero } from "@/lib/editorial"
 import { buildPropertyJsonLd, getPropertySeoContent } from "@/lib/property-seo"
 import type { Property, PropertyVariant } from "@/lib/schemas"
 import { getDisplayAmenities, getStandoutAmenities } from "@/lib/standout-amenities"
-import { appendQuery, type StaySelection } from "@/lib/stay-search"
+import { type StaySelection } from "@/lib/stay-search"
 import { formatCount } from "@/lib/utils"
 
 function AirbnbReviews({ variant }: { variant: PropertyVariant }) {
@@ -149,29 +149,6 @@ function PropertyAmenities({ standout, allAmenities }: { standout: string[]; all
   )
 }
 
-function EstateResidenceLinks({ property, variant, preservedQuery }: { property: Property; variant: PropertyVariant; preservedQuery: string }) {
-  const alternatives = property.variants.filter((item) => item.id !== variant.id)
-  if (!property.estate || !alternatives.length) return null
-
-  return (
-    <section id="estate-residences" className="scroll-mt-28 border-b border-black/10 py-12">
-      <p className="eyebrow text-[#805a27]">The Cove Club Residences</p>
-      <h2 className="mt-3 font-display text-4xl leading-none text-[#173c33]">Compare ways to stay.</h2>
-      <div className="mt-7 border-y border-black/10">
-        {alternatives.map((item) => (
-          <Link key={item.id} href={appendQuery(`/havens/${property.slug}/${item.slug}`, preservedQuery)} className="group flex items-center justify-between gap-5 border-b border-black/10 py-4 last:border-b-0">
-            <span>
-              <span className="block font-display text-2xl text-[#173c33]">{item.shortName}</span>
-              <span className="mt-1 block text-xs text-black/52">Up to {formatCount(item.guests, "guest")} · {formatCount(item.bedrooms, "bedroom")}</span>
-            </span>
-            <ArrowRight className="size-4 shrink-0 text-[#805a27] transition group-hover:translate-x-1" />
-          </Link>
-        ))}
-      </div>
-    </section>
-  )
-}
-
 export function PropertyDetail({ property, variant, bookingLive = false, quoteAvailable = false, pagePath, heroImageOverride, heroImagePosition, galleryPreviewStart, initialSelection, preservedQuery = "" }: { property: Property; variant: PropertyVariant; bookingLive?: boolean; quoteAvailable?: boolean; pagePath?: string; heroImageOverride?: string; heroImagePosition?: string; galleryPreviewStart?: number; initialSelection?: StaySelection; preservedQuery?: string }) {
   const propertyImages = variant.images.length > 4 ? variant.images : [...variant.images, ...property.gallery].filter((url, index, all) => all.indexOf(url) === index)
   const heroImage = heroImageOverride || getEditorialVariantHero(variant.id) || propertyImages[0]
@@ -242,7 +219,6 @@ export function PropertyDetail({ property, variant, bookingLive = false, quoteAv
 
               <PropertyAmenities standout={standoutAmenities} allAmenities={allAmenities} />
               <PropertyMap variant={variant} location={property.location} locationSummary={locationSummary} />
-              <EstateResidenceLinks property={property} variant={variant} preservedQuery={preservedQuery} />
               <AirbnbReviews variant={variant} />
               {!property.estate ? <PropertyFaq name={variant.shortName} items={seo.faq.slice(0, 5)} /> : null}
             </div>

@@ -10,14 +10,14 @@ import { SectionHeading } from "@/components/section-heading"
 import { TrackedEventLink } from "@/components/tracked-contact-link"
 import { BRAND_INSTAGRAM_URL } from "@/lib/brand"
 import { getCatalog } from "@/lib/catalog"
-import { BRAND_HERO_URL, experienceTiles, getEditorialVariantHero, homeHeroSlides } from "@/lib/editorial"
+import { BRAND_HERO_URL, experienceTiles, homeHeroSlides } from "@/lib/editorial"
 import { getAirbnbReviewSummary } from "@/lib/airbnb"
 import { buildHomeJsonLd, HOME_DESCRIPTION, HOME_OG_IMAGE, HOME_TITLE, homeFaq, homeKeywords } from "@/lib/home-seo"
 import { shareMetadata } from "@/lib/seo-metadata"
 import { formatCount } from "@/lib/utils"
 
 const HERO_SLIDE_INTERVAL_SECONDS = 5
-const homeCollectionSlugs = ["blue-haven", "sea-renity-haven", "emerald-haven", "fair-haven", "aurora-haven", "reflection-haven", "whidbey-estate"]
+const homeCollectionSlugs = ["blue-haven", "sea-renity-haven", "emerald-haven", "fair-haven", "aurora-haven", "reflection-haven"]
 
 export const metadata: Metadata = shareMetadata({
   title: HOME_TITLE,
@@ -42,11 +42,6 @@ export default async function HomePage() {
     ? homeHeroSlides
     : [{ name: "Enchanted Havens", image: BRAND_HERO_URL, position: "50% 50%" }]
   const hero = catalog.find((property) => property.slug === "emerald-haven") || catalog[0]
-  const estate = catalog.find((property) => property.slug === "whidbey-estate") || catalog[catalog.length - 1]
-  const estateFeatureVariant = estate.variants.find((variant) => variant.slug === "full-estate")
-  const estateFeature = estate.heroImage || (estateFeatureVariant && getEditorialVariantHero(estateFeatureVariant.id)) || BRAND_HERO_URL
-  const estateGuestCopy = estateFeatureVariant ? `Up to ${formatCount(estateFeatureVariant.guests, "guest")}` : "Private estate"
-  const estateStayCopy = `${formatCount(estate.variants.length, "way")} to stay`
   const airbnbSummary = getAirbnbReviewSummary(catalog.flatMap((property) => property.variants.map((variant) => variant.id)))
   const socialImages = [
     featuredBySlug.get("blue-haven")?.heroImage,
@@ -56,7 +51,6 @@ export default async function HomePage() {
     featuredBySlug.get("aurora-haven")?.heroImage,
     featuredBySlug.get("reflection-haven")?.gallery[0],
     featuredBySlug.get("sea-renity-haven")?.gallery[4],
-    featuredBySlug.get("whidbey-estate")?.heroImage,
   ].filter((image): image is string => Boolean(image))
   const schema = buildHomeJsonLd({ catalog, reviews: [] })
 
@@ -154,21 +148,6 @@ export default async function HomePage() {
                 </div>
               </Link>
             ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="immersive-panel relative min-h-[48rem] overflow-hidden text-white">
-        <Image src={estateFeature} alt="The private waterfront setting of The Cove Club" fill sizes="100vw" className="object-cover" />
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(7,30,25,.82),rgba(7,30,25,.12)_72%),linear-gradient(0deg,rgba(7,30,25,.5),transparent)]" />
-        <div className="grain absolute inset-0 opacity-25" />
-        <div className="container-shell relative flex min-h-[48rem] items-center py-24">
-          <div className="max-w-3xl">
-            <p className="eyebrow mb-5 text-[#d4b47d]">The Collection’s Private Estate</p>
-            <h2 className="display-balance font-display text-6xl leading-[0.88] sm:text-7xl lg:text-[6.2rem]">Twenty-three acres. One private world.</h2>
-            <p className="copy-balance mt-7 max-w-xl text-base leading-8 text-white/70 sm:text-lg">Choose an intimate residence, a grand gathering house, or reserve the entire waterfront estate on Whidbey Island.</p>
-            <div className="mt-8 flex flex-wrap gap-x-7 gap-y-3 text-[0.65rem] font-bold uppercase tracking-[0.14em] text-white/58"><span>Gated waterfront</span><span>{estateStayCopy}</span><span>{estateGuestCopy}</span></div>
-            <Link href="/havens/whidbey-estate" className="button-light mt-9">Discover The Cove Club <ArrowRight className="size-4" /></Link>
           </div>
         </div>
       </section>

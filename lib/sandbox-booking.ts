@@ -10,10 +10,6 @@ const nightlyRates: Record<number, number> = {
   184081: 820,
   335403: 795,
   576478: 825,
-  558675: 1200,
-  558676: 1500,
-  558677: 3200,
-  558678: 1800,
 }
 
 export type SandboxBookingSession = {
@@ -74,7 +70,7 @@ export function getSandboxQuote(listingId: number, checkIn: string, checkOut: st
   if (!nightlyRate) throw new Error("This haven is not configured for sandbox checkout.")
 
   const accommodation = money(nightlyRate * nights)
-  const cleaning = listingId >= 558675 ? 425 : guests >= 10 ? 325 : 245
+  const cleaning = listingId === 576478 ? 425 : guests >= 10 ? 325 : 245
   const lodgingTax = money((accommodation + cleaning) * 0.12)
   const total = money(accommodation + cleaning + lodgingTax)
 

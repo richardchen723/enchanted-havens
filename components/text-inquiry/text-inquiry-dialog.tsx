@@ -44,8 +44,6 @@ export function TextInquiryDialog({ open, onOpenChange, context }: TextInquiryDi
   const [error, setError] = useState("")
   const [inquiryId, setInquiryId] = useState("")
   const selectedListing = useMemo(() => getTextInquiryListing(listingSlug), [listingSlug])
-  const individualHavens = textInquiryListings.filter((listing) => listing.propertySlug !== "whidbey-estate")
-  const coveClubResidences = textInquiryListings.filter((listing) => listing.propertySlug === "whidbey-estate")
 
   useEffect(() => {
     if (!open) return
@@ -244,10 +242,7 @@ export function TextInquiryDialog({ open, onOpenChange, context }: TextInquiryDi
                 <select className="field h-[3.6rem]" value={listingSlug} onChange={(event) => handleListingChange(event.target.value)} required disabled={state === "sending"}>
                   <option value="">Select a haven</option>
                   <optgroup label="Enchanted Havens">
-                    {individualHavens.map((listing) => <option key={listing.listingSlug} value={listing.listingSlug}>{listing.name}</option>)}
-                  </optgroup>
-                  <optgroup label="The Cove Club">
-                    {coveClubResidences.map((listing) => <option key={listing.listingSlug} value={listing.listingSlug}>{listing.name}</option>)}
+                    {textInquiryListings.map((listing) => <option key={listing.listingSlug} value={listing.listingSlug}>{listing.name}</option>)}
                   </optgroup>
                 </select>
               </label>
