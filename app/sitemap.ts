@@ -52,7 +52,7 @@ function staticPageImages(path: string, catalog: Property[]) {
 }
 
 export function buildSitemap(catalog: Property[]): MetadataRoute.Sitemap {
-  const staticPaths = ["", "/havens", "/experiences", "/story", "/contact", "/privacy", "/terms"]
+  const staticPaths = ["", "/havens", "/experiences", "/story", "/contact", "/privacy", "/terms", "/owner-policy"]
   const hubs = Object.values(seoHubs)
 
   return [
