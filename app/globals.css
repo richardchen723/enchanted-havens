@@ -42,6 +42,10 @@ body {
   margin-top: calc(var(--header-height) * -1);
 }
 
+.owner-page [id] {
+  scroll-margin-top: calc(var(--header-height) + 1.5rem);
+}
+
 ::selection {
   color: var(--ivory);
   background: var(--forest);

@@ -22,6 +22,7 @@ export function SiteFrame({
 }) {
   const pathname = usePathname()
   const isAdmin = pathname?.startsWith("/admin")
+  const isOwnerPage = pathname?.startsWith("/vacation-rental-management")
 
   if (isAdmin) {
     return (
@@ -35,7 +36,7 @@ export function SiteFrame({
   }
 
   return (
-    <TextInquiryProvider enabled={chatEnabled} smsFallbackEnabled={textMessagingEnabled}>
+    <TextInquiryProvider enabled={chatEnabled && !isOwnerPage} smsFallbackEnabled={textMessagingEnabled && !isOwnerPage}>
       <a href="#main-content" className="fixed left-4 top-4 z-[100] -translate-y-24 bg-white px-4 py-3 text-sm focus:translate-y-0">
         Skip to content
       </a>

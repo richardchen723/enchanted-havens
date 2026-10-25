@@ -105,6 +105,18 @@ export async function ensureSchema() {
     await sql`create unique index if not exists contact_inquiries_reference_idx on contact_inquiries(reference) where reference is not null`
     await sql`create unique index if not exists contact_inquiries_submission_key_idx on contact_inquiries(submission_key) where submission_key is not null`
     await sql`
+      create table if not exists owner_inquiries (
+        id uuid primary key,
+        submission_key uuid unique not null,
+        fingerprint char(64) not null,
+        reference text unique not null,
+        details jsonb not null,
+        delivery_status text not null default 'stored',
+        created_at timestamptz not null default now(),
+        updated_at timestamptz not null default now()
+      )
+    `
+    await sql`
       create table if not exists website_text_inquiries (
         id uuid primary key,
         idempotency_key uuid unique not null,

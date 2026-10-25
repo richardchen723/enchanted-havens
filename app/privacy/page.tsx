@@ -10,13 +10,14 @@ export default function PrivacyPage() {
       eyebrow="Legal"
       title="Privacy Policy"
       introduction="This policy explains what information Enchanted Havens receives, why we use it, and the choices available to guests and site visitors."
-      lastUpdated="August 7, 2026"
+      lastUpdated="October 25, 2026"
       contactEmail={BRAND_CONTACT_EMAIL}
       sections={[
         {
           title: "Information we receive",
           body: [
             "We receive information you provide when you inquire about or reserve a stay, including your name, contact details, trip preferences, guest count, dates, messages, and reservation information.",
+            "For vacation rental management inquiries, we receive the name, email, property location, and optional phone number or note you provide. We also retain campaign labels and the referring website's hostname when available to understand how owners find us.",
             "We may also receive technical information such as browser type, device information, referring pages, and basic site activity used to operate, secure, and improve the website.",
           ],
         },
@@ -24,6 +25,7 @@ export default function PrivacyPage() {
           title: "How we use information",
           body: [
             "We use guest information to respond to inquiries, provide availability and pricing, create and support reservations, communicate arrival details, improve our services, prevent misuse, and meet legal or accounting obligations.",
+            "We use owner inquiry information to discuss management services, assess service availability, and follow up about the property. Submitting an owner inquiry does not automatically subscribe you to marketing emails.",
             "We do not sell personal information. We do not use inquiry details for unrelated third-party advertising.",
           ],
         },

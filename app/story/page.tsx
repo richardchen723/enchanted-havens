@@ -83,7 +83,7 @@ export default async function StoryPage() {
           </div>
         </div>
       </section>
-      <section className="bg-[#f3eee3] py-24 text-center"><div className="container-shell"><p className="eyebrow text-[#805a27]">Begin Here</p><h2 className="mx-auto mt-4 max-w-3xl font-display text-6xl leading-none text-[#173c33]">Find the haven that feels like it was waiting for you.</h2><Link href="/havens" className="button-primary mt-8">Explore the Collection <ArrowRight className="size-4" /></Link></div></section>
+      <section className="bg-[#f3eee3] py-24 text-center"><div className="container-shell"><p className="eyebrow text-[#805a27]">Begin Here</p><h2 className="mx-auto mt-4 max-w-3xl font-display text-6xl leading-none text-[#173c33]">Find the haven that feels like it was waiting for you.</h2><Link href="/havens" className="button-primary mt-8">Explore the Collection <ArrowRight className="size-4" /></Link><p className="mt-8 text-sm leading-7 text-[#173c33]">Own a distinctive home? <Link href="/vacation-rental-management" className="underline underline-offset-4">Explore our Pacific Northwest vacation rental management</Link>.</p></div></section>
     </>
   )
 }

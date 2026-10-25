@@ -1,0 +1,46 @@
+{
+  "validated_at": "2026-10-25",
+  "environment": "local production build",
+  "crawler_checks": [
+    {
+      "user_agent": "Mozilla/5.0",
+      "status": 200,
+      "faq_answers_in_html": 8,
+      "canonical": "https://enchantedhavens.com/vacation-rental-management",
+      "visible_text_characters": 9302
+    },
+    {
+      "user_agent": "Googlebot",
+      "status": 200,
+      "faq_answers_in_html": 8,
+      "canonical": "https://enchantedhavens.com/vacation-rental-management",
+      "visible_text_characters": 9302
+    },
+    {
+      "user_agent": "Bingbot",
+      "status": 200,
+      "faq_answers_in_html": 8,
+      "canonical": "https://enchantedhavens.com/vacation-rental-management",
+      "visible_text_characters": 9302
+    },
+    {
+      "user_agent": "OAI-SearchBot",
+      "status": 200,
+      "faq_answers_in_html": 8,
+      "canonical": "https://enchantedhavens.com/vacation-rental-management",
+      "visible_text_characters": 9302
+    },
+    {
+      "user_agent": "ChatGPT-User",
+      "status": 200,
+      "faq_answers_in_html": 8,
+      "canonical": "https://enchantedhavens.com/vacation-rental-management",
+      "visible_text_characters": 9302
+    }
+  ],
+  "robots": "public crawlers allowed",
+  "sitemap_images": 4,
+  "legacy_redirect": "308, campaign preserved",
+  "receipt": "noindex",
+  "static_html": true
+}

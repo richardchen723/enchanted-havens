@@ -1,6 +1,7 @@
 import { resolve4 } from "node:dns/promises"
 import nodemailer from "nodemailer"
 import type { Guest, Property, PropertyVariant, Quote } from "@/lib/schemas"
+import type { OwnerInquiry } from "@/lib/owner-inquiry-schema"
 import { formatCurrency } from "@/lib/utils"
 
 export const DEFAULT_CONTACT_TO_EMAIL = "stays@enchantedhavens.com"
@@ -9,7 +10,7 @@ export function isEmailConfigured() {
   return Boolean(process.env.GMAIL_USER && process.env.GMAIL_APP_PASSWORD)
 }
 
-async function googleTransport() {
+async function googleTransport(ownerInquiry = false) {
   const user = process.env.GMAIL_USER
   const pass = process.env.GMAIL_APP_PASSWORD
   if (!user || !pass) return null
@@ -25,6 +26,8 @@ async function googleTransport() {
       requireTLS: true,
       auth: { user, pass },
       tls: { servername: smtpServer },
+      // Keep owner form delivery within its request deadline; other mail flows retain their defaults.
+      ...(ownerInquiry ? { connectionTimeout: 10000, greetingTimeout: 10000, socketTimeout: 20000 } : {}),
     }),
   }
 }
@@ -61,6 +64,23 @@ export async function sendContactNotification(input: ContactInquiryEmail) {
     return true
   } catch {
     throw new Error("The inquiry notification could not be delivered.")
+  }
+}
+
+export async function sendOwnerInquiryNotification(input: OwnerInquiry & { reference: string }) {
+  const mail = await googleTransport(true)
+  if (!mail) return false
+  try {
+    const result = await mail.transporter.sendMail({
+      from: mail.from,
+      to: process.env.OWNER_INQUIRY_TO_EMAIL || process.env.CONTACT_TO_EMAIL || DEFAULT_CONTACT_TO_EMAIL,
+      replyTo: input.email,
+      subject: `Owner management inquiry ${input.reference} from ${input.name}`,
+      text: `OWNER MANAGEMENT INQUIRY\nReference: ${input.reference}\nName: ${input.name}\nEmail: ${input.email}\nPhone: ${input.phone || "Not provided"}\nProperty location: ${input.propertyLocation}\n\n${input.message || "No additional details provided."}\n\nSource: /vacation-rental-management\nReferral host: ${input.referrerHost || "Not available"}\nCampaign: ${input.utmCampaign || "Not available"}\nSource / medium: ${input.utmSource || "Not available"} / ${input.utmMedium || "Not available"}`,
+    })
+    return Boolean(result.accepted?.length)
+  } catch {
+    throw new Error("The owner inquiry notification could not be delivered.")
   }
 }
 

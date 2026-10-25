@@ -20,6 +20,15 @@ export function brandContactPoint() {
       areaServed: "US",
       availableLanguage: ["en-US", "en"],
     },
+    {
+      "@type": "ContactPoint",
+      contactType: "vacation rental management inquiries",
+      email: BRAND_CONTACT_EMAIL,
+      telephone: BRAND_CONTACT_PHONE,
+      url: absoluteUrl("/vacation-rental-management#owner-inquiry"),
+      areaServed: "Washington, US",
+      availableLanguage: ["en-US", "en"],
+    },
   ]
 }
 

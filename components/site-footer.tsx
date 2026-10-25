@@ -11,6 +11,7 @@ const exploreLinks = [
   ["The Havens", "/havens"],
   ["Experiences", "/experiences"],
   ["Our Story", "/story"],
+  ["For Owners", "/vacation-rental-management"],
   ["Contact", "/contact"],
 ] as const
 

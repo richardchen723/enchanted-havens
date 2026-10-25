@@ -221,6 +221,7 @@ export function PropertyDetail({ property, variant, bookingLive = false, quoteAv
               <PropertyMap variant={variant} location={property.location} locationSummary={locationSummary} />
               <AirbnbReviews variant={variant} />
               {!property.estate ? <PropertyFaq name={variant.shortName} items={seo.faq.slice(0, 5)} /> : null}
+              <p className="border-t border-black/10 py-6 text-sm leading-7 text-[#173c33]">Own a home in the Pacific Northwest? <Link href="/vacation-rental-management" className="underline underline-offset-4">Discover Enchanted Havens vacation rental management</Link>.</p>
             </div>
 
             <BookingPanel key={`${variant.id}:${initialSelection?.checkIn || ""}:${initialSelection?.checkOut || ""}:${initialSelection?.guests || ""}`} property={bookingProperty} variant={bookingVariant} bookingLive={bookingLive} quoteAvailable={quoteAvailable} initialSelection={initialSelection} preservedQuery={preservedQuery} returnTo={returnTo} />

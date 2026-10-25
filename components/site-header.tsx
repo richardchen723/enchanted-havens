@@ -14,6 +14,7 @@ const links = [
   ["The Havens", "/havens"],
   ["Experiences", "/experiences"],
   ["Our Story", "/story"],
+  ["For Owners", "/vacation-rental-management"],
   ["Contact", "/contact"],
 ] as const
 
@@ -24,6 +25,7 @@ function isActivePath(pathname: string, href: string) {
 }
 
 function isImmersive(pathname: string) {
+  if (pathname === "/vacation-rental-management") return true
   return pathname === "/" || pathname.startsWith("/havens") || pathname.startsWith("/destinations") || pathname.startsWith("/stays") || pathname.startsWith("/groups") || pathname.startsWith("/amenities") || pathname.startsWith("/experiences") || pathname === "/story" || pathname === "/contact"
 }
 
@@ -139,7 +141,7 @@ export function SiteHeader() {
         </div>
       </div>
 
-      <CouponPromotion pathname={pathname || "/"} />
+      {!pathname.startsWith("/vacation-rental-management") && <CouponPromotion pathname={pathname || "/"} />}
 
       {open && (
         <nav ref={mobileNavRef} id="mobile-navigation" aria-label="Mobile navigation" className="fixed inset-x-0 top-[var(--header-height)] max-h-[calc(100dvh-var(--header-height))] min-h-[calc(100dvh-var(--header-height))] overflow-y-auto border-t border-black/8 bg-[#faf7f0] px-5 py-10 text-[#173c33] lg:hidden">
