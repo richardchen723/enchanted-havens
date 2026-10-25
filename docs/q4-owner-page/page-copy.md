@@ -41,11 +41,11 @@ Optional expanded results: show the estimated USD revenue, days available, and o
 
 More than 42,000 people follow Enchanted Havens on Instagram. Our photography and films introduce guests to the homes, landscapes, and moments that make a Pacific Northwest stay memorable.
 
-Four selected Reels have about 1.4 million combined views. Explore the original posts to see how we bring the collection to life.
+A single EH Reel has earned more than 400,000 views. Explore the original posts to see how we bring the collection to life.
 
-Display: 42K+ Instagram followers · About 1.4M views across four selected Reels
+Display: 42K+ Instagram followers · 400K+ views on a single Instagram Reel
 
-Caption: Public counts observed October 25, 2026. Views are cumulative plays across these posts, not unique people or attributed bookings.
+Caption: Public counts observed October 25, 2026. Each count shows cumulative views for that Reel, not unique people or attributed bookings.
 
 Action: Explore @enchanted.havens
 

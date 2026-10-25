@@ -50,7 +50,7 @@ The public [EH Instagram profile](https://www.instagram.com/enchanted.havens/ree
 | [DYh7lDyIt-5](https://www.instagram.com/enchanted.havens/reel/DYh7lDyIt-5/) | 330K |
 | [DZYSphUofEg](https://www.instagram.com/enchanted.havens/reel/DZYSphUofEg/) | 264K |
 
-Safe wording: **42K+ Instagram followers** and **about 1.4 million combined views across four selected Reels**, observed October 25, 2026. These are lifetime counts on the selected posts, not a monthly total, unique audience, or booking conversion measure.
+Published wording: **42K+ Instagram followers** and **400K+ views on a single Instagram Reel**. Rechecked the public Reels grid on October 25, 2026: pinned Reel DXsNWoUCNO6 displays 405K views. This clearer single-post result replaces the four-Reel sum at the owner’s request. Individual Reel examples remain linked as evidence. These are cumulative post view counts, not a monthly total, unique audience, or booking conversion measure. The available Instagram session is logged out, so private Insights accounts reached and audience breakdowns are not available.
 
 The user's organic-growth and local-following descriptions require Instagram Insights for substantiation. Use audience geography and organic/paid reporting over a stated period before publishing a specific local or organic percentage. A full-account “millions of views” claim should use an export with a defined period and metric, rather than adding an incomplete sample indefinitely.
 

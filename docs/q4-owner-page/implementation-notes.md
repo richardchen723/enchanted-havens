@@ -34,7 +34,7 @@ The page uses the verified October 25 snapshot from `evidence-register.md`: Emer
 
 The owner subsequently supplied Aurora Haven's updated rank of #15 among 774 Port Angeles listings, which is included in the public table. The proof card now reads “Top 5%” across the homes' respective markets, as requested.
 
-Instagram proof uses 42K+ followers and approximately 1.4 million combined views on four linked Reels. The copy does not claim verified local audience composition, organic acquisition, unique reach, or bookings attributed to those views. Refresh the source data and evidence date together when updating the claims in `lib/owner-management.ts`.
+Instagram proof uses 42K+ followers and 400K+ views on a single Reel, supported by the linked Reel with a public count of 405K. Four individual Reel examples remain linked below. The single-Reel result replaces the arbitrary four-post sum in the headline. The copy does not claim verified local audience composition, organic acquisition, unique reach, or bookings attributed to those views. Refresh the source data and evidence date together when updating the claims in `lib/owner-management.ts`.
 
 ## Inquiry delivery
 
