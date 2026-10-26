@@ -14,7 +14,7 @@ let input: ReturnType<typeof ownerInquirySchema.parse>
 beforeEach(() => {
   vi.clearAllMocks()
   records = new Map()
-  input = ownerInquirySchema.parse({ name: "Avery Stone", email: "avery@example.com", propertyLocation: "Port Angeles", submissionKey: randomUUID() })
+  input = ownerInquirySchema.parse({ name: "Avery Stone", email: "avery@example.com", propertyAddress: "123 Example Lane, Port Angeles, WA 98362", bedrooms: 3, bathrooms: 2.5, features: ["Lakefront", "Sauna"], submissionKey: randomUUID() })
   mocks.configured.mockReturnValue(true)
   mocks.send.mockResolvedValue(true)
   mocks.sql.mockImplementation(async (_strings, ...values) => {
@@ -33,6 +33,11 @@ beforeEach(() => {
 })
 
 describe("owner inquiry persistence and retries", () => {
+  it("stores the address, room counts, and selected features and sends them to the team", async () => {
+    await deliverOwnerInquiry(input)
+    expect(mocks.sql.mock.calls[0][5]).toMatchObject({ propertyAddress: input.propertyAddress, bedrooms: 3, bathrooms: 2.5, features: ["Lakefront", "Sauna"] })
+    expect(mocks.send).toHaveBeenCalledWith(expect.objectContaining({ propertyAddress: input.propertyAddress, bedrooms: 3, bathrooms: 2.5, features: ["Lakefront", "Sauna"] }))
+  })
   it("does not send or claim success without durable storage", async () => {
     mocks.configured.mockReturnValue(false)
     await expect(deliverOwnerInquiry(input)).rejects.toMatchObject({ status: 503 })
@@ -61,7 +66,9 @@ describe("owner inquiry persistence and retries", () => {
 
   it("rejects a reused submission key carrying different owner details", async () => {
     await deliverOwnerInquiry(input)
-    await expect(deliverOwnerInquiry({ ...input, email: "another@example.com" })).rejects.toMatchObject({ status: 409 })
+    for (const change of [{ email: "another@example.com" }, { bedrooms: 4 }, { bathrooms: 3 }, { propertyAddress: "456 Example Lane, Port Angeles, WA 98362" }, { features: ["Hot tub"] as typeof input.features }]) {
+      await expect(deliverOwnerInquiry({ ...input, ...change })).rejects.toMatchObject({ status: 409 })
+    }
     expect(mocks.send).toHaveBeenCalledTimes(1)
   })
 })

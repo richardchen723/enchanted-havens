@@ -76,7 +76,7 @@ export async function sendOwnerInquiryNotification(input: OwnerInquiry & { refer
       to: process.env.OWNER_INQUIRY_TO_EMAIL || process.env.CONTACT_TO_EMAIL || DEFAULT_CONTACT_TO_EMAIL,
       replyTo: input.email,
       subject: `Owner management inquiry ${input.reference} from ${input.name}`,
-      text: `OWNER MANAGEMENT INQUIRY\nReference: ${input.reference}\nName: ${input.name}\nEmail: ${input.email}\nPhone: ${input.phone || "Not provided"}\nProperty location: ${input.propertyLocation}\n\n${input.message || "No additional details provided."}\n\nSource: /vacation-rental-management\nReferral host: ${input.referrerHost || "Not available"}\nCampaign: ${input.utmCampaign || "Not available"}\nSource / medium: ${input.utmSource || "Not available"} / ${input.utmMedium || "Not available"}`,
+      text: `OWNER MANAGEMENT INQUIRY\nReference: ${input.reference}\nName: ${input.name}\nEmail: ${input.email}\nPhone: ${input.phone || "Not provided"}\nProperty address: ${input.propertyAddress}\nBedrooms: ${input.bedrooms === 0 ? "0 (studio)" : input.bedrooms}\nBathrooms: ${input.bathrooms}\nProperty features: ${input.features.length ? input.features.join(", ") : "Not provided"}\n\n${input.message || "No additional details provided."}\n\nSource: /vacation-rental-management\nReferral host: ${input.referrerHost || "Not available"}\nCampaign: ${input.utmCampaign || "Not available"}\nSource / medium: ${input.utmSource || "Not available"} / ${input.utmMedium || "Not available"}`,
     })
     return Boolean(result.accepted?.length)
   } catch {

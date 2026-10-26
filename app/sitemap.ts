@@ -4,7 +4,7 @@ import { BRAND_HERO_URL, experienceTiles, homeHeroSlides } from "@/lib/editorial
 import type { Property } from "@/lib/schemas"
 import { seoHubs, seoLandingPages } from "@/lib/seo-pages"
 import { absoluteUrl } from "@/lib/utils"
-import { OWNER_EVIDENCE_DATE, OWNER_HERO_IMAGE, OWNER_PAGE_PATH, ownerRegions } from "@/lib/owner-management"
+import { OWNER_PAGE_UPDATED_DATE, OWNER_HERO_IMAGE, OWNER_PAGE_PATH, ownerRegions } from "@/lib/owner-management"
 
 const SITEMAP_LAST_MODIFIED = new Date().toISOString()
 const HAVENS_HERO_IMAGE = "/images/home-hero/heros-zip/hero-04.webp"
@@ -59,7 +59,7 @@ export function buildSitemap(catalog: Property[]): MetadataRoute.Sitemap {
   return [
     {
       url: absoluteUrl(OWNER_PAGE_PATH),
-      lastModified: OWNER_EVIDENCE_DATE,
+      lastModified: OWNER_PAGE_UPDATED_DATE,
       changeFrequency: "monthly",
       priority: 0.85,
       images: sitemapImages([OWNER_HERO_IMAGE, ...ownerRegions.map((region) => region.image)]),

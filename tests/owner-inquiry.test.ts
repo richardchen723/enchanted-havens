@@ -7,7 +7,8 @@ vi.mock("@/lib/owner-inquiries", async (importOriginal) => ({ ...await importOri
 import { POST } from "@/app/api/owner-inquiries/route"
 import { OwnerInquiryError } from "@/lib/owner-inquiries"
 
-const details = { name: "Avery Stone", email: "avery@example.com", propertyLocation: "Port Angeles" }
+const details = { name: "Avery Stone", email: "avery@example.com", propertyAddress: "123 Example Lane, Port Angeles, WA 98362", bedrooms: "3", bathrooms: "2.5" }
+const normalizedDetails = { ...details, bedrooms: 3, bathrooms: 2.5, features: [] }
 function jsonRequest(body: unknown, ip = randomUUID()) {
   return new Request("https://enchantedhavens.com/api/owner-inquiries", { method: "POST", headers: { "Content-Type": "application/json", "X-Forwarded-For": ip }, body: JSON.stringify(body) })
 }
@@ -16,10 +17,20 @@ beforeEach(() => { mocks.deliver.mockReset(); mocks.deliver.mockResolvedValue({ 
 afterEach(() => { vi.restoreAllMocks() })
 
 describe("owner inquiry validation and delivery", () => {
-  it("requires only name, email and location, and normalizes whitespace", () => {
-    expect(ownerInquirySchema.parse({ ...details, name: "  Avery Stone  " })).toMatchObject({ ...details, phone: "", message: "" })
-    for (const propertyLocation of ["", "  "]) expect(ownerInquirySchema.safeParse({ ...details, propertyLocation }).success).toBe(false)
+  it("requires contact and property details, and normalizes whitespace and room counts", () => {
+    expect(ownerInquirySchema.parse({ ...details, name: "  Avery Stone  ", propertyAddress: `  ${details.propertyAddress}  ` })).toMatchObject({ ...normalizedDetails, phone: "", message: "" })
+    for (const propertyAddress of ["", "  ", "PA"]) expect(ownerInquirySchema.safeParse({ ...details, propertyAddress }).success).toBe(false)
     expect(ownerInquirySchema.safeParse({ ...details, email: "incorrect" }).success).toBe(false)
+  })
+  it("accepts studios and half bathrooms while rejecting missing or invalid counts", () => {
+    expect(ownerInquirySchema.parse({ ...details, bedrooms: "0", bathrooms: "0.5" })).toMatchObject({ bedrooms: 0, bathrooms: 0.5 })
+    expect(ownerInquirySchema.parse({ ...details, bedrooms: 3, bathrooms: 2.5 })).toMatchObject({ bedrooms: 3, bathrooms: 2.5 })
+    for (const bedrooms of [undefined, null, "", "  ", true, -1, 1.5, "many", 51]) expect(ownerInquirySchema.safeParse({ ...details, bedrooms }).success).toBe(false)
+    for (const bathrooms of [undefined, null, "", "  ", true, 0, -1, 1.25, "many", 51]) expect(ownerInquirySchema.safeParse({ ...details, bathrooms }).success).toBe(false)
+  })
+  it("accepts multiple known features, removes duplicates, and rejects unknown features", () => {
+    expect(ownerInquirySchema.parse({ ...details, features: ["Lakefront", "Hot tub", "Lakefront"] }).features).toEqual(["Lakefront", "Hot tub"])
+    expect(ownerInquirySchema.safeParse({ ...details, features: ["Unknown feature"] }).success).toBe(false)
   })
   it("rejects bot fields and header injection without sending", async () => {
     for (const invalid of [{ website: "spam" }, { name: "Avery\r\nBcc: other@example.com" }, { message: "x".repeat(4001) }]) {
@@ -29,10 +40,10 @@ describe("owner inquiry validation and delivery", () => {
   })
   it("only confirms success after delivery and passes the retry key through", async () => {
     const submissionKey = randomUUID()
-    const response = await POST(jsonRequest({ ...details, submissionKey }))
+    const response = await POST(jsonRequest({ ...details, submissionKey, features: ["Lakefront", "Sauna"] }))
     expect(response.status).toBe(200)
     expect(await response.json()).toMatchObject({ ok: true, reference: "EH-OWNER-12345678" })
-    expect(mocks.deliver).toHaveBeenCalledWith(expect.objectContaining({ ...details, submissionKey }))
+    expect(mocks.deliver).toHaveBeenCalledWith(expect.objectContaining({ ...normalizedDetails, submissionKey, features: ["Lakefront", "Sauna"] }))
     expect(response.headers.get("cache-control")).toBe("no-store")
   })
   it("returns a retryable error when delivery is unavailable, without a success receipt", async () => {
@@ -42,16 +53,27 @@ describe("owner inquiry validation and delivery", () => {
     expect(await response.json()).toEqual({ error: "Please call our team." })
   })
   it("accepts native browser form posts without JavaScript and redirects after success", async () => {
-    const response = await POST(new Request("https://enchantedhavens.com/api/owner-inquiries", { method: "POST", body: new URLSearchParams(details), headers: { "X-Forwarded-For": randomUUID() } }))
+    const body = new URLSearchParams(details)
+    body.append("features", "Oceanfront")
+    body.append("features", "Hot tub")
+    const response = await POST(new Request("https://enchantedhavens.com/api/owner-inquiries", { method: "POST", body, headers: { "X-Forwarded-For": randomUUID() } }))
     expect(response.status).toBe(303)
     expect(response.headers.get("location")).toBe("/vacation-rental-management/thank-you")
+    expect(mocks.deliver).toHaveBeenCalledWith(expect.objectContaining({ ...normalizedDetails, features: ["Oceanfront", "Hot tub"] }))
   })
   it("preserves and escapes entered details on native form failure", async () => {
     mocks.deliver.mockRejectedValue(new OwnerInquiryError("Temporarily unavailable.", 503))
-    const response = await POST(new Request("https://enchantedhavens.com/api/owner-inquiries", { method: "POST", body: new URLSearchParams({ ...details, message: '</textarea><script>alert("test")</script>' }), headers: { "X-Forwarded-For": randomUUID() } }))
+    const body = new URLSearchParams({ ...details, propertyAddress: '123 "Example" Lane, Port Angeles, WA 98362', message: '</textarea><script>alert("test")</script>' })
+    body.append("features", "Lakefront")
+    body.append("features", "Sauna")
+    const response = await POST(new Request("https://enchantedhavens.com/api/owner-inquiries", { method: "POST", body, headers: { "X-Forwarded-For": randomUUID() } }))
     const html = await response.text()
     expect(response.status).toBe(503)
-    expect(html).toContain('value="Port Angeles"')
+    expect(html).toContain('value="123 &quot;Example&quot; Lane, Port Angeles, WA 98362"')
+    expect(html).toContain('name="bedrooms" type="number" value="3"')
+    expect(html).toContain('name="bathrooms" type="number" value="2.5"')
+    expect(html).toContain('value="Lakefront" checked')
+    expect(html).toContain('value="Sauna" checked')
     expect(html).toContain("&lt;/textarea&gt;&lt;script&gt;")
     expect(html).not.toContain("<script>")
     expect(html).toMatch(/name="submissionKey" value="[\da-f-]{36}"/)

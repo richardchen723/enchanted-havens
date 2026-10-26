@@ -96,7 +96,7 @@ On mobile, stack the hero content and evidence; retain market names, denominator
 
 ## Inquiry experience
 
-Three required fields are enough to begin: **Name**, **Email**, and **Property location**. The location field accepts a town or area; an exact address is optional. Offer **Phone** and **Anything you would like us to know?** as optional fields. A listing URL can be pasted in the latter field.
+The inquiry form requires **Name**, **Email**, **Property address** (street, city, state, ZIP), **Bedrooms**, and **Bathrooms** so the team can research the home before following up. Accept 0 bedrooms for studios and half bathrooms. Group the property details together, with bedroom and bathroom inputs side by side. Offer optional checkboxes for **Oceanfront**, **Lakefront**, **Scenic view**, **Hot tub**, **Sauna**, and **Pet-friendly**. Keep **Phone** and **Anything you would like us to know?** optional; the note can include an existing listing URL or other features.
 
 Use the same CTA wording throughout: **Tell us about your home**. The form submit label is **Send my inquiry**. Explain that the next step is a conversation about the property and the owner's goals. Do not require a calendar booking, account, document upload, or revenue disclosure to submit.
 

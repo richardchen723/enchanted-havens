@@ -7,7 +7,7 @@ Release prepared for production on October 25, 2026, based on the current produc
 - Canonical route: `/vacation-rental-management`.
 - `/management` permanently redirects with status 308 and retains campaign parameters.
 - Full-service management is the main offer. The page uses EH's existing typography, forest/ivory palette, property photography, header, and footer.
-- Three required inquiry fields: name, email, and property location. Phone and a note are optional. The form comes before call/text alternatives on mobile.
+- Five required inquiry fields: name, email, full property address, bedrooms, and bathrooms. Studios (0 bedrooms) and half bathrooms are supported. Oceanfront, lakefront, scenic view, hot tub, sauna, and pet-friendly checkboxes are optional, as are phone and a note. The form comes before call/text alternatives on mobile.
 - A mobile contact bar appears after the hero and disappears when the inquiry section is visible. Guest chat and stay promotions are suppressed on owner pages.
 - Header, footer, story, and property-detail links make the page discoverable within the existing site.
 
@@ -40,6 +40,8 @@ Instagram proof uses 42K+ followers and 400K+ views on a single Reel, supported 
 
 `POST /api/owner-inquiries` validates input, rejects honeypot and invalid-origin submissions, bounds request size, and applies a basic per-process IP attempt limit. It accepts JSON and native form posts. Native failures preserve and escape entered values; successful native submissions redirect to a noindex receipt page.
 
+The October 26 update captures the full property address, numeric room counts, and all selected features in the existing JSON details record and the team email; no database migration is needed. Both JavaScript and native form submissions retain all selected checkboxes and preserve the values on failure. Counts are validated server-side as well as in the browser.
+
 The server stores the inquiry in PostgreSQL before notifying the team through the existing Gmail transport. A persistent submission key and row lock prevent ordinary retries from sending another notification. The UI confirms success only after SMTP accepts a recipient. Failed delivery retains the stored inquiry and allows a retry with the same reference. As with ordinary SMTP, a crash between accepted mail and the database update can still cause a duplicate on retry.
 
 Recipient order: `OWNER_INQUIRY_TO_EMAIL`, then `CONTACT_TO_EMAIL`, then `stays@enchantedhavens.com`. The optional owner-specific setting is documented in `.env.example`. Existing database and Gmail credentials are required; the existing schema initializer creates `owner_inquiries`. No new external service is required. The basic IP limiter is not a distributed abuse-prevention service.
@@ -47,6 +49,8 @@ Recipient order: `OWNER_INQUIRY_TO_EMAIL`, then `CONTACT_TO_EMAIL`, then `stays@
 Owner funnel events track intent, start, success, and error without sending form contact details to analytics. Form fields are masked for Clarity. The privacy page describes the inquiry data and optional campaign/referral attribution.
 
 ## Validation
+
+October 26 form update: 221 tests across 38 files, TypeScript, and the optimized build passed in the workspace. The owner-specific suite has 23 tests, including numeric validation, multi-feature JSON/native submissions, persistence, email content, and retry preservation. Desktop, 390px, and 320px layouts were inspected. Delivery tests use mocked storage/email; no live test inquiry was sent.
 
 - Original workspace unit suite: 38 files, 217 tests passed. Isolated production release: 36 files, 205 tests passed; unrelated pending checkout and marketing changes are excluded.
 - Owner-specific suite: 4 files, 19 tests passed, including validation, native form submissions, delivery failure, persistent retry behavior, changed-payload rejection, recipient routing, and search metadata.

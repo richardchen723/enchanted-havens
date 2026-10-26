@@ -143,7 +143,10 @@ Tell us a little about your property and what you are looking for. Our team will
 
 - Name — required
 - Email — required
-- Property location — required; town or area is enough to begin
+- Property address — required; street address, city, state, and ZIP code
+- Bedrooms — required; whole numbers, including 0 for a studio
+- Bathrooms — required; half bathrooms supported (for example, 2.5)
+- Property features — optional checkboxes: Oceanfront, Lakefront, Scenic view, Hot tub, Sauna, Pet-friendly
 - Phone — optional
 - Anything you would like us to know? — optional; goals, timing, or a listing link
 

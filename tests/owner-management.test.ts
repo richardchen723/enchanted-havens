@@ -34,7 +34,7 @@ describe("owner management search discovery", () => {
 
   it("includes the canonical with images and a real content date, excluding receipts and redirects", () => {
     const sitemap = buildSitemap([])
-    expect(sitemap.find((item) => item.url === absoluteUrl(OWNER_PAGE_PATH))).toMatchObject({ lastModified: "2026-10-25", images: expect.arrayContaining([expect.stringContaining("sea-renity-firepit-exterior.webp")]) })
+    expect(sitemap.find((item) => item.url === absoluteUrl(OWNER_PAGE_PATH))).toMatchObject({ lastModified: "2026-10-26", images: expect.arrayContaining([expect.stringContaining("sea-renity-firepit-exterior.webp")]) })
     expect(sitemap.some((item) => /management\/thank-you|\/management$/.test(item.url))).toBe(false)
   })
 

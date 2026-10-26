@@ -4,6 +4,7 @@ import Link from "next/link"
 import { useEffect, useRef, useState, type FormEvent } from "react"
 import { ArrowRight, CheckCircle2, LoaderCircle } from "lucide-react"
 import { trackConversionEvent } from "@/lib/analytics"
+import { OWNER_PROPERTY_FEATURES } from "@/lib/owner-property-features"
 
 export function OwnerInquiryForm() {
   const [state, setState] = useState<"idle" | "sending" | "sent" | "error">("idle")
@@ -21,7 +22,8 @@ export function OwnerInquiryForm() {
     pending.current = true
     setState("sending")
     setError("")
-    const details = Object.fromEntries(new FormData(event.currentTarget))
+    const formData = new FormData(event.currentTarget)
+    const details = { ...Object.fromEntries(formData), features: formData.getAll("features") }
     const signature = JSON.stringify(details)
     if (!requestRef.current || requestRef.current.signature !== signature) {
       const params = new URLSearchParams(window.location.search)
@@ -48,10 +50,22 @@ export function OwnerInquiryForm() {
   return (
     <form action="/api/owner-inquiries" method="post" onSubmit={submit} aria-label="Owner management inquiry" aria-busy={state === "sending"} className="grid gap-5" data-clarity-mask="true" onFocusCapture={() => { if (!started.current) { started.current = true; trackConversionEvent("Owner Inquiry Started", { intent: "full_service_management" }) } }}>
       <div hidden aria-hidden="true"><label>Leave this field blank<input name="website" tabIndex={-1} autoComplete="off" /></label></div>
-      <p className="text-sm text-black/65">Three details to begin. No exact address needed.</p>
+      <p className="text-sm leading-7 text-black/65">These details help us review your home and its local market before we connect.</p>
       <label htmlFor="owner-name"><span className="mb-2 block text-sm text-[#173c33]">Name <span aria-hidden="true">*</span></span><input id="owner-name" className="field text-base" name="name" autoComplete="name" required minLength={2} maxLength={120} /></label>
       <label htmlFor="owner-email"><span className="mb-2 block text-sm text-[#173c33]">Email <span aria-hidden="true">*</span></span><input id="owner-email" className="field text-base" name="email" type="email" autoComplete="email" required maxLength={254} /></label>
-      <label htmlFor="owner-location"><span className="mb-2 block text-sm text-[#173c33]">Property location <span aria-hidden="true">*</span></span><input id="owner-location" className="field text-base" name="propertyLocation" placeholder="Town or area" required minLength={2} maxLength={300} aria-describedby="owner-location-help" /><span id="owner-location-help" className="mt-2 block text-xs leading-6 text-black/60">For example, Port Angeles, Belfair, or Oak Harbor.</span></label>
+      <fieldset className="grid min-w-0 gap-5 border-t border-[#173c33]/15 pt-5">
+        <legend className="pr-3 text-sm font-medium text-[#173c33]">About your property</legend>
+        <label htmlFor="owner-address"><span className="mb-2 block text-sm text-[#173c33]">Property address <span aria-hidden="true">*</span></span><input id="owner-address" className="field text-base" name="propertyAddress" autoComplete="street-address" placeholder="Street address, city, state, ZIP" required minLength={8} maxLength={300} aria-describedby="owner-address-help" /><span id="owner-address-help" className="mt-2 block text-xs leading-6 text-black/60">Include the street address, city, state, and ZIP code.</span></label>
+        <div className="grid grid-cols-2 gap-4">
+          <label htmlFor="owner-bedrooms"><span className="mb-2 block text-sm text-[#173c33]">Bedrooms <span aria-hidden="true">*</span></span><input id="owner-bedrooms" className="field text-base" name="bedrooms" type="number" inputMode="numeric" min={0} max={50} step={1} required placeholder="e.g. 3" aria-describedby="owner-bedrooms-help" /><span id="owner-bedrooms-help" className="mt-2 block text-xs leading-6 text-black/60">Enter 0 for a studio.</span></label>
+          <label htmlFor="owner-bathrooms"><span className="mb-2 block text-sm text-[#173c33]">Bathrooms <span aria-hidden="true">*</span></span><input id="owner-bathrooms" className="field text-base" name="bathrooms" type="number" inputMode="decimal" min={0.5} max={50} step={0.5} required placeholder="e.g. 2.5" aria-describedby="owner-bathrooms-help" /><span id="owner-bathrooms-help" className="mt-2 block text-xs leading-6 text-black/60">Half baths count as 0.5.</span></label>
+        </div>
+        <fieldset className="min-w-0">
+          <legend className="text-sm text-[#173c33]">Property features (optional)</legend>
+          <p className="mt-1 text-xs leading-6 text-black/60">Select all that apply.</p>
+          <div className="mt-2 grid grid-cols-2 gap-x-4 gap-y-1">{OWNER_PROPERTY_FEATURES.map((feature) => <label key={feature} className="flex min-h-11 cursor-pointer items-center gap-3 text-sm text-[#173c33]"><input type="checkbox" name="features" value={feature} className="size-4 shrink-0 accent-[#173c33]" />{feature}</label>)}</div>
+        </fieldset>
+      </fieldset>
       <details className="border-y border-[#173c33]/15 py-4"><summary className="cursor-pointer text-sm leading-7 text-[#173c33]">Add a phone number or a note (optional)</summary><div className="mt-5 grid gap-5"><label htmlFor="owner-phone"><span className="mb-2 block text-sm">Phone (optional)</span><input id="owner-phone" className="field text-base" name="phone" type="tel" autoComplete="tel" maxLength={40} /></label><label htmlFor="owner-message"><span className="mb-2 block text-sm">Anything you would like us to know? (optional)</span><textarea id="owner-message" className="field min-h-32 resize-y text-base" name="message" maxLength={4000} placeholder="Your goals, timing, or an existing listing link." /></label></div></details>
       {state === "error" && <p role="alert" className="border-l-2 border-red-800 pl-4 text-sm leading-7 text-red-900">{error}</p>}
       <button type="submit" className="button-primary w-full" disabled={state === "sending"}>{state === "sending" ? <><LoaderCircle aria-hidden="true" className="size-4 animate-spin" /> Sending inquiry</> : <>Send my inquiry <ArrowRight aria-hidden="true" className="size-4" /></>}</button>

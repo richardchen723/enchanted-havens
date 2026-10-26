@@ -8,6 +8,7 @@ export const OWNER_PAGE_DESCRIPTION = "Full-service vacation rental management o
 export const OWNER_HERO_IMAGE = "/images/sea-renity/sea-renity-firepit-exterior.webp"
 export const OWNER_EVIDENCE_DATE = "2026-10-25"
 export const OWNER_EVIDENCE_DATE_LABEL = "October 25, 2026"
+export const OWNER_PAGE_UPDATED_DATE = "2026-10-26"
 
 export const ownerResults = [
   { name: "Emerald Haven", slug: "emerald-haven", market: "Port Angeles", rank: 1, listings: 774, estimatedRevenue: 264900, source: "https://app.airdna.co/data/us/airdna-50/airdna-3132/top-listings" },
@@ -58,7 +59,7 @@ export function ownerManagementSchema() {
     "@context": "https://schema.org",
     "@graph": [
       { "@type": "Organization", "@id": organizationId, ...brandEntityFields() },
-      { "@type": "WebPage", "@id": `${url}#webpage`, url, name: `${OWNER_PAGE_TITLE} | ${BRAND_NAME}`, description: OWNER_PAGE_DESCRIPTION, inLanguage: "en-US", dateModified: OWNER_EVIDENCE_DATE, isPartOf: { "@id": `${absoluteUrl()}#website` }, mainEntity: { "@id": `${url}#service` }, breadcrumb: { "@id": `${url}#breadcrumbs` }, hasPart: { "@id": `${url}#owner-questions` }, publisher: { "@id": organizationId }, primaryImageOfPage: { "@type": "ImageObject", url: absoluteUrl(OWNER_HERO_IMAGE) }, citation: [...new Set(ownerResults.map((result) => result.source))] },
+      { "@type": "WebPage", "@id": `${url}#webpage`, url, name: `${OWNER_PAGE_TITLE} | ${BRAND_NAME}`, description: OWNER_PAGE_DESCRIPTION, inLanguage: "en-US", dateModified: OWNER_PAGE_UPDATED_DATE, isPartOf: { "@id": `${absoluteUrl()}#website` }, mainEntity: { "@id": `${url}#service` }, breadcrumb: { "@id": `${url}#breadcrumbs` }, hasPart: { "@id": `${url}#owner-questions` }, publisher: { "@id": organizationId }, primaryImageOfPage: { "@type": "ImageObject", url: absoluteUrl(OWNER_HERO_IMAGE) }, citation: [...new Set(ownerResults.map((result) => result.source))] },
       { "@type": "Service", "@id": `${url}#service`, name: "Full-service vacation rental management", serviceType: "Short-term vacation rental property management", description: OWNER_PAGE_DESCRIPTION, url, provider: { "@id": organizationId }, areaServed: ["Port Angeles", "Belfair", "Oak Harbor"].map((name) => ({ "@type": "Place", name: `${name}, Washington` })), hasOfferCatalog: { "@type": "OfferCatalog", name: "Vacation rental management services", itemListElement: ownerServices.map((service) => ({ "@type": "Offer", itemOffered: { "@type": "Service", name: service.title, description: service.text } })) } },
       { "@type": "BreadcrumbList", "@id": `${url}#breadcrumbs`, itemListElement: [{ "@type": "ListItem", position: 1, name: "Home", item: absoluteUrl() }, { "@type": "ListItem", position: 2, name: "Vacation rental management", item: url }] },
       // The same answers are visible in the HTML. This does not promise FAQ rich results.
