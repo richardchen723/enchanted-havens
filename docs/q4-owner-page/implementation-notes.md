@@ -7,7 +7,7 @@ Release prepared for production on October 25, 2026, based on the current produc
 - Canonical route: `/vacation-rental-management`.
 - `/management` permanently redirects with status 308 and retains campaign parameters.
 - Full-service management is the main offer. The page uses EH's existing typography, forest/ivory palette, property photography, header, and footer.
-- Five required inquiry fields: name, email, full property address, bedrooms, and bathrooms. Studios (0 bedrooms) and half bathrooms are supported. Oceanfront, lakefront, scenic view, hot tub, sauna, and pet-friendly checkboxes are optional, as are phone and a note. The form comes before call/text alternatives on mobile.
+- Five required inquiry fields: name, email, full property address, bedrooms, and bathrooms. Studios (0 bedrooms) and half bathrooms are supported. Oceanfront, lakefront, scenic view, hot tub, sauna, and pet-friendly checkboxes are optional, as are phone and a note. All optional fields remain visible without an expandable section. The form comes before call/text alternatives on mobile.
 - A mobile contact bar appears after the hero and disappears when the inquiry section is visible. Guest chat and stay promotions are suppressed on owner pages.
 - Header, footer, story, and property-detail links make the page discoverable within the existing site.
 
