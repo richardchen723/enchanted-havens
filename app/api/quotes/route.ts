@@ -5,6 +5,7 @@ import { applyPropertyCoupon } from "@/lib/coupons"
 import { quoteRequestSchema } from "@/lib/schemas"
 import { nightsBetween } from "@/lib/utils"
 import { getSandboxQuote, isSandboxBooking } from "@/lib/sandbox-booking"
+import { applyRequestReferral } from "@/lib/affiliates"
 
 export async function POST(request: Request) {
   try {
@@ -31,7 +32,8 @@ export async function POST(request: Request) {
       const application = await applyPropertyCoupon({ propertySlug: property.slug, code: input.couponCode, quote })
       return Response.json({ quote: application.quote, coupon: application.coupon, source, sandboxWrites: isSandboxBooking() })
     }
-    return Response.json({ quote, source, sandboxWrites: isSandboxBooking() })
+    const referral = await applyRequestReferral(request, quote)
+    return Response.json({ quote: referral.quote, source, sandboxWrites: isSandboxBooking() })
   } catch (error) {
     return Response.json({ error: error instanceof Error ? error.message : "Unable to calculate this stay." }, { status: 400 })
   }

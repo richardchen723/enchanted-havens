@@ -5,6 +5,7 @@ import { stripe } from "@/lib/stripe"
 import { createBookingSession } from "@/lib/booking-sessions"
 import { createSandboxBookingSession, getSandboxQuote, isSandboxBooking } from "@/lib/sandbox-booking"
 import { applyPropertyCoupon, type CouponApplication } from "@/lib/coupons"
+import { applyRequestReferral } from "@/lib/affiliates"
 
 function getCustomerAddress(guest: Guest) {
   if (!guest.address && !guest.city && !guest.state && !guest.zipCode) return undefined
@@ -40,6 +41,7 @@ export async function POST(request: Request) {
         couponApplication = await applyPropertyCoupon({ propertySlug: property.slug, code: input.couponCode, quote, guestEmail: input.guest.email })
         quote = couponApplication.quote
       }
+      quote = (await applyRequestReferral(request, quote, input.couponCode)).quote
       const customer = await stripe().customers.create({
         email: input.guest.email,
         name: `${input.guest.firstName} ${input.guest.lastName}`,
@@ -63,7 +65,8 @@ export async function POST(request: Request) {
     const couponApplication = input.couponCode
       ? await applyPropertyCoupon({ propertySlug: property.slug, code: input.couponCode, quote: baseQuote, guestEmail: input.guest.email })
       : null
-    const quote = couponApplication?.quote || baseQuote
+    const referral = await applyRequestReferral(request, baseQuote, input.couponCode)
+    const quote = couponApplication?.quote || referral.quote
     const customer = await stripe().customers.create({
       email: input.guest.email,
       name: `${input.guest.firstName} ${input.guest.lastName}`,
@@ -87,8 +90,9 @@ export async function POST(request: Request) {
       guests: input.guests,
       guest: input.guest,
       quote,
-      baseQuote: couponApplication ? baseQuote : undefined,
+      baseQuote: couponApplication || referral.snapshot ? baseQuote : undefined,
       coupon: couponApplication?.coupon,
+      affiliateSnapshot: referral.snapshot,
       stripeCustomerId: customer.id,
       stripeSetupIntentId: setupIntent.id,
     })
