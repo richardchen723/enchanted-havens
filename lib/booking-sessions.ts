@@ -1,6 +1,8 @@
 import { randomUUID } from "node:crypto"
 import { db, ensureSchema } from "@/lib/db"
 import type { Guest, Quote } from "@/lib/schemas"
+import type { AffiliateSnapshot } from "@/lib/affiliate-rules"
+import { recordAffiliateCommission } from "@/lib/affiliates"
 
 export const TERMS_VERSION = "2026-06-13-v1"
 
@@ -19,6 +21,7 @@ export type BookingSessionRow = {
   coupon_id: string | null
   coupon_code: string | null
   coupon_discount_amount: number | null
+  affiliate_snapshot?: AffiliateSnapshot | null
   stripe_customer_id: string | null
   stripe_setup_intent_id: string | null
   stripe_payment_method_id: string | null
@@ -79,6 +82,7 @@ export async function createBookingSession(input: {
   quote: Quote
   baseQuote?: Quote
   coupon?: { id: string; code: string; discountAmount: number }
+  affiliateSnapshot?: AffiliateSnapshot | null
   stripeCustomerId: string
   stripeSetupIntentId: string
 }) {
@@ -89,13 +93,14 @@ export async function createBookingSession(input: {
     insert into booking_sessions (
       id, status, property_slug, variant_slug, listing_id, check_in, check_out, guests,
       guest, quote, base_quote, coupon_id, coupon_code, coupon_discount_amount,
-      stripe_customer_id, stripe_setup_intent_id, expires_at
+      stripe_customer_id, stripe_setup_intent_id, expires_at, affiliate_snapshot
     ) values (
       ${id}, 'pending', ${input.propertySlug}, ${input.variantSlug}, ${input.listingId},
       ${input.checkIn}, ${input.checkOut}, ${input.guests}, ${db().json(input.guest as never)},
       ${db().json(input.quote as never)}, ${input.baseQuote ? db().json(input.baseQuote as never) : null},
       ${input.coupon?.id || null}, ${input.coupon?.code || null}, ${input.coupon?.discountAmount || null},
-      ${input.stripeCustomerId}, ${input.stripeSetupIntentId}, ${expiresAt}
+      ${input.stripeCustomerId}, ${input.stripeSetupIntentId}, ${expiresAt},
+      ${input.affiliateSnapshot ? db().json(input.affiliateSnapshot as never) : null}
     )
   `
   return { id, expiresAt }
@@ -131,6 +136,7 @@ export async function markBookingConfirmed(input: { id: string; paymentMethodId:
       returning id
     `
     if (!rows[0]) return false
+    await recordAffiliateCommission(transaction, input.id)
     await transaction`update property_coupon_redemptions set confirmed_at = coalesce(confirmed_at, now()) where booking_session_id = ${input.id}`
     await transaction`
       insert into outbox_events (id, topic, payload)

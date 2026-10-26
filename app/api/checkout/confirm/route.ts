@@ -7,6 +7,7 @@ import { sendBookingConfirmation } from "@/lib/email"
 import { quoteHasChanged } from "@/lib/utils"
 import { confirmSandboxBookingSession, getSandboxBookingSession, isSandboxBooking } from "@/lib/sandbox-booking"
 import { applyPropertyCoupon, claimCouponRedemption, CouponValidationError } from "@/lib/coupons"
+import { affiliateSnapshotSchema, applyAffiliateSnapshot } from "@/lib/affiliate-rules"
 
 const RECONCILIATION_GRACE_MS = 60_000
 
@@ -113,6 +114,9 @@ export async function POST(request: Request) {
       return Response.json({ error: "These dates were just reserved by another guest. Your card was not charged." }, { status: 409 })
     }
     let freshQuote = freshBaseQuote
+    if (session.affiliate_snapshot && !session.coupon_id) {
+      freshQuote = applyAffiliateSnapshot(freshBaseQuote, affiliateSnapshotSchema.parse(session.affiliate_snapshot))
+    }
     if (session.coupon_id && session.coupon_code) {
       try {
         const application = await applyPropertyCoupon({

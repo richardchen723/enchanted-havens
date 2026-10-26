@@ -1,14 +1,15 @@
 import { format } from "date-fns"
-import { ArrowUpRight, BedDouble, House, Leaf, LogOut, Settings, Users } from "lucide-react"
+import { ArrowUpRight, BedDouble, House, Leaf, LogOut, Settings, Users, Handshake } from "lucide-react"
 import Link from "next/link"
 import { signOutAdminAction } from "@/app/admin/actions"
 import type { AdminUser } from "@/lib/admin-auth"
 
-type AdminSection = "overview" | "properties" | "team"
+type AdminSection = "overview" | "properties" | "team" | "affiliates"
 
 const navigation = [
   { id: "overview" as const, label: "Overview", icon: House, href: "/admin/dashboard" },
   { id: "properties" as const, label: "Properties", icon: BedDouble, href: "/admin/properties" },
+  { id: "affiliates" as const, label: "Affiliates", icon: Handshake, href: "/admin/affiliates" },
   { id: "team" as const, label: "Team", icon: Users, href: "/admin/dashboard#team" },
 ]
 
@@ -45,7 +46,7 @@ export function AdminShell({ viewer, active, children }: { viewer: AdminUser; ac
           <div><p className="text-[0.62rem] font-bold uppercase tracking-[0.18em] text-[#97723c]">Admin portal</p><p className="mt-1 hidden text-sm text-black/48 sm:block">{format(new Date(), "EEEE, MMMM d")}</p></div>
           <div className="flex items-center gap-3"><Link href="/" className="hidden min-h-10 items-center gap-2 rounded-lg border border-black/10 bg-white px-4 text-xs font-semibold sm:inline-flex">View website <ArrowUpRight className="size-3.5" /></Link><div className="grid size-10 place-items-center rounded-full bg-[#173c33] text-xs font-bold text-[#f3eee3]" title={viewer.fullName}>{adminInitials(viewer.fullName)}</div></div>
         </header>
-        <nav aria-label="Admin navigation" className="sticky top-20 z-20 grid grid-cols-3 border-b border-black/8 bg-[#f8f5ee] px-3 lg:hidden">
+        <nav aria-label="Admin navigation" className="sticky top-20 z-20 grid grid-cols-4 border-b border-black/8 bg-[#f8f5ee] px-3 lg:hidden">
           {navigation.map((item) => {
             const Icon = item.icon
             const current = item.id === active

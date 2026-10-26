@@ -212,4 +212,20 @@ describe("checkout confirmation API", () => {
     expect(mocks.markBookingConfirmed).not.toHaveBeenCalled()
     expect(mocks.sendBookingConfirmation).not.toHaveBeenCalled()
   })
+
+  it("honors referral terms saved before the payment redirect without needing the referral cookie", async () => {
+    const affiliateSnapshot = {
+      affiliateId: "0d60019d-1d4f-4e81-b572-a51cd2f9b8bb", code: "partner",
+      discountType: "percentage", discountValue: 10, discountAmount: 210,
+      commissionType: "percentage", commissionValue: 15, commissionAmount: 315,
+      revenueBasis: 2100, currency: "USD",
+    }
+    const discountedQuote = { ...storedQuote, total: 1890 }
+    mocks.getBookingSession.mockResolvedValue({ ...baseSession, quote: discountedQuote, base_quote: storedQuote, affiliate_snapshot: affiliateSnapshot })
+    mocks.createHostawayReservation.mockResolvedValue({ id: 987654 })
+    const response = await POST(request())
+    expect(response.status).toBe(200)
+    expect(mocks.createHostawayReservation).toHaveBeenCalledWith(expect.objectContaining({ quote: expect.objectContaining({ total: 1890 }) }))
+    expect(mocks.markBookingConfirmed).toHaveBeenCalledOnce()
+  })
 })

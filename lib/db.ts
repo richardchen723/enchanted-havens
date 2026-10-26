@@ -1,4 +1,5 @@
 import postgres from "postgres"
+import { ensureAffiliateTables } from "@/lib/affiliate-schema"
 
 let client: ReturnType<typeof postgres> | null = null
 let schemaReady: Promise<void> | null = null
@@ -311,6 +312,7 @@ export async function ensureSchema() {
     await sql`alter table property_coupon_redemptions add column if not exists confirmed_at timestamptz`
     await sql`create index if not exists property_coupon_redemptions_coupon_idx on property_coupon_redemptions(coupon_id, redeemed_at desc)`
     await sql`create index if not exists property_coupon_redemptions_guest_idx on property_coupon_redemptions(coupon_id, lower(guest_email))`
+    await ensureAffiliateTables(sql)
   })()
   return schemaReady
 }

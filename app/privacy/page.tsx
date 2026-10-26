@@ -49,6 +49,13 @@ export default function PrivacyPage() {
           ],
         },
         {
+          title: "Affiliate referrals",
+          body: [
+            "When you follow a partner referral link, we store a first-party referral cookie for 30 days. The most recent eligible referral link determines the partner offer and booking attribution. An entered coupon takes precedence over a partner offer.",
+            "We use referral visits and attributed reservations to administer partner offers and commissions. Partner reporting includes reservation references, stay dates, accommodation revenue, discounts, and commissions; it does not include guest contact or payment card details. You can remove the referral cookie using your browser settings.",
+          ],
+        },
+        {
           title: "Maps and embedded content",
           body: [
             "Property pages may embed Google Maps to show an approximate location. When the map loads, Google may receive technical information such as your IP address, device or browser details, and the page you visited under Google's own privacy terms.",
