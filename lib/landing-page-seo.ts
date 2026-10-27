@@ -1,3 +1,4 @@
+import { buildVacationRentalEntity } from "@/lib/vacation-rental-schema"
 import type { Property, PropertyVariant, Review } from "@/lib/schemas"
 import type { SeoHub, SeoLandingPage } from "@/lib/seo-pages"
 import { brandEntityFields } from "@/lib/brand-schema"
@@ -53,25 +54,6 @@ function primaryVariant(property: Property): PropertyVariant {
     : property.variants[0]
 }
 
-function aggregateRating(reviews: Review[]) {
-  const rated = reviews.filter((review) => review.rating > 0)
-  if (!rated.length) return undefined
-  const ratingValue = Math.round((rated.reduce((sum, review) => sum + review.rating, 0) / rated.length) * 100) / 100
-  return {
-    "@type": "AggregateRating",
-    ratingValue,
-    reviewCount: rated.length,
-    bestRating: 5,
-  }
-}
-
-function selectSchemaReviews(reviews: Review[]) {
-  return reviews
-    .filter((review) => review.rating >= 4.8)
-    .filter((review, index, all) => all.findIndex((item) => item.id === review.id || item.text === review.text) === index)
-    .slice(0, 5)
-}
-
 function uniqueStrings(items: Array<string | undefined | null>) {
   return items
     .map((item) => item?.trim())
@@ -110,10 +92,8 @@ function hubAreaNames(hub: SeoHub, pages: SeoLandingPage[], matchedProperties: R
   ]).filter((name) => !/rental|rentals|stays|retreat|retreats|lodging|vacation|direct book|company|wedding|family|group|hot tub|sauna|dock|kayak|pet-friendly|firepit/i.test(name)).slice(0, 16)
 }
 
-export function buildLandingPageJsonLd({ page, properties, reviews }: { page: SeoLandingPage; properties: Property[]; reviews: Review[] }) {
+export function buildLandingPageJsonLd({ page, properties }: { page: SeoLandingPage; properties: Property[]; reviews: Review[] }) {
   const pageUrl = absoluteUrl(page.path)
-  const selectedReviews = selectSchemaReviews(reviews)
-  const rating = aggregateRating(selectedReviews)
   const allKeywords = [page.primaryKeyword, ...page.keywords]
   const primaryImage = properties[0]?.heroImage ? absoluteImageUrl(properties[0].heroImage) : absoluteImageUrl(LOGO_PATH)
   const areaNames = pageAreaNames(page, properties)
@@ -197,19 +177,6 @@ export function buildLandingPageJsonLd({ page, properties, reviews }: { page: Se
         potentialAction: { "@type": "ReserveAction", target: absoluteUrl("/havens#availability") },
         makesOffer: schemaRefs(bookingOffers),
         hasOfferCatalog: { "@id": offerCatalogId },
-        ...(rating ? { aggregateRating: rating } : {}),
-        ...(selectedReviews.length
-          ? {
-              review: selectedReviews.map((review) => ({
-                "@type": "Review",
-                author: { "@type": "Person", name: review.guestName },
-                reviewRating: { "@type": "Rating", ratingValue: review.rating, bestRating: 5 },
-                reviewBody: review.text,
-                datePublished: review.date,
-                itemReviewed: review.propertyName,
-              })),
-            }
-          : {}),
       },
       {
         ...directBookingOfferCatalog({
@@ -226,44 +193,11 @@ export function buildLandingPageJsonLd({ page, properties, reviews }: { page: Se
         itemListElement: properties.map((property, index) => {
           const variant = primaryVariant(property)
           const href = `/havens/${property.slug}`
-          const offer = bookingOffers[index]
           return {
             "@type": "ListItem",
             position: index + 1,
             url: absoluteUrl(href),
-            item: {
-              "@type": "LodgingBusiness",
-              "@id": `${absoluteUrl(href)}#lodging`,
-              name: property.displayName,
-              url: absoluteUrl(href),
-              image: absoluteImageUrl(property.heroImage),
-              description: property.seoDescription,
-              address: {
-                "@type": "PostalAddress",
-                addressLocality: variant.city || property.location,
-                addressRegion: "WA",
-                addressCountry: "US",
-              },
-              amenityFeature: variant.amenities.slice(0, 8).map((amenity) => ({
-                "@type": "LocationFeatureSpecification",
-                name: amenity,
-                value: true,
-              })),
-              maximumAttendeeCapacity: variant.guests || undefined,
-              numberOfRooms: variant.bedrooms || undefined,
-              offers: { "@id": offer["@id"] },
-              potentialAction: { "@type": "ReserveAction", target: absoluteUrl(`${href}#reserve`) },
-              ...(variant.rating && variant.reviewsCount
-                ? {
-                    aggregateRating: {
-                      "@type": "AggregateRating",
-                      ratingValue: variant.rating,
-                      reviewCount: variant.reviewsCount,
-                      bestRating: 5,
-                    },
-                  }
-                : {}),
-            },
+            item: buildVacationRentalEntity(property, variant),
           }
         }),
       },
@@ -280,10 +214,8 @@ export function buildLandingPageJsonLd({ page, properties, reviews }: { page: Se
   }
 }
 
-export function buildHubJsonLd({ hub, pages, reviews, heroImage, properties = [] }: { hub: SeoHub; pages: SeoLandingPage[]; reviews: Review[]; heroImage?: string; properties?: Property[] }) {
+export function buildHubJsonLd({ hub, pages, heroImage, properties = [] }: { hub: SeoHub; pages: SeoLandingPage[]; reviews: Review[]; heroImage?: string; properties?: Property[] }) {
   const hubUrl = absoluteUrl(hub.path)
-  const selectedReviews = selectSchemaReviews(reviews)
-  const rating = aggregateRating(selectedReviews)
   const primaryImage = heroImage ? absoluteImageUrl(heroImage) : absoluteImageUrl(LOGO_PATH)
   const pagePaths = pages.map((page) => page.path)
   const matchedProperties = getHubMatchedProperties({ pages, catalog: properties })
@@ -348,19 +280,6 @@ export function buildHubJsonLd({ hub, pages, reviews, heroImage, properties = []
         ...brandEntityFields(),
         image: primaryImage,
         potentialAction: { "@type": "ReserveAction", target: absoluteUrl("/havens#availability") },
-        ...(rating ? { aggregateRating: rating } : {}),
-        ...(selectedReviews.length
-          ? {
-              review: selectedReviews.map((review) => ({
-                "@type": "Review",
-                author: { "@type": "Person", name: review.guestName },
-                reviewRating: { "@type": "Rating", ratingValue: review.rating, bestRating: 5 },
-                reviewBody: review.text,
-                datePublished: review.date,
-                itemReviewed: review.propertyName,
-              })),
-            }
-          : {}),
       },
       {
         "@type": "ItemList",
@@ -392,35 +311,14 @@ export function buildHubJsonLd({ hub, pages, reviews, heroImage, properties = []
               "@id": `${hubUrl}#matched-havens`,
               name: `Havens most relevant to ${hub.title}`,
               numberOfItems: matchedProperties.length,
-              itemListElement: matchedProperties.map(({ property, guideCount }, index) => {
+              itemListElement: matchedProperties.map(({ property }, index) => {
                 const variant = primaryVariant(property)
                 const href = `/havens/${property.slug}`
                 return {
                   "@type": "ListItem",
                   position: index + 1,
                   url: absoluteUrl(href),
-                  item: {
-                    "@type": "LodgingBusiness",
-                    "@id": `${absoluteUrl(href)}#lodging`,
-                    name: property.displayName,
-                    url: absoluteUrl(href),
-                    image: absoluteImageUrl(property.heroImage),
-                    description: property.seoDescription,
-                    address: {
-                      "@type": "PostalAddress",
-                      addressLocality: variant.city || property.location,
-                      addressRegion: "WA",
-                      addressCountry: "US",
-                    },
-                    maximumAttendeeCapacity: variant.guests || undefined,
-                    numberOfRooms: variant.bedrooms || undefined,
-                    additionalProperty: {
-                      "@type": "PropertyValue",
-                      name: "Referenced guide count",
-                      value: guideCount,
-                    },
-                    potentialAction: { "@type": "ReserveAction", target: absoluteUrl(`${href}#reserve`) },
-                  },
+                  item: buildVacationRentalEntity(property, variant),
                 }
               }),
             },

@@ -24,7 +24,7 @@ export function ImageGallery({ images, listingId, name, location, tags = [], pre
   const requestedListingRef = useRef<number | null>(null)
   const gallery = fullGallery.slice(previewStart, previewStart + 3)
   const galleryLocation = location || "the Pacific Northwest"
-  const imageAlt = (index: number) => propertyGalleryImageAlt({ name, location: galleryLocation, index, tags })
+  const imageAlt = (index: number) => propertyGalleryImageAlt({ name, location: galleryLocation, index, tags, src: fullGallery[index] })
 
   const displayedIndex = Math.min(activeIndex, Math.max(fullGallery.length - 1, 0))
   const activeImage = fullGallery[displayedIndex] || images[0]

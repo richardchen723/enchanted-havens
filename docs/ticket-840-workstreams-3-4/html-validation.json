@@ -1,0 +1,130 @@
+{
+  "environment": "local production build, editorial fallback",
+  "checkedAt": "2026-10-27",
+  "propertyPages": [
+    {
+      "path": "/havens/blue-haven",
+      "type": "VacationRental",
+      "identifier": "enchanted-havens-146889",
+      "occupancy": 6,
+      "coordinates": {
+        "@type": "GeoCoordinates",
+        "latitude": 48.07339881,
+        "longitude": -123.69492239
+      },
+      "photos": 8,
+      "amenities": 9,
+      "streetAddressPublished": false
+    },
+    {
+      "path": "/havens/sea-renity-haven",
+      "type": "VacationRental",
+      "identifier": "enchanted-havens-157299",
+      "occupancy": 12,
+      "coordinates": {
+        "@type": "GeoCoordinates",
+        "latitude": 48.284209,
+        "longitude": -122.728497
+      },
+      "photos": 8,
+      "amenities": 9,
+      "streetAddressPublished": false
+    },
+    {
+      "path": "/havens/emerald-haven",
+      "type": "VacationRental",
+      "identifier": "enchanted-havens-178403",
+      "occupancy": 10,
+      "coordinates": {
+        "@type": "GeoCoordinates",
+        "latitude": 48.08321254,
+        "longitude": -123.71711993
+      },
+      "photos": 8,
+      "amenities": 12,
+      "streetAddressPublished": false
+    },
+    {
+      "path": "/havens/fair-haven",
+      "type": "VacationRental",
+      "identifier": "enchanted-havens-178994",
+      "occupancy": 10,
+      "coordinates": {
+        "@type": "GeoCoordinates",
+        "latitude": 47.421447,
+        "longitude": -122.864068
+      },
+      "photos": 8,
+      "amenities": 10,
+      "streetAddressPublished": false
+    },
+    {
+      "path": "/havens/aurora-haven",
+      "type": "VacationRental",
+      "identifier": "enchanted-havens-184081",
+      "occupancy": 10,
+      "coordinates": {
+        "@type": "GeoCoordinates",
+        "latitude": 48.0903402,
+        "longitude": -123.5436679
+      },
+      "photos": 8,
+      "amenities": 10,
+      "streetAddressPublished": false
+    },
+    {
+      "path": "/havens/reflection-haven",
+      "type": "VacationRental",
+      "identifier": "enchanted-havens-335403",
+      "occupancy": 10,
+      "coordinates": {
+        "@type": "GeoCoordinates",
+        "latitude": 48.0420886,
+        "longitude": -123.4296749
+      },
+      "photos": 8,
+      "amenities": 11,
+      "streetAddressPublished": false
+    }
+  ],
+  "guidesChecked": [
+    "/destinations/lake-sutherland-vacation-rentals",
+    "/destinations/port-angeles-vacation-rentals",
+    "/destinations/port-angeles-lake-house-rentals",
+    "/destinations/lake-crescent-vacation-rentals",
+    "/destinations/olympic-national-park-vacation-rentals",
+    "/destinations/olympic-peninsula-vacation-rentals",
+    "/destinations/hood-canal-beachfront-rentals",
+    "/destinations/whidbey-island-vacation-rentals",
+    "/destinations/puget-sound-waterfront-rentals",
+    "/destinations/washington-coast-vacation-rentals",
+    "/stays/pacific-northwest-vacation-rentals",
+    "/stays/direct-book-vacation-rentals-washington",
+    "/stays/washington-waterfront-vacation-rentals",
+    "/stays/washington-beach-house-rentals",
+    "/stays/washington-lake-house-rentals",
+    "/stays/lakefront-cabins-washington",
+    "/stays/washington-cabin-rentals",
+    "/stays/luxury-vacation-rentals-near-seattle",
+    "/stays/washington-vacation-rentals-near-seattle",
+    "/stays/forest-retreats-washington",
+    "/groups/family-reunion-house-washington",
+    "/groups/washington-group-vacation-rentals",
+    "/groups/pnw-retreat-rental",
+    "/groups/company-retreat-rental-pnw",
+    "/groups/washington-wedding-lodging",
+    "/groups/intimate-event-stays-washington",
+    "/experiences/waterfront-stays",
+    "/experiences/lake-days-kayaks-docks",
+    "/experiences/wellness-hot-tub-sauna",
+    "/experiences/olympic-national-park-basecamp",
+    "/amenities/washington-hot-tub-vacation-rentals",
+    "/amenities/washington-sauna-vacation-rentals",
+    "/amenities/washington-vacation-rentals-with-private-dock",
+    "/amenities/washington-kayak-vacation-rentals",
+    "/amenities/pet-friendly-vacation-rentals-washington",
+    "/amenities/washington-vacation-rentals-with-firepit"
+  ],
+  "guideCount": 36,
+  "javascriptExecuted": false
+}

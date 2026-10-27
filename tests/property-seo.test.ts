@@ -1,3 +1,4 @@
+import { propertySchemaImages } from "@/lib/vacation-rental-schema"
 import { readFileSync } from "node:fs"
 import { describe, expect, it } from "vitest"
 import { getAirbnbReviewDestination } from "@/lib/airbnb"
@@ -50,13 +51,13 @@ describe("individual property SEO", () => {
     expect(source).not.toMatch(/Instagram-visible|live stay data|supplied by Hostaway|worth searching for/i)
   })
 
-  it("creates contextual gallery alt text for image search without generic labels", () => {
+  it("identifies the property without guessing image content from amenities", () => {
     expect(propertyGalleryImageAlt({
       name: "Blue Haven",
       location: "Port Angeles, Washington",
       index: 0,
       tags: ["Lakefront", "Private beach", "Kayaks"],
-    })).toBe("Blue Haven lakefront gallery view in Port Angeles, Washington")
+    })).toBe("Blue Haven gallery view 1 in Port Angeles, Washington")
   })
 
   it("provides every published residence with the core information needed to choose and book", () => {
@@ -239,7 +240,7 @@ describe("individual property SEO", () => {
     expect(havenSource).toContain("imageAlt: `${property.displayName} in ${property.location}`")
   })
 
-  it("builds focused LodgingBusiness, BreadcrumbList, and gallery schema for property pages", () => {
+  it("builds focused VacationRental, BreadcrumbList, and gallery schema for property pages", () => {
     const property = fallbackProperties.find((item) => item.slug === "blue-haven")!
     const variant = property.variants[0]
     const jsonLd = buildPropertyJsonLd({
@@ -252,13 +253,13 @@ describe("individual property SEO", () => {
     const graph = jsonLd["@graph"] as JsonObject[]
     const organization = graph.find((item) => item["@type"] === "Organization") as JsonObject | undefined
     const webpage = graph.find((item) => item["@type"] === "WebPage") as JsonObject | undefined
-    const lodging = graph.find((item) => item["@type"] === "LodgingBusiness") as JsonObject | undefined
+    const lodging = graph.find((item) => item["@type"] === "VacationRental") as JsonObject | undefined
     const offer = graph.find((item) => item["@type"] === "Offer") as JsonObject | undefined
     const imageGallery = graph.find((item) => item["@type"] === "ImageGallery") as JsonObject | undefined
     const imageObjects = graph.filter((item) => item["@type"] === "ImageObject") as JsonObject[]
     const accommodation = lodging?.containsPlace as JsonObject | undefined
 
-    expect(graph.some((item) => item["@type"] === "LodgingBusiness" && item.name === property.displayName)).toBe(true)
+    expect(graph.some((item) => item["@type"] === "VacationRental" && item.name === property.displayName)).toBe(true)
     expect(graph.some((item) => item["@type"] === "Organization" && item["@id"] === "https://enchantedhavens.com/#organization")).toBe(true)
     expect(graph.some((item) => item["@type"] === "WebSite" && item["@id"] === "https://enchantedhavens.com/#website")).toBe(true)
     expect(graph.some((item) => item["@type"] === "BreadcrumbList")).toBe(true)
@@ -273,19 +274,17 @@ describe("individual property SEO", () => {
       hasPart: [{ "@id": "https://enchantedhavens.com/havens/blue-haven#gallery" }],
       potentialAction: { "@type": "ReserveAction", target: "https://enchantedhavens.com/havens/blue-haven#reserve" },
     })
-    expect(webpage?.associatedMedia).toHaveLength(Math.min(8, new Set([property.heroImage, ...variant.images, ...property.gallery]).size))
+    expect(webpage?.associatedMedia).toHaveLength(propertySchemaImages(property, variant).length)
     expect((webpage?.spatialCoverage as JsonObject[] | undefined)?.some((place) => place.name === "Lake Sutherland")).toBe(true)
     expect(lodging).toMatchObject({
       parentOrganization: { "@id": "https://enchantedhavens.com/#organization" },
-      sameAs: BRAND_SAME_AS,
+      sameAs: [getAirbnbReviewDestination(variant.id).href],
       photo: expect.arrayContaining([{ "@id": "https://enchantedhavens.com/havens/blue-haven#image-1" }]),
-      offers: { "@id": "https://enchantedhavens.com/havens/blue-haven#direct-book-offer" },
       potentialAction: { "@type": "ReserveAction", target: "https://enchantedhavens.com/havens/blue-haven#reserve" },
     })
     expect(offer).toMatchObject({
       "@id": "https://enchantedhavens.com/havens/blue-haven#direct-book-offer",
       "@type": "Offer",
-      availability: "https://schema.org/LimitedAvailability",
       businessFunction: "https://purl.org/goodrelations/v1#LeaseOut",
       seller: { "@id": "https://enchantedhavens.com/#organization" },
       itemOffered: { "@id": "https://enchantedhavens.com/havens/blue-haven#lodging" },
@@ -302,12 +301,12 @@ describe("individual property SEO", () => {
     expect(imageObjects[0]).toMatchObject({
       "@id": "https://enchantedhavens.com/havens/blue-haven#image-1",
       name: "Blue Haven gallery image 1",
-      caption: "Blue Haven lakefront gallery view in Lake Sutherland, Port Angeles, Washington",
+      caption: "Blue Haven: lakefront exterior in Lake Sutherland, Port Angeles, Washington",
       representativeOfPage: true,
     })
     expect(accommodation).toMatchObject({
       "@type": "Accommodation",
-      occupancy: { "@type": "QuantitativeValue", maxValue: variant.guests },
+      occupancy: { "@type": "QuantitativeValue", value: variant.guests },
       numberOfBedrooms: variant.bedrooms,
       numberOfBathroomsTotal: variant.bathrooms,
     })

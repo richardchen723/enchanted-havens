@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs"
 import { describe, expect, it } from "vitest"
 import { BRAND_CONTACT_EMAIL, BRAND_SAME_AS } from "@/lib/brand"
-import { fallbackProperties, featuredReviews } from "@/lib/editorial"
+import { fallbackProperties } from "@/lib/editorial"
 import {
   buildHavensCollectionJsonLd,
   collectionGuides,
@@ -38,7 +38,7 @@ describe("Havens collection SEO", () => {
     expect(slugs).not.toContain("reflection-point")
     expect(slugs).not.toContain("whidbey-estate")
     expect(slugs).toContain("reflection-haven")
-    const graph = buildHavensCollectionJsonLd(fallbackProperties, featuredReviews)
+    const graph = buildHavensCollectionJsonLd(fallbackProperties)
     expect(JSON.stringify(graph)).not.toMatch(/Reflection Point|reflection-point|576478/)
   })
 
@@ -102,7 +102,7 @@ describe("Havens collection SEO", () => {
   })
 
   it("builds CollectionPage, WebSite, brand LodgingBusiness, ItemList, BreadcrumbList, Organization, and FAQ schema", () => {
-    const graph = buildHavensCollectionJsonLd(fallbackProperties, featuredReviews)["@graph"] as JsonObject[]
+    const graph = buildHavensCollectionJsonLd(fallbackProperties)["@graph"] as JsonObject[]
     const website = graph.find((item) => item["@type"] === "WebSite") as JsonObject | undefined
     const itemList = graph.find((item) => item["@type"] === "ItemList") as ItemListSchema | undefined
     const offerCatalog = graph.find((item) => item["@type"] === "OfferCatalog") as OfferCatalogSchema | undefined
@@ -128,8 +128,8 @@ describe("Havens collection SEO", () => {
       potentialAction: { "@type": "ReserveAction", target: "https://enchantedhavens.com/havens#availability" },
     })
     expect(lodgingBrand?.sameAs).toEqual(BRAND_SAME_AS)
-    expect(lodgingBrand?.aggregateRating).toMatchObject({ "@type": "AggregateRating", bestRating: 5 })
-    expect(lodgingBrand?.review).toHaveLength(featuredReviews.length)
+    expect(lodgingBrand?.aggregateRating).toBeUndefined()
+    expect(lodgingBrand?.review).toBeUndefined()
     expect(lodgingBrand?.contactPoint).toEqual(expect.arrayContaining([
       expect.objectContaining({ "@type": "ContactPoint", email: BRAND_CONTACT_EMAIL, url: "https://enchantedhavens.com/contact" }),
     ]))
@@ -155,14 +155,13 @@ describe("Havens collection SEO", () => {
     expect(offerCatalog?.itemListElement).toHaveLength(fallbackProperties.length)
     expect(offerCatalog?.itemListElement?.[0]).toMatchObject({
       "@type": "Offer",
-      availability: "https://schema.org/LimitedAvailability",
       businessFunction: "https://purl.org/goodrelations/v1#LeaseOut",
       seller: { "@id": "https://enchantedhavens.com/#lodging-brand" },
       potentialAction: { "@type": "ReserveAction", target: expect.stringMatching(/#reserve$/) },
     })
     expect(itemList?.numberOfItems).toBe(fallbackProperties.length)
     expect(itemList?.itemListElement).toHaveLength(fallbackProperties.length)
-    expect(itemList?.itemListElement?.every((item) => Boolean((item.item?.offers as JsonObject | undefined)?.["@id"]))).toBe(true)
+    expect(itemList?.itemListElement?.every((item) => item.item?.makesOffer === undefined)).toBe(true)
     expect(itemList?.itemListElement?.every((item) => (item.item?.potentialAction as JsonObject | undefined)?.["@type"] === "ReserveAction")).toBe(true)
     expect(faq?.mainEntity).toHaveLength(havensCollectionFaq.length)
   })

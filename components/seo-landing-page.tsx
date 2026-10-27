@@ -10,7 +10,8 @@ import type { Property, Review } from "@/lib/schemas"
 import type { SeoHub, SeoLandingPage } from "@/lib/seo-pages"
 import { getRelatedSeoPages, getSeoPagesByGroup } from "@/lib/seo-pages"
 import { getAirbnbReviewSummary } from "@/lib/airbnb"
-import { confirmedStayPolicies } from "@/lib/property-facts"
+import { confirmedStayPolicies, getVerifiedPropertyFacts } from "@/lib/property-facts"
+import { guidePlanning } from "@/lib/guide-planning"
 import { cn, formatCount } from "@/lib/utils"
 
 function jsonLd(data: unknown) {
@@ -45,157 +46,61 @@ function primaryVariant(property: Property) {
     : property.variants[0]
 }
 
-function uniqueStrings(items: Array<string | undefined | null>) {
-  return items
-    .map((item) => item?.trim())
-    .filter((item): item is string => Boolean(item))
-    .filter((item, index, all) => all.indexOf(item) === index)
-}
-
-function humanList(items: string[]) {
-  if (items.length <= 1) return items[0] || ""
-  if (items.length === 2) return `${items[0]} and ${items[1]}`
-  return `${items.slice(0, -1).join(", ")}, and ${items.at(-1)}`
-}
-
-function groupPlanningCopy(group: SeoLandingPage["group"]) {
-  if (group === "groups") return `${confirmedStayPolicies.events} Share overnight guest count, vendors, parking needs, pets, quiet-hour expectations, and any ceremony or programming plans.`
-  if (group === "amenities") return "Confirm seasonal details, maintenance windows, weather limits, pet rules, and the amenities that matter most before locking in dates."
-  if (group === "destinations") return "Ask the stay team about drive patterns, ferry timing, park access, grocery stops, pets, and how the setting fits your itinerary."
-  if (group === "experiences") return `Confirm house rules, weather-sensitive details, and guest count. ${confirmedStayPolicies.events}`
-  return "Select dates and guest count for live availability, then compare location, capacity, amenities, pets, and direct-book rules before committing."
-}
-
-function PlanningSignals({ page, properties, relatedPages }: { page: SeoLandingPage; properties: Property[]; relatedPages: SeoLandingPage[] }) {
-  const variants = properties.map(primaryVariant)
-  const locations = uniqueStrings([
-    page.eyebrow,
-    ...properties.map((property) => property.location),
-    ...variants.map((variant) => variant.city),
-    ...variants.map((variant) => variant.location),
-  ]).slice(0, 5)
-  const tags = uniqueStrings(properties.flatMap((property) => property.experienceTags)).slice(0, 6)
-  const amenities = uniqueStrings(variants.flatMap((variant) => variant.amenities)).slice(0, 6)
-  const maxGuests = Math.max(...variants.map((variant) => variant.guests), 0)
-  const totalHomes = properties.length
-  const totalBedrooms = variants.reduce((sum, variant) => sum + variant.bedrooms, 0)
-  const totalBathrooms = variants.reduce((sum, variant) => sum + variant.bathrooms, 0)
-  const propertyNames = properties.map((property) => property.displayName).slice(0, 4)
-  const leadProperty = properties[0]
-  const leadRelated = relatedPages[0]
-
+export function GuidePlanning({ page }: { page: SeoLandingPage }) {
+  const notes = guidePlanning[page.slug] || []
   return (
-    <section className="bg-[#efe7d9] py-20 lg:py-24">
+    <section id="planning-details" className="scroll-mt-24 bg-[#faf7f0] py-20 lg:py-24">
       <div className="container-shell">
-        <div className="grid gap-8 lg:grid-cols-[0.75fr_1.25fr] lg:items-end">
-          <div>
-            <p className="eyebrow text-[#805a27]">Planning Details</p>
-            <h2 className="mt-4 font-display text-5xl leading-none text-[#173c33]">The local cues behind this guide.</h2>
-          </div>
-          <p className="max-w-3xl text-base leading-8 text-black/62">
-            Every recommendation here is grounded in real Enchanted Havens inventory: specific places, capacities, amenities, and direct-book details guests usually need before choosing a stay.
-          </p>
+        <p className="eyebrow text-[#805a27]">Planning Details</p>
+        <h2 className="mt-4 max-w-3xl font-display text-5xl leading-none text-[#173c33]">Plan the stay around your party.</h2>
+        <div className="mt-10 grid gap-10 lg:grid-cols-3">
+          {notes.map((item) => (
+            <article key={item.heading} className="border-t border-[#173c33]/18 pt-6">
+              <h3 className="font-display text-3xl leading-tight text-[#173c33]">{item.heading}</h3>
+              <p className="mt-4 text-sm leading-7 text-black/65">{item.body}</p>
+              {item.sources?.map((source) => <a key={source.href} href={source.href} className="mt-4 block text-sm text-[#173c33] underline underline-offset-4">{source.label}</a>)}
+            </article>
+          ))}
         </div>
-        <div className="mt-12 grid gap-6 lg:grid-cols-3">
-          <article className="border-t border-[#173c33]/18 pt-6">
-            <p className="text-[0.61rem] font-bold uppercase tracking-[0.18em] text-[#805a27]">01</p>
-            <h3 className="mt-4 font-display text-4xl leading-none text-[#173c33]">Local Fit</h3>
-            <p className="mt-4 text-sm leading-7 text-black/62">
-              Strongest for {humanList(locations)} stays where guests want {humanList(tags.slice(0, 4).map((item) => item.toLowerCase())) || page.primaryKeyword.toLowerCase()}.
-            </p>
-            {leadRelated ? (
-              <Link href={leadRelated.path} className="mt-5 inline-flex items-center gap-2 text-[0.62rem] font-bold uppercase tracking-[0.14em] text-[#173c33]">
-                Explore Related Guide
-                <ArrowRight className="size-4" />
-              </Link>
-            ) : null}
-          </article>
-          <article className="border-t border-[#173c33]/18 pt-6">
-            <p className="text-[0.61rem] font-bold uppercase tracking-[0.18em] text-[#805a27]">02</p>
-            <h3 className="mt-4 font-display text-4xl leading-none text-[#173c33]">Compare Havens</h3>
-            <p className="mt-4 text-sm leading-7 text-black/62">
-              {formatCount(totalHomes, "matched haven")} here can host up to {formatCount(maxGuests, "guest")}, with {formatCount(totalBedrooms, "bedroom")} and {formatCount(totalBathrooms, "bath")} represented across {humanList(propertyNames)}.
-            </p>
-            {leadProperty ? (
-              <Link href={`/havens/${leadProperty.slug}`} className="mt-5 inline-flex items-center gap-2 text-[0.62rem] font-bold uppercase tracking-[0.14em] text-[#173c33]">
-                View {leadProperty.displayName}
-                <ArrowRight className="size-4" />
-              </Link>
-            ) : null}
-          </article>
-          <article className="border-t border-[#173c33]/18 pt-6">
-            <p className="text-[0.61rem] font-bold uppercase tracking-[0.18em] text-[#805a27]">03</p>
-            <h3 className="mt-4 font-display text-4xl leading-none text-[#173c33]">Booking Clarity</h3>
-            <p className="mt-4 text-sm leading-7 text-black/62">
-              {groupPlanningCopy(page.group)} Key amenities to compare include {humanList(amenities.slice(0, 5).map((item) => item.toLowerCase())) || "water access, outdoor living, and group-ready spaces"}.
-            </p>
-            <Link href={matchedAvailabilityHref(page)} className="mt-5 inline-flex items-center gap-2 text-[0.62rem] font-bold uppercase tracking-[0.14em] text-[#173c33]">
-              Check Live Dates
-              <ArrowRight className="size-4" />
-            </Link>
-          </article>
-        </div>
+        <p className="mt-10 text-sm leading-7 text-black/65">Share your sleeping, seating, access, and internet requirements with us before booking.</p>
+        <Link href="/contact" className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-[#173c33] underline underline-offset-4">Ask the Stay Team <ArrowRight className="size-4" /></Link>
       </div>
     </section>
   )
 }
 
-function MatchedHavensComparison({ page, properties }: { page: SeoLandingPage; properties: Property[] }) {
+export function MatchedHavensComparison({ properties }: { properties: Property[] }) {
   if (!properties.length) return null
-
   return (
-    <section className="bg-[#efe7d9] py-16 lg:py-20">
+    <section id="compare-havens" className="scroll-mt-24 bg-[#efe7d9] py-16 lg:py-20">
       <div className="container-shell">
-        <div className="grid gap-8 lg:grid-cols-[0.72fr_1.28fr] lg:items-end">
-          <div>
-            <p className="eyebrow text-[#805a27]">Compare Matched Havens</p>
-            <h2 className="mt-4 font-display text-5xl leading-none text-[#173c33]">Choose by setting, capacity, and stay rhythm.</h2>
-          </div>
-          <p className="max-w-3xl text-base leading-8 text-black/62">
-            These homes answer the same kind of trip in different ways. Compare the setting, capacity, and rhythm of each stay before opening the full gallery or choosing dates.
-          </p>
-        </div>
+        <p className="eyebrow text-[#805a27]">Compare Matched Havens</p>
+        <h2 className="mt-4 max-w-3xl font-display text-5xl leading-none text-[#173c33]">Compare sleeping arrangements and access.</h2>
+        <p className="mt-6 max-w-3xl text-base leading-8 text-black/65">Use each home’s bedroom layout, water access, and parking to choose a stay that fits your party. Capacities apply to each home individually.</p>
         <div className="mt-10 border-y border-[#173c33]/16">
           {properties.map((property) => {
             const variant = primaryVariant(property)
-            const location = uniqueStrings([property.location, variant.city, variant.location]).slice(0, 3)
-            const bestFor = uniqueStrings(property.experienceTags).slice(0, 4)
-            const amenities = uniqueStrings(variant.amenities).slice(0, 5)
-            const cues = uniqueStrings([...bestFor, ...amenities]).slice(0, 7)
-
+            const facts = getVerifiedPropertyFacts(variant.id)
+            if (!facts) return null
+            const arrivalDetails = facts.details.filter((detail) => /Access|Parking|Bathroom/i.test(detail.label))
             return (
-              <Link key={property.slug} href={`/havens/${property.slug}`} className="group grid gap-5 border-b border-[#173c33]/12 py-6 last:border-b-0 md:grid-cols-[0.95fr_0.95fr_1.15fr_0.55fr] md:items-start">
+              <article key={property.slug} className="grid gap-6 border-b border-[#173c33]/12 py-8 last:border-b-0 lg:grid-cols-[0.8fr_2.2fr]">
                 <div>
-                  <p className="eyebrow text-[#805a27]">{location[0] || page.eyebrow}</p>
-                  <h3 className="mt-2 font-display text-4xl leading-none text-[#173c33]">{property.displayName}</h3>
-                  <p className="mt-3 flex items-center gap-2 text-sm text-black/58"><MapPin className="size-4 shrink-0" /> {humanList(location)}</p>
+                  <p className="eyebrow text-[#805a27]">{facts.area}</p>
+                  <h3 className="mt-3 font-display text-4xl leading-none text-[#173c33]"><Link href={`/havens/${property.slug}`} className="hover:underline">{property.displayName}</Link></h3>
+                  <p className="mt-4 text-sm leading-7 text-black/65">Up to {facts.maxGuests} guests · {facts.bedrooms} bedrooms · {facts.bathrooms} bathrooms</p>
+                  <Link href={`/havens/${property.slug}#reserve`} className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-[#173c33] underline underline-offset-4">Select dates for exact pricing <ArrowRight className="size-4 shrink-0" /></Link>
                 </div>
-                <div>
-                  <p className="text-[0.61rem] font-bold uppercase tracking-[0.16em] text-[#805a27]">Capacity</p>
-                  <p className="mt-3 text-sm leading-7 text-black/64">
-                    Up to {formatCount(variant.guests, "guest")} with {formatCount(variant.bedrooms, "bedroom")} and {formatCount(variant.bathrooms, "bath")}.
-                  </p>
-                </div>
-                <div>
-                  <p className="text-[0.61rem] font-bold uppercase tracking-[0.16em] text-[#805a27]">Best Fit</p>
-                  <p className="mt-3 text-sm leading-7 text-black/64">{property.narrative}</p>
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    {cues.map((item) => (
-                      <span key={`${property.slug}-${item}`} className="border border-[#173c33]/14 px-2.5 py-1.5 text-[0.58rem] font-bold uppercase tracking-[0.11em] text-[#173c33]/68">{item}</span>
-                    ))}
-                  </div>
-                </div>
-                <div className="flex items-center justify-between gap-4 md:block md:text-right">
-                  <p className="text-xs font-semibold text-[#173c33]">Select dates for exact pricing</p>
-                  <span className="mt-4 inline-flex items-center gap-2 text-[0.62rem] font-bold uppercase tracking-[0.14em] text-[#173c33] md:justify-end">
-                    View
-                    <ArrowRight className="size-4 transition group-hover:translate-x-1" />
-                  </span>
-                </div>
-              </Link>
+                <dl className="grid gap-6 md:grid-cols-3">
+                  <div><dt className="text-xs font-bold uppercase tracking-wider text-[#805a27]">Sleeping arrangements</dt><dd className="mt-3 text-sm leading-7 text-black/65">{facts.sleeping}</dd></div>
+                  <div><dt className="text-xs font-bold uppercase tracking-wider text-[#805a27]">Setting and water access</dt><dd className="mt-3 text-sm leading-7 text-black/65">{facts.waterAccess}</dd></div>
+                  <div><dt className="text-xs font-bold uppercase tracking-wider text-[#805a27]">Arrival and parking</dt><dd className="mt-3 space-y-3 text-sm leading-7 text-black/65">{arrivalDetails.map((detail) => <p key={detail.label}>{detail.text}</p>)}</dd></div>
+                </dl>
+              </article>
             )
           })}
         </div>
+        <div className="mt-8 grid gap-4 text-sm leading-7 text-black/65 md:grid-cols-2"><p>{confirmedStayPolicies.pets}</p><p>{confirmedStayPolicies.events}</p></div>
       </div>
     </section>
   )
@@ -281,7 +186,7 @@ export function SeoLandingPageView({ page, catalog }: { page: SeoLandingPage; ca
       <LandingJsonLd page={page} properties={featuredProperties} reviews={[]} />
 
       <section className="immersive-hero relative min-h-[68dvh] overflow-hidden bg-[#071e19] text-white sm:min-h-[88dvh]">
-        <Image src={heroImage} alt={page.imageAlt} fill loading="eager" quality={82} sizes="100vw" className="object-cover" />
+        <Image src={heroImage} alt={heroProperty ? `${heroProperty.displayName} in ${heroProperty.location}` : page.title} fill loading="eager" quality={82} sizes="100vw" className="object-cover" />
         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,24,20,.78),rgba(5,24,20,.18)_68%),linear-gradient(0deg,rgba(5,24,20,.72),rgba(5,24,20,.05)_58%)]" />
         <div className="grain absolute inset-0 opacity-25" />
         <div className="container-shell relative flex min-h-[68dvh] items-end pb-12 pt-32 sm:min-h-[88dvh] sm:pb-14 sm:pt-36">
@@ -333,9 +238,9 @@ export function SeoLandingPageView({ page, catalog }: { page: SeoLandingPage; ca
         </div>
       </section>
 
-      <MatchedHavensComparison page={page} properties={featuredProperties} />
+      <MatchedHavensComparison properties={featuredProperties} />
 
-      <PlanningSignals page={page} properties={featuredProperties} relatedPages={relatedPages} />
+      <GuidePlanning page={page} />
 
       <section className="bg-[#e7e1d6] py-20 lg:py-28">
         <div className="container-shell grid gap-12 lg:grid-cols-[0.34fr_1fr] lg:gap-20">
@@ -467,7 +372,7 @@ export function SeoHubPageView({ hub, catalog }: { hub: SeoHub; catalog: Propert
                 <article key={page.path} className="group">
                   <Link href={page.path} className="block">
                     <div className="image-lift relative aspect-[4/3] overflow-hidden bg-[#dbe2dd]">
-                      <Image src={image} alt={page.imageAlt} fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover" />
+                      <Image src={image} alt={property ? `${property.displayName} in ${property.location}` : page.title} fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover" />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/48 via-transparent to-transparent" />
                       <p className="absolute left-5 top-5 border border-white/45 bg-black/10 px-3 py-2 text-[0.61rem] font-bold uppercase tracking-[0.17em] text-white backdrop-blur-sm">{page.eyebrow}</p>
                     </div>

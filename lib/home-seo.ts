@@ -1,3 +1,4 @@
+import { buildVacationRentalEntity } from "@/lib/vacation-rental-schema"
 import type { Property, PropertyVariant, Review } from "@/lib/schemas"
 import { brandEntityFields } from "@/lib/brand-schema"
 import { significantLinks, webpageRefs } from "@/lib/seo-link-graph"
@@ -180,22 +181,8 @@ function primaryVariant(property: Property): PropertyVariant {
     : property.variants[0]
 }
 
-function aggregateRating(reviews: Review[]) {
-  const rated = reviews.filter((review) => review.rating > 0)
-  if (!rated.length) return undefined
-  const ratingValue = Math.round((rated.reduce((sum, review) => sum + review.rating, 0) / rated.length) * 100) / 100
-  return {
-    "@type": "AggregateRating",
-    ratingValue,
-    reviewCount: rated.length,
-    bestRating: 5,
-  }
-}
-
-export function buildHomeJsonLd({ catalog, reviews }: { catalog: Property[]; reviews: Review[] }) {
+export function buildHomeJsonLd({ catalog }: { catalog: Property[]; reviews: Review[] }) {
   const homeUrl = absoluteUrl()
-  const selectedReviews = reviews.filter((review) => review.rating >= 4.8).slice(0, 6)
-  const rating = aggregateRating(selectedReviews)
   const bookingOffers = catalog.map((property) => {
     const href = `/havens/${property.slug}`
     const propertyUrl = absoluteUrl(href)
@@ -273,19 +260,6 @@ export function buildHomeJsonLd({ catalog, reviews }: { catalog: Property[]; rev
         potentialAction: { "@type": "ReserveAction", target: absoluteUrl("/havens#availability") },
         makesOffer: schemaRefs(bookingOffers),
         hasOfferCatalog: { "@id": offerCatalogId },
-        ...(rating ? { aggregateRating: rating } : {}),
-        ...(selectedReviews.length
-          ? {
-              review: selectedReviews.map((review) => ({
-                "@type": "Review",
-                author: { "@type": "Person", name: review.guestName },
-                reviewRating: { "@type": "Rating", ratingValue: review.rating, bestRating: 5 },
-                reviewBody: review.text,
-                datePublished: review.date,
-                itemReviewed: review.propertyName,
-              })),
-            }
-          : {}),
       },
       {
         ...directBookingOfferCatalog({
@@ -302,29 +276,11 @@ export function buildHomeJsonLd({ catalog, reviews }: { catalog: Property[]; rev
         itemListElement: catalog.map((property, index) => {
           const variant = primaryVariant(property)
           const href = `/havens/${property.slug}`
-          const offer = bookingOffers[index]
           return {
             "@type": "ListItem",
             position: index + 1,
             url: absoluteUrl(href),
-            item: {
-              "@type": "LodgingBusiness",
-              "@id": `${absoluteUrl(href)}#lodging`,
-              name: property.displayName,
-              url: absoluteUrl(href),
-              image: absoluteImageUrl(property.heroImage),
-              description: property.seoDescription,
-              address: {
-                "@type": "PostalAddress",
-                addressLocality: variant.city || property.location,
-                addressRegion: "WA",
-                addressCountry: "US",
-              },
-              maximumAttendeeCapacity: variant.guests || undefined,
-              numberOfRooms: variant.bedrooms || undefined,
-              offers: { "@id": offer["@id"] },
-              potentialAction: { "@type": "ReserveAction", target: absoluteUrl(`${href}#reserve`) },
-            },
+            item: buildVacationRentalEntity(property, variant),
           }
         }),
       },

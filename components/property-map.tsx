@@ -36,7 +36,7 @@ export function PropertyMap({ variant, location, locationSummary }: { variant: P
         />
         <div className="pointer-events-none absolute bottom-4 left-4 flex max-w-[calc(100%-2rem)] items-start gap-3 bg-[#fffdf8]/95 px-4 py-3 shadow-[0_16px_40px_rgba(7,30,25,.16)] backdrop-blur-sm">
           <MapPin className="mt-0.5 size-4 shrink-0 text-[#805a27]" aria-hidden="true" />
-          <p className="text-xs leading-5 text-black/62"><strong className="font-bold text-[#173c33]">Approximate location.</strong> The exact arrival address is shared with confirmed guests.</p>
+          <p className="text-xs leading-5 text-black/62"><strong className="font-bold text-[#173c33]">Approximate location.</strong> The street address is shared with confirmed guests.</p>
         </div>
       </div>
       {locationSummary ? <p className="mt-5 max-w-3xl text-sm leading-7 text-black/60">{locationSummary}</p> : null}

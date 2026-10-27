@@ -82,7 +82,7 @@ describe("verified property facts", () => {
     const home = property("reflection-haven")
     const facts = getVerifiedPropertyFacts(home.variants[0].id)!
     const schema = buildPropertyJsonLd({ property: home, variant: home.variants[0], reviews: [], path: `/havens/${home.slug}`, heroImage: home.heroImage })
-    const lodging = schema["@graph"].find((node) => node["@type"] === "LodgingBusiness" && "additionalProperty" in node)!
+    const lodging = schema["@graph"].find((node) => node["@type"] === "VacationRental" && "additionalProperty" in node)!
     expect(lodging).toHaveProperty("additionalProperty", expect.arrayContaining([
       { "@type": "PropertyValue", name: "Setting and water access", value: facts.waterAccess },
       { "@type": "PropertyValue", name: "Sleeping arrangements", value: facts.sleeping },
