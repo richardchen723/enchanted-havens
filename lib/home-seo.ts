@@ -3,6 +3,7 @@ import { brandEntityFields } from "@/lib/brand-schema"
 import { significantLinks, webpageRefs } from "@/lib/seo-link-graph"
 import { directBookingOffer, directBookingOfferCatalog, schemaRefs } from "@/lib/seo-offers"
 import { absoluteUrl } from "@/lib/utils"
+import { confirmedStayPolicies } from "@/lib/property-facts"
 
 export const HOME_TITLE = "Pacific Northwest Vacation Rentals | Enchanted Havens"
 export const HOME_DESCRIPTION =
@@ -57,7 +58,7 @@ export const homeFaq = [
   {
     question: "Are events or private retreats allowed?",
     answer:
-      "Event-style use, day guests, vendors, ceremonies, amplified music, tenting, and retreat programming must be approved before booking and must follow property rules and local requirements.",
+      `${confirmedStayPolicies.events} Vendors, ceremonies, amplified music, tenting, and retreat programming also need approval and must follow property rules and local requirements.`,
   },
 ]
 

@@ -10,6 +10,7 @@ import type { Property, Review } from "@/lib/schemas"
 import type { SeoHub, SeoLandingPage } from "@/lib/seo-pages"
 import { getRelatedSeoPages, getSeoPagesByGroup } from "@/lib/seo-pages"
 import { getAirbnbReviewSummary } from "@/lib/airbnb"
+import { confirmedStayPolicies } from "@/lib/property-facts"
 import { cn, formatCount } from "@/lib/utils"
 
 function jsonLd(data: unknown) {
@@ -58,10 +59,10 @@ function humanList(items: string[]) {
 }
 
 function groupPlanningCopy(group: SeoLandingPage["group"]) {
-  if (group === "groups") return "Share overnight guest count, day visitors, vendors, parking needs, pets, quiet-hour expectations, and any ceremony or programming plans before booking."
+  if (group === "groups") return `${confirmedStayPolicies.events} Share overnight guest count, vendors, parking needs, pets, quiet-hour expectations, and any ceremony or programming plans.`
   if (group === "amenities") return "Confirm seasonal details, maintenance windows, weather limits, pet rules, and the amenities that matter most before locking in dates."
   if (group === "destinations") return "Ask the stay team about drive patterns, ferry timing, park access, grocery stops, pets, and how the setting fits your itinerary."
-  if (group === "experiences") return "Use the guide to match the feeling of the trip, then confirm house rules, weather-sensitive details, guest count, and any retreat-style plans."
+  if (group === "experiences") return `Confirm house rules, weather-sensitive details, and guest count. ${confirmedStayPolicies.events}`
   return "Select dates and guest count for live availability, then compare location, capacity, amenities, pets, and direct-book rules before committing."
 }
 

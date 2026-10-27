@@ -11,6 +11,7 @@ import { GuestCountControl } from "@/components/guest-count-control"
 import { trackConversionEvent } from "@/lib/analytics"
 import { arrivalCopy, bookingPolicyCopy, getBookingTermsSummary } from "@/lib/booking-terms"
 import { formatUsPhoneInput } from "@/lib/phone"
+import { confirmedStayPolicies } from "@/lib/property-facts"
 import type { Property, PropertyVariant, Quote } from "@/lib/schemas"
 import { formatCurrency } from "@/lib/utils"
 
@@ -372,6 +373,11 @@ export function BookingCheckout({ property, variant, initialCheckIn = "", initia
           </div>
         )}
 
+        <section aria-labelledby="stay-policies-heading" className="mt-8 border-t border-black/10 pt-6 text-sm leading-7 text-black/62">
+          <h2 id="stay-policies-heading" className="font-semibold text-[#173c33]">Pets, visitors, and events</h2>
+          <p className="mt-3">{confirmedStayPolicies.pets}</p>
+          <p className="mt-3">{confirmedStayPolicies.events}</p>
+        </section>
         <div className="mt-10 grid gap-3 border-t border-black/10 pt-7 text-xs leading-6 text-black/60 sm:grid-cols-3"><p className="flex gap-2"><CheckCircle2 className="mt-1 size-4 shrink-0 text-[#805a27]" /> {quoteSource === "sandbox" ? "Preview availability" : "Live availability verified"}</p><p className="flex gap-2"><CheckCircle2 className="mt-1 size-4 shrink-0 text-[#805a27]" /> Complete total before confirmation</p><p className="flex gap-2"><CheckCircle2 className="mt-1 size-4 shrink-0 text-[#805a27]" /> {sandboxMode ? "No live reservation created" : "No payment collected today"}</p></div>
       </div>
 

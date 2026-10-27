@@ -3,6 +3,7 @@ import { brandEntityFields } from "@/lib/brand-schema"
 import { propertyGalleryImageAlt, propertyGalleryImageTitle } from "@/lib/property-image-seo"
 import { directBookingOffer } from "@/lib/seo-offers"
 import { absoluteUrl } from "@/lib/utils"
+import { confirmedStayPolicies, getVerifiedPropertyFacts, propertyFactDetails, propertySleepingSummary } from "@/lib/property-facts"
 
 export type PropertySeoLink = {
   label: string
@@ -36,7 +37,7 @@ const defaultContent: PropertySeoContent = {
     },
     {
       question: "Are events or extra visitors allowed?",
-      answer: "Event-style use, extra visitors, vendors, ceremonies, amplified music, and hosted meals must be approved before booking and must follow property rules and local requirements.",
+      answer: confirmedStayPolicies.events,
     },
     {
       question: "How do I confirm whether this is the right fit?",
@@ -65,11 +66,11 @@ const propertyContent: Record<string, PropertySeoContent> = {
       },
     ],
     faq: [
-      { question: "What is the sleeping and bathroom layout?", answer: "Blue Haven has three queen beds for up to six guests and one bathroom on the lower floor. One upstairs bedroom is open rather than fully enclosed, and the lakefront setting includes roughly 30 steps between parking and the entrance." },
+      { question: "What is the sleeping and bathroom layout?", answer: propertySleepingSummary(146889) },
       { question: "When are check-in and checkout?", answer: "The standard check-in window is 3:00 p.m. to 11:00 p.m., and checkout is by 10:00 a.m. Early arrival or late departure depends on the turnover schedule, so request it ahead of time and wait for confirmation before planning around it." },
       { question: "What is included for time on Lake Sutherland?", answer: "The home includes a private beach, two kayaks with paddles, and life jackets stored by the upper deck. A public boat launch is about 0.2 miles away, and guests bringing their own boat may use the house dock." },
-      { question: "How well equipped is the kitchen?", answer: "The compact kitchen has a cooktop, oven, refrigerator, microwave, coffee maker, toaster, cookware, and dining essentials. There is no dishwasher, and a five-burner gas grill is available on the upper deck." },
-      { question: "Can I bring a pet?", answer: "Yes. Blue Haven allows pets and has gates around the upper deck. The current listing requires a $100 one-time pet fee, notice at least one day before arrival, and payment before the access code is released." },
+      { question: "How well equipped is the kitchen?", answer: "The compact kitchen has a cooktop, oven, refrigerator, microwave, coffee maker, toaster, cookware, and dining essentials. A five-burner gas grill is available on the upper deck." },
+      { question: "Can I bring a pet?", answer: confirmedStayPolicies.pets },
     ],
     relatedLinks: [
       { label: "Port Angeles lake house rentals", href: "/destinations/port-angeles-lake-house-rentals", text: "Plan a Lake Sutherland stay with practical Port Angeles and Olympic National Park access." },
@@ -99,10 +100,10 @@ const propertyContent: Record<string, PropertySeoContent> = {
     ],
     faq: [
       { question: "How does arrival at the bluff work?", answer: "The standard check-in window is 4:00 p.m. to 11:00 p.m., and checkout is by 11:00 a.m. The driveway is winding and narrow, so arrive slowly; three vehicles fit in front of the home, with additional roadside parking and an EV charger available." },
-      { question: "How are the bedrooms arranged?", answer: "Sea-Renity has four bedrooms: one king room, two queen rooms, and a room with two twin beds. A full-size crib, Pack ’n Play, and four folding mattresses add flexibility for family stays." },
+      { question: "How are the bedrooms arranged?", answer: propertySleepingSummary(157299) },
       { question: "Can a group cook and eat together comfortably?", answer: "Yes. The kitchen is fully stocked and includes both a Breville espresso machine and a coffee maker. The dining table seats eight, with another four seats at the breakfast bar." },
-      { question: "Is the home set up for children and pets?", answer: "The home includes a crib, Pack ’n Play, high chair, books, toys, and a fenced backyard. Pets are welcome with the current $100 one-time fee, advance notice, and payment before the access code is issued." },
-      { question: "Can we invite visitors or host a gathering?", answer: "The reservation should reflect everyone staying at the home. Extra visitors or event-style plans need written approval before booking so parking, occupancy, quiet hours, and house rules can be confirmed." },
+      { question: "Is the home set up for children and pets?", answer: `The home includes a crib, Pack ’n Play, high chair, books, toys, and a fenced backyard. ${confirmedStayPolicies.pets}` },
+      { question: "Can we invite visitors or host a gathering?", answer: confirmedStayPolicies.events },
     ],
     relatedLinks: [
       { label: "Washington Coast vacation rentals", href: "/destinations/washington-coast-vacation-rentals", text: "Explore saltwater stays with horizon views and coastal atmosphere." },
@@ -163,9 +164,9 @@ const propertyContent: Record<string, PropertySeoContent> = {
       },
     ],
     faq: [
-      { question: "How are the beds arranged?", answer: "Fair Haven has a king bedroom and a queen bedroom downstairs, plus an upstairs family room with one queen and two twin beds. Two folding mattresses and a crib provide additional flexibility for up to ten guests." },
+      { question: "How are the beds arranged?", answer: propertySleepingSummary(178994) },
       { question: "When can we arrive, and where do we park?", answer: "The standard check-in window is 3:00 p.m. to 11:00 p.m., and checkout is by 10:00 a.m. Two vehicles fit in the private parking area, a third can use the roadside space, and a 240V Level 2 EV charger is provided." },
-      { question: "Are pets allowed?", answer: "Yes. Fair Haven has a private fenced dog area and welcomes more than one pet. The current listing requires a $100 flat pet fee, notice at least one day before arrival, and payment before the access code is released." },
+      { question: "Are pets allowed?", answer: `Fair Haven has an enclosed dog area. ${confirmedStayPolicies.pets}` },
       { question: "What should we bring for the beach and sauna?", answer: "The home includes a panoramic barrel sauna, three kayaks, beach essentials, and life jackets. Bring water shoes for the shell-covered Hood Canal shoreline, and follow the posted guidance for kayaking, harvesting shellfish, fires, and sauna use." },
       { question: "Where can I see the complete stay price?", answer: "Choose your dates and guest count in the booking panel to see the date-specific total. The current listing notes that the displayed price includes a non-refundable 5% payment-processing fee." },
     ],
@@ -197,7 +198,7 @@ const propertyContent: Record<string, PropertySeoContent> = {
     ],
     faq: [
       { question: "How do I see the exact price for my stay?", answer: "Select your dates and guest count in the booking panel. The live quote is the best source for the complete stay total because rates and minimum stays change by date." },
-      { question: "Is Aurora Haven easy to navigate without stairs?", answer: "Yes. The home is arranged on one level with no interior stairs. It has a king room, a queen room, a room with two twin beds, two folding mattresses, and a Pack ’n Play for flexible group sleeping." },
+      { question: "Is Aurora Haven easy to navigate without stairs?", answer: `Aurora Haven is a single-level home with no steps, including from parking to the entrance. ${propertySleepingSummary(184081)}` },
       { question: "What are the arrival and departure times?", answer: "The standard check-in window is 3:00 p.m. to 11:00 p.m., and checkout is by 10:00 a.m. Requests for earlier arrival or later departure depend on the cleaning and reservation schedule and are only confirmed in advance." },
       { question: "Is there parking and EV charging?", answer: "The ten-acre property has ample on-site parking. A 240V, 50-amp Level 2 EV outlet is available; bring the charging cord or adapter that fits your vehicle." },
       { question: "What can families do at the property?", answer: "Aurora’s on-site highlights include a game room, hot tub, fire pit, and outdoor zipline. Adults should supervise children closely, especially around the zipline, hot tub, fire, and wooded grounds." },
@@ -217,11 +218,11 @@ const propertyContent: Record<string, PropertySeoContent> = {
     ],
   },
   "reflection-haven": {
-    keywords: ["Olympic National Park vacation rental", "Port Angeles vacation rental", "Port Angeles lakeside rental", "Washington forest retreat rental", "Olympic Peninsula hot tub rental"],
+    keywords: ["Lake Dawn vacation rental", "Olympic National Park vacation rental", "Port Angeles vacation rental", "Port Angeles lakeside rental", "Washington forest retreat rental", "Olympic Peninsula hot tub rental"],
     localSections: [
       {
-        heading: "Lakeside near Olympic National Park",
-        body: "Reflection Haven works as a relaxed Olympic Peninsula basecamp with lake atmosphere, forest texture, and Port Angeles-area access.",
+        heading: "Lake Dawn near Olympic National Park",
+        body: "Reflection Haven is on Lake Dawn's north shore near Port Angeles and Olympic National Park. Blue Haven and Emerald Haven are the collection's Lake Sutherland homes.",
       },
       {
         heading: "A quiet return after park days",
@@ -229,10 +230,10 @@ const propertyContent: Record<string, PropertySeoContent> = {
       },
     ],
     faq: [
-      { question: "What is the bedroom layout?", answer: "Reflection Haven sleeps up to ten across four bedrooms: two king rooms, one queen room, and a bunk room with two bunk beds. The home has two bathrooms." },
+      { question: "What is the bedroom layout?", answer: propertySleepingSummary(335403) },
       { question: "How can I confirm the total price?", answer: "Enter your dates and guest count in the booking panel to generate the current quote. That total reflects the dates and occupancy you selected and is more accurate than a generic nightly rate." },
       { question: "What does the kitchen include?", answer: "The kitchen is stocked for shared meals with a stove, oven, refrigerator, microwave, dishwasher, cookware, cooking basics, and coffee and tea equipment. Linens, towels, and essential bath supplies are also provided." },
-      { question: "Can pets stay at Reflection Haven?", answer: "Yes. The home has a fenced yard and allows pets with a current $100 one-time fee. Notify the stay team at least one day before arrival and complete the pet fee before the access code is sent." },
+      { question: "Can pets stay at Reflection Haven?", answer: `The home has a fenced yard. ${confirmedStayPolicies.pets}` },
       { question: "What is included for lake time and evenings outside?", answer: "Guests can use two kayaks and a canoe on Lake Dawn, then unwind in the six-person hot tub or around the fire pit. Follow the home’s water, hot-tub, and seasonal fire-safety guidance." },
     ],
     relatedLinks: [
@@ -241,7 +242,7 @@ const propertyContent: Record<string, PropertySeoContent> = {
       { label: "Direct book vacation rentals", href: "/stays/direct-book-vacation-rentals-washington", text: "Book Reflection Haven directly with date-based pricing and stay-team support." },
       { label: "Lake Crescent vacation rentals", href: "/destinations/lake-crescent-vacation-rentals", text: "Use Reflection Haven as a quiet lakeside return after Lake Crescent and park days." },
       { label: "Olympic National Park vacation rentals", href: "/destinations/olympic-national-park-vacation-rentals", text: "Plan park days around a private lakeside base with forest recovery time." },
-      { label: "Washington lake house rentals", href: "/stays/washington-lake-house-rentals", text: "Compare Reflection Haven with other Lake Sutherland and Port Angeles-area lake homes." },
+      { label: "Washington lake house rentals", href: "/stays/washington-lake-house-rentals", text: "Compare Reflection Haven on Lake Dawn with Blue Haven and Emerald Haven on Lake Sutherland." },
       { label: "Washington cabin rentals", href: "/stays/washington-cabin-rentals", text: "Compare Olympic Peninsula cabin-style stays with water, forest, and hot tub rhythm." },
       { label: "Olympic National Park basecamps", href: "/experiences/olympic-national-park-basecamp", text: "Plan a park trip around a restorative private home." },
       { label: "Olympic Peninsula vacation rentals", href: "/destinations/olympic-peninsula-vacation-rentals", text: "Compare the Port Angeles and peninsula collection." },
@@ -283,6 +284,7 @@ function propertyAreaNames(property: Property, variant: PropertyVariant) {
 }
 
 export function buildPropertyJsonLd({ property, variant, reviews, path, heroImage }: { property: Property; variant: PropertyVariant; reviews: Review[]; path: string; heroImage: string }) {
+  const facts = getVerifiedPropertyFacts(variant.id)
   const pageUrl = absoluteUrl(path)
   const selectedReviews = reviews.slice(0, 3)
   const keywords = getPropertyKeywords(property, variant)
@@ -356,6 +358,7 @@ export function buildPropertyJsonLd({ property, variant, reviews, path, heroImag
       { "@type": "PropertyValue", name: "Maximum overnight guests", value: variant.guests },
       { "@type": "PropertyValue", name: "Bedrooms", value: variant.bedrooms },
       { "@type": "PropertyValue", name: "Bathrooms", value: variant.bathrooms },
+      ...(facts ? propertyFactDetails(facts).map((detail) => ({ "@type": "PropertyValue", name: detail.label, value: detail.text })) : []),
     ],
     photo: imageRefs,
     offers: { "@id": directOffer["@id"] },
