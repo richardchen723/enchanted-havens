@@ -1,0 +1,93 @@
+{
+  "deploymentId": "dpl_4CdJJNmcCEbBokP3vTGPpviojLZh",
+  "url": "https://enchanted-havens-1gyh0f5l7-richardchen-6494s-projects.vercel.app",
+  "commit": "2590c70031ff78ff7e2deb7a7da0814cd2151806",
+  "checkedAt": "2026-10-27",
+  "javascriptExecuted": false,
+  "results": [
+    {
+      "path": "/havens/blue-haven",
+      "vacationRentalRecords": 1,
+      "photosPerRental": 8,
+      "streetAddressPublished": false,
+      "passed": true
+    },
+    {
+      "path": "/havens/sea-renity-haven",
+      "vacationRentalRecords": 1,
+      "photosPerRental": 8,
+      "streetAddressPublished": false,
+      "passed": true
+    },
+    {
+      "path": "/havens/emerald-haven",
+      "vacationRentalRecords": 1,
+      "photosPerRental": 8,
+      "streetAddressPublished": false,
+      "passed": true
+    },
+    {
+      "path": "/havens/fair-haven",
+      "vacationRentalRecords": 1,
+      "photosPerRental": 8,
+      "streetAddressPublished": false,
+      "passed": true
+    },
+    {
+      "path": "/havens/aurora-haven",
+      "vacationRentalRecords": 1,
+      "photosPerRental": 8,
+      "streetAddressPublished": false,
+      "passed": true
+    },
+    {
+      "path": "/havens/reflection-haven",
+      "vacationRentalRecords": 1,
+      "photosPerRental": 8,
+      "streetAddressPublished": false,
+      "passed": true
+    },
+    {
+      "path": "/groups/company-retreat-rental-pnw",
+      "vacationRentalRecords": 4,
+      "photosPerRental": 8,
+      "streetAddressPublished": false,
+      "passed": true
+    },
+    {
+      "path": "/destinations/olympic-national-park-vacation-rentals",
+      "vacationRentalRecords": 4,
+      "photosPerRental": 8,
+      "streetAddressPublished": false,
+      "passed": true
+    },
+    {
+      "path": "/amenities/washington-vacation-rentals-with-private-dock",
+      "vacationRentalRecords": 3,
+      "photosPerRental": 8,
+      "streetAddressPublished": false,
+      "passed": true
+    },
+    {
+      "path": "/",
+      "vacationRentalRecords": 6,
+      "photosPerRental": 8,
+      "streetAddressPublished": false,
+      "passed": true
+    },
+    {
+      "path": "/havens",
+      "vacationRentalRecords": 6,
+      "photosPerRental": 8,
+      "streetAddressPublished": false,
+      "passed": true
+    },
+    {
+      "path": "/destinations",
+      "vacationRentalRecords": 6,
+      "photosPerRental": 8,
+      "streetAddressPublished": false,
+      "passed": true
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 # Ticket #840: property identity and practical guides
 
-Workstreams 3 and 4 for [Cotton Candy #840](https://yourcottoncandy.com/tickets/840/page), implemented October 27, 2026. This is a review record for the proposed change; production release is separate.
+Workstreams 3 and 4 for [Cotton Candy #840](https://yourcottoncandy.com/tickets/840/page), implemented October 27, 2026. [PR #10](https://github.com/richardchen723/enchanted-havens/pull/10) is ready for review. [Open the hosted retreat-guide preview](https://enchanted-havens-1gyh0f5l7-richardchen-6494s-projects.vercel.app/groups/company-retreat-rental-pnw#compare-havens). Production release is separate.
 
 ## Owner decisions applied
 
@@ -52,6 +52,22 @@ Google's vacation-rental feature has separate integration/eligibility requiremen
 ## Validation and review evidence
 
 The final local production build passes 255 tests (6 existing integration tests skipped), TypeScript, and ESLint (only the two existing `owner-inquiries.ts` warnings). The production build completes successfully. Schema.org validates the six emitted page graphs together with zero errors and zero warnings. Desktop and 390px mobile comparisons were visually checked; neither viewport has horizontal overflow. `html-validation.json` records ordinary HTTP checks of six property pages and 36 guides without executing JavaScript. The tests check stable identities across all page families, privacy, corrected owner facts against stale upstream values, complete amenities, deduplicated photos, absent date-free availability/price/rating claims, and server-rendered guide content.
+
+Google's [final code test](https://search.google.com/test/rich-results/result?id=JyqOA8t1Bfn4gOQlI98-Yg) reports **6 valid vacation-rental items and no critical issues** (26 valid items across all detected types). Optional findings are missing review/rating metadata, private street address/postal code, and typed bed quantities; the two fractional-bathroom homes also omit the optional integer bathroom-total field. Complete sleeping layouts remain in visible copy and `additionalProperty`. See [validator evidence](schema-validation.json).
+
+The first Google test exposed that `makesOffer` on a rental is interpreted as a dated lodging offer requiring check-in/out and price details. The final rental entities expose `ReserveAction` to date selection; generic brand offer catalogs remain separate. Schema.org and Google both pass the final output.
+
+Vercel preview **dpl_4CdJJNmcCEbBokP3vTGPpviojLZh** is Ready for code commit **2590c70031ff78ff7e2deb7a7da0814cd2151806**. Authenticated HTTP checks passed on all six homes, the retreat/park/private-dock guides, homepage, collection, and destination hub: [preview evidence](preview-validation.json). The hosted desktop comparison was also visually checked. Screenshots below show production before the change, the hosted desktop preview, and the local production build at 390px for mobile.
+
+### Before: general setting and amenity tags
+
+![Production comparison before this change](before-retreat-comparison.jpg)
+
+### After: sleeping arrangements, water access, and parking
+
+![Hosted preview comparison](after-retreat-comparison-desktop.jpg)
+
+[Mobile comparison](after-retreat-comparison-mobile.jpg) · [Sourced park-planning notes](park-planning-desktop.jpg) · [Schema.org result](schema-validator.jpg) · [Google rich-results result](google-rich-results.jpg)
 
 ## Release and rollback
 
