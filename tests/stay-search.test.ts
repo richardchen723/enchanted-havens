@@ -18,6 +18,12 @@ describe("stay search continuity", () => {
     expect(buildStayQuery(params, selection)).toBe("checkIn=2027-04-15&checkOut=2027-04-19&guests=5&utm_source=instagram&utm_campaign=spring&coupon=RETURN15")
   })
 
+  it("rejects impossible dates and excludes oversized or unsafe attribution", () => {
+    expect(parseStaySelection({checkIn: "2027-02-30", checkOut: "2027-03-03"}).checkIn).toBe("")
+    const query = buildStayQuery({utm_source: "planner", utm_campaign: "x".repeat(257), gclid: "bad\nvalue", email: "private"}, {checkIn: "2027-04-15", checkOut: "2027-04-19", guests: 3})
+    expect(query).toBe("checkIn=2027-04-15&checkOut=2027-04-19&guests=3&utm_source=planner")
+  })
+
   it("rejects invalid date ranges and avoids query noise for casual browsing", () => {
     const selection = parseStaySelection({ checkIn: "2027-04-19", checkOut: "2027-04-15" })
 

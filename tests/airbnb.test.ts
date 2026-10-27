@@ -5,9 +5,9 @@ import { BRAND_AIRBNB_URL } from "@/lib/brand"
 describe("Airbnb review destinations", () => {
   it("builds a review-count-weighted verified collection snapshot", () => {
     expect(getAirbnbReviewSummary([146889, 157299, 178403, 178994, 184081, 335403])).toMatchObject({
-      rating: 4.92,
-      reviewCount: 752,
-      checkedAt: "August 2026",
+      rating: 4.91,
+      reviewCount: 805,
+      checkedAt: "2026-10-27",
     })
   })
   it("links standalone homes to their matching Airbnb listing", () => {
@@ -15,10 +15,9 @@ describe("Airbnb review destinations", () => {
       href: "https://www.airbnb.com/rooms/634384398560090584",
       isListingSpecific: true,
       snapshot: {
-        rating: 4.95,
-        reviewCount: 202,
-        mentions: ["Location", "Views", "Hospitality"],
-        checkedAt: "August 2026",
+        rating: 4.94,
+        reviewCount: 210,
+        checkedAt: "2026-10-27",
       },
     })
 
@@ -27,7 +26,6 @@ describe("Airbnb review destinations", () => {
       expect(destination.isListingSpecific).toBe(true)
       expect(destination.snapshot?.rating).toBeGreaterThanOrEqual(4.8)
       expect(destination.snapshot?.reviewCount).toBeGreaterThan(0)
-      expect(destination.snapshot?.mentions).toHaveLength(3)
     }
   })
 

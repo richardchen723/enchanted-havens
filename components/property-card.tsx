@@ -3,7 +3,7 @@ import Link from "next/link"
 import { ArrowRight, ArrowUpRight, MapPin } from "lucide-react"
 import type { Property, PropertyVariant } from "@/lib/schemas"
 import { appendQuery } from "@/lib/stay-search"
-import { getAirbnbReviewDestination } from "@/lib/airbnb"
+import { getAirbnbReviewDestination, reviewSnapshotDate } from "@/lib/airbnb"
 import { cn, formatCount, formatCurrency } from "@/lib/utils"
 
 type PropertyCardProps = {
@@ -39,7 +39,7 @@ function Rate({ light = false, quote }: { light?: boolean; quote?: PropertyCardP
 
 function VerifiedRating({ snapshot, light = false }: { snapshot: ReturnType<typeof getAirbnbReviewDestination>["snapshot"]; light?: boolean }) {
   if (!snapshot) return null
-  return <p className={cn("mt-3 text-xs font-semibold", light ? "text-white/72" : "text-[#173c33]")}>★ {snapshot.rating.toFixed(2)} · {formatCount(snapshot.reviewCount, "verified Airbnb review")}</p>
+  return <p className={cn("mt-3 text-xs font-semibold", light ? "text-white/72" : "text-[#173c33]")}>★ {snapshot.rating.toFixed(2)} · {formatCount(snapshot.reviewCount, "Airbnb review")}<span className="mt-1 block text-[0.65rem] font-normal opacity-80">Checked {reviewSnapshotDate(snapshot.checkedAt)}</span></p>
 }
 
 export function PropertyCard({ property, priority = false, layout = "standard", index = 0, variant, queryString = "", quote }: PropertyCardProps) {

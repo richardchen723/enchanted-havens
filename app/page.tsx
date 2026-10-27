@@ -11,7 +11,7 @@ import { TrackedEventLink } from "@/components/tracked-contact-link"
 import { BRAND_INSTAGRAM_URL } from "@/lib/brand"
 import { getCatalog } from "@/lib/catalog"
 import { BRAND_HERO_URL, experienceTiles, homeHeroSlides } from "@/lib/editorial"
-import { getAirbnbReviewSummary } from "@/lib/airbnb"
+import { getAirbnbReviewSummary, reviewSnapshotDate } from "@/lib/airbnb"
 import { buildHomeJsonLd, HOME_DESCRIPTION, HOME_OG_IMAGE, HOME_TITLE, homeFaq, homeKeywords } from "@/lib/home-seo"
 import { shareMetadata } from "@/lib/seo-metadata"
 import { formatCount } from "@/lib/utils"
@@ -161,7 +161,7 @@ export default async function HomePage() {
               <p className="mt-6 text-sm leading-7 text-black/60">We link directly to Airbnb so each rating stays with its original listing and booking context.</p>
             </div>
             <div className="border-y border-black/10 py-9">
-              {airbnbSummary ? <div className="grid gap-8 sm:grid-cols-[0.7fr_1.3fr] sm:items-center"><div><p className="font-display text-7xl leading-none text-[#173c33]">{airbnbSummary.rating.toFixed(2)}</p><p className="mt-3 text-[#805a27]" aria-label={`${airbnbSummary.rating.toFixed(2)} out of 5 stars`}>★★★★★</p><p className="mt-3 text-xs font-semibold text-black/60">{formatCount(airbnbSummary.reviewCount, "verified Airbnb review")}</p></div><div><p className="font-display text-3xl leading-snug text-[#173c33]">Check the current ratings, guest comments, and listing-specific review history directly on Airbnb.</p><TrackedEventLink href={airbnbSummary.href} target="_blank" rel="noopener noreferrer" eventName="Airbnb Reviews Clicked" data={{ location: "homepage" }} className="button-outline mt-6 text-[#173c33]">Check verified Airbnb reviews <ArrowRight className="size-4" /></TrackedEventLink><p className="mt-4 text-xs leading-5 text-black/55">Snapshot checked {airbnbSummary.checkedAt}. Enchanted Havens is independent and is not endorsed by Airbnb.</p></div></div> : <p className="text-sm leading-7 text-black/60">Verified review history is available directly on our Airbnb profile.</p>}
+              {airbnbSummary ? <div className="grid gap-8 sm:grid-cols-[0.7fr_1.3fr] sm:items-center"><div><p className="font-display text-7xl leading-none text-[#173c33]">{airbnbSummary.rating.toFixed(2)}</p><p className="mt-3 text-[#805a27]" aria-label={`${airbnbSummary.rating.toFixed(2)} out of 5 stars`}>★★★★★</p><p className="mt-3 text-xs font-semibold text-black/60">{formatCount(airbnbSummary.reviewCount, "verified Airbnb review")}</p></div><div><p className="font-display text-3xl leading-snug text-[#173c33]">Check the current ratings, guest comments, and listing-specific review history directly on Airbnb.</p><TrackedEventLink href={airbnbSummary.href} target="_blank" rel="noopener noreferrer" eventName="Airbnb Reviews Clicked" data={{ location: "homepage" }} className="button-outline mt-6 text-[#173c33]">Check verified Airbnb reviews <ArrowRight className="size-4" /></TrackedEventLink><p className="mt-4 text-xs leading-5 text-black/55">Review-weighted average across the collection’s Airbnb listing snapshots, checked {reviewSnapshotDate(airbnbSummary.checkedAt)}. Enchanted Havens is independent and is not endorsed by Airbnb.</p></div></div> : <p className="text-sm leading-7 text-black/60">Verified review history is available directly on our Airbnb profile.</p>}
             </div>
           </div>
         </div>

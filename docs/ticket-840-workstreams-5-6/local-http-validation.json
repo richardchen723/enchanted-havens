@@ -1,0 +1,35 @@
+{
+  "javascriptExecuted": false,
+  "results": [
+    {
+      "path": "/agents",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "path": "/agent/catalog",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "path": "/agent/openapi.json",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "path": "/agent/quote?listingId=576478&checkIn=2027-04-15&checkOut=2027-04-19&guests=2",
+      "status": 404,
+      "passed": true
+    },
+    {
+      "path": "/agent/quote?listingId=146889&checkIn=2027-02-30&checkOut=2027-03-04&guests=2",
+      "status": 400,
+      "passed": true
+    },
+    {
+      "path": "/agent/quote?listingId=146889&checkIn=2027-04-15&checkOut=2027-04-19&guests=2&guests=3",
+      "status": 400,
+      "passed": true
+    }
+  ]
+}

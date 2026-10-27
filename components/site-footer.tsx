@@ -83,7 +83,7 @@ export function SiteFooter() {
       <div className="border-t border-white/10">
         <div className="container-shell flex flex-col gap-4 py-6 text-[0.68rem] text-white/60 sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} Enchanted Havens. All rights reserved.</p>
-          <div className="flex flex-wrap gap-x-6 gap-y-3"><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><Link href="/owner-policy">Owner Policy</Link></div>
+          <div className="flex flex-wrap gap-x-6 gap-y-3"><Link href="/agents">Travel planner resources</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><Link href="/owner-policy">Owner Policy</Link></div>
         </div>
       </div>
     </footer>

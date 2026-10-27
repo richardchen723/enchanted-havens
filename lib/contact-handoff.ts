@@ -28,7 +28,16 @@ export function buildInquiryHref({
   else params.delete("checkOut")
   if (guests) params.set("guests", String(guests))
   if (tripType) params.set("tripType", tripType)
-  if (returnTo) params.set("returnTo", returnTo)
+  if (returnTo) {
+    const path = safeContactReturnPath(returnTo, `/havens/${property}#reserve`)
+    const target = new URL(path, "https://enchantedhavens.com")
+    if (checkIn) target.searchParams.set("checkIn", checkIn)
+    else target.searchParams.delete("checkIn")
+    if (checkOut) target.searchParams.set("checkOut", checkOut)
+    else target.searchParams.delete("checkOut")
+    if (guests) target.searchParams.set("guests", String(guests))
+    params.set("returnTo", `${target.pathname}${target.search}${target.hash}`)
+  }
   return `/contact?${params.toString()}`
 }
 

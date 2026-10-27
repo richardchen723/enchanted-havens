@@ -9,7 +9,7 @@ import { getHubMatchedProperties } from "@/lib/hub-matched-properties"
 import type { Property, Review } from "@/lib/schemas"
 import type { SeoHub, SeoLandingPage } from "@/lib/seo-pages"
 import { getRelatedSeoPages, getSeoPagesByGroup } from "@/lib/seo-pages"
-import { getAirbnbReviewSummary } from "@/lib/airbnb"
+import { getAirbnbReviewSummary, reviewSnapshotDate } from "@/lib/airbnb"
 import { confirmedStayPolicies, getVerifiedPropertyFacts } from "@/lib/property-facts"
 import { guidePlanning } from "@/lib/guide-planning"
 import { cn, formatCount } from "@/lib/utils"
@@ -126,8 +126,8 @@ function ProofCards({ properties }: { properties: Property[] }) {
   const cards = [
     {
       icon: Star,
-      title: airbnb ? `${airbnb.rating.toFixed(2)} verified on Airbnb` : "Verified Airbnb reviews",
-      text: airbnb ? `${formatCount(airbnb.reviewCount, "review")} across matched Enchanted Havens listings, verified ${airbnb.checkedAt}.` : "Read guest feedback with its original stay context on Airbnb.",
+      title: airbnb ? `${airbnb.rating.toFixed(2)} across matched homes` : "Verified Airbnb reviews",
+      text: airbnb ? `Review-weighted average of Airbnb listing snapshots: ${formatCount(airbnb.reviewCount, "review")}, checked ${reviewSnapshotDate(airbnb.checkedAt)}. See each home for its original source.` : "Read guest feedback with its original stay context on Airbnb.",
       href: airbnb?.href || BRAND_INSTAGRAM_URL,
       cta: airbnb ? "Check verified reviews" : "See the collection",
     },

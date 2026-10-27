@@ -9,7 +9,7 @@ import { PropertyMap } from "@/components/property-map"
 import { PropertyFacts } from "@/components/property-facts"
 import { TrackedEventLink } from "@/components/tracked-contact-link"
 import { buildInquiryHref } from "@/lib/contact-handoff"
-import { getAirbnbReviewDestination } from "@/lib/airbnb"
+import { getAirbnbReviewDestination, reviewSnapshotDate } from "@/lib/airbnb"
 import { getEditorialVariantHero } from "@/lib/editorial"
 import { buildPropertyJsonLd, getPropertySeoContent } from "@/lib/property-seo"
 import type { Property, PropertyVariant } from "@/lib/schemas"
@@ -39,11 +39,7 @@ function AirbnbReviews({ variant }: { variant: PropertyVariant }) {
             <p className="mt-2 text-xs text-black/60">{formatCount(snapshot.reviewCount, "verified review")}</p>
           </div>
           <div>
-            <p className="text-sm leading-7 text-black/60">A recent snapshot of verified feedback for {variant.shortName}. Guests often mention:</p>
-            <ul className="mt-4 flex flex-wrap gap-2" aria-label="Common themes in guest reviews">
-              {snapshot.mentions.map((mention) => <li key={mention} className="border border-[#805a27]/20 px-3 py-2 text-xs text-[#173c33]">{mention}</li>)}
-            </ul>
-            <p className="mt-3 text-xs text-black/55">Snapshot checked {snapshot.checkedAt}.</p>
+            <p className="text-sm leading-7 text-black/60">Airbnb rating and review count for {variant.shortName}, checked {reviewSnapshotDate(snapshot.checkedAt)}. Read the original guest feedback and current totals on the listing.</p>
           </div>
         </div>
       ) : (
@@ -193,7 +189,7 @@ export function PropertyDetail({ property, variant, bookingLive = false, quoteAv
               <span className="flex items-center gap-2"><Users className="size-4 text-[#e7c892]" /> {formatCount(variant.guests, "guest")}</span>
               <span className="flex items-center gap-2"><BedDouble className="size-4 text-[#e7c892]" /> {formatCount(variant.bedrooms, "bedroom")}</span>
               <span className="flex items-center gap-2"><Bath className="size-4 text-[#e7c892]" /> {formatCount(variant.bathrooms, "bathroom")}</span>
-              {verifiedReviews ? <a href="#reviews" className="flex items-center gap-2 transition hover:text-white"><Star className="size-4 fill-[#e7c892] text-[#e7c892]" /> {verifiedReviews.rating.toFixed(2)} ({verifiedReviews.reviewCount}) verified on Airbnb</a> : null}
+              {verifiedReviews ? <a href="#reviews" className="flex items-center gap-2 transition hover:text-white"><Star className="size-4 fill-[#e7c892] text-[#e7c892]" /> {verifiedReviews.rating.toFixed(2)} ({verifiedReviews.reviewCount}) on Airbnb · {reviewSnapshotDate(verifiedReviews.checkedAt)}</a> : null}
               <a href="#gallery" className="ml-auto inline-flex items-center gap-2 font-bold uppercase tracking-[0.13em] text-white transition hover:text-[#e7c892]"><Images className="size-4" /> View the residence</a>
             </div>
             <div className="mt-6 flex flex-wrap gap-3">
