@@ -14,6 +14,9 @@ export type BookingTermsSummary = {
 const flexibleListingIds = new Set([335403, 576478])
 const threePmListingIds = new Set([146889, 178994, 184081])
 const tenAmListingIds = new Set([146889, 178994, 184081])
+// Reflection Haven's Airbnb arrival rule is "Check in after 4:00 PM".
+// Verified 2026-10-27; the owner designated Airbnb as the source of truth.
+const openEndedCheckInListingIds = new Set([335403, 576478])
 
 export function getBookingTermsSummary(variant: Pick<PropertyVariant, "id">): BookingTermsSummary {
   const flexible = flexibleListingIds.has(variant.id)
@@ -23,7 +26,7 @@ export function getBookingTermsSummary(variant: Pick<PropertyVariant, "id">): Bo
     partialRefundDays: flexible ? 7 : 14,
     partialRefundPercent: 50,
     checkInStart: threePmListingIds.has(variant.id) ? 15 : 16,
-    checkInEnd: variant.id === 576478 ? null : 23,
+    checkInEnd: openEndedCheckInListingIds.has(variant.id) ? null : 23,
     checkOut: tenAmListingIds.has(variant.id) ? 10 : 11,
     refundableDamageDeposit: 0,
   }
@@ -42,5 +45,5 @@ export function arrivalCopy(terms: BookingTermsSummary) {
   const window = terms.checkInEnd
     ? `${timeLabel(terms.checkInStart)}–${timeLabel(terms.checkInEnd)}`
     : `from ${timeLabel(terms.checkInStart)}`
-  return `Check-in ${window}; check-out by ${timeLabel(terms.checkOut)}.`
+  return `Check-in ${window}; check-out by ${timeLabel(terms.checkOut)}`
 }

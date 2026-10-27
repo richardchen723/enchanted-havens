@@ -1,4 +1,5 @@
 import { getAirbnbReviewDestination } from "@/lib/airbnb"
+import { arrivalCopy, getBookingTermsSummary } from "@/lib/booking-terms"
 import type { Property, PropertyVariant } from "@/lib/schemas"
 
 type FactDetail = { label: string; text: string }
@@ -24,7 +25,7 @@ export type VerifiedPropertyFacts = {
 }
 
 function listingSource(listingId: number, sections: string[]) {
-  return { url: getAirbnbReviewDestination(listingId).href, checkedAt: "2026-10-27", sections }
+  return { url: getAirbnbReviewDestination(listingId).href, checkedAt: "2026-10-27", sections: [...sections, "Things to know: check-in and checkout"] }
 }
 
 // Only confirmed facts belong here. Missing information is unknown, not false.
@@ -197,6 +198,7 @@ export function propertyFactDetails(facts: VerifiedPropertyFacts): FactDetail[] 
     { label: "Setting and water access", text: facts.waterAccess },
     { label: "Capacity and bathrooms", text: `Up to ${facts.maxGuests} guests · ${facts.bedrooms} bedrooms · ${facts.bathrooms} bathrooms.` },
     { label: "Sleeping arrangements", text: facts.sleeping },
+    { label: "Check-in and checkout", text: `${arrivalCopy(getBookingTermsSummary({ id: facts.listingId }))} All times are local Pacific time.` },
     ...facts.details,
     { label: "Pets", text: confirmedStayPolicies.pets },
     { label: "Visitors and events", text: confirmedStayPolicies.events },
