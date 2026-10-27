@@ -7,6 +7,7 @@ import { LoaderCircle, RotateCcw, SlidersHorizontal } from "lucide-react"
 import { GuestCountControl } from "@/components/guest-count-control"
 import { PropertyCard } from "@/components/property-card"
 import { trackConversionEvent } from "@/lib/analytics"
+import { buildStayQuery, replaceStayUrl } from "@/lib/stay-search"
 import type { Property, PropertyVariant } from "@/lib/schemas"
 
 type SearchQuote = { total: number; currency: string; nights: number }
@@ -34,37 +35,51 @@ export function CollectionBrowser({ properties, initialGuests = 1, initialCheckI
   const [guests, setGuests] = useState(initialGuests)
   const [experience, setExperience] = useState(normalizedExperience(initialExperience))
   const [availability, setAvailability] = useState<SearchResult[] | null>(null)
+  const [unknownCount, setUnknownCount] = useState(0)
+  const [refresh, setRefresh] = useState(0)
   const [availabilityMessage, setAvailabilityMessage] = useState("")
   const [checkingAvailability, setCheckingAvailability] = useState(Boolean(initialCheckIn && initialCheckOut))
 
   useEffect(() => {
     if (!initialCheckIn || !initialCheckOut) return
     const controller = new AbortController()
-    fetch("/api/search", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ checkIn: initialCheckIn, checkOut: initialCheckOut, guests: initialGuests }),
-      signal: controller.signal,
-    })
-      .then(async (response) => {
+    async function load() {
+      setCheckingAvailability(true)
+      setAvailability(null)
+      setAvailabilityMessage("")
+      setUnknownCount(0)
+      try {
+        const response = await fetch("/api/search", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ checkIn: initialCheckIn, checkOut: initialCheckOut, guests }),
+          signal: controller.signal,
+        })
         const data = await response.json()
-        if (!response.ok) throw new Error(data.error || "Live availability is not configured yet.")
-        return data.results as SearchResult[]
-      })
-      .then((results) => {
+        if (controller.signal.aborted) return
+        if (!response.ok) throw new Error(data.error || "Availability could not be confirmed.")
+        const results = data.results as SearchResult[]
+        const unknown = data.unknown?.length || 0
+        setUnknownCount(unknown)
         setAvailability(results)
-        trackConversionEvent(results.length ? "Stay Search Completed" : "Stay Search No Results", { results: results.length, guests: initialGuests })
-      })
-      .catch((error) => {
-        if (error instanceof DOMException && error.name === "AbortError") return
-        setAvailabilityMessage(error.message)
-      })
-      .finally(() => {
+        trackConversionEvent(unknown ? "Stay Search Incomplete" : results.length ? "Stay Search Completed" : "Stay Search No Results", { results: results.length, guests })
+      } catch (error) {
+        if (controller.signal.aborted) return
+        setAvailabilityMessage(error instanceof Error ? error.message : "Availability could not be confirmed.")
+      } finally {
         if (!controller.signal.aborted) setCheckingAvailability(false)
-      })
+      }
+    }
+    void load()
     return () => controller.abort()
-  }, [initialCheckIn, initialCheckOut, initialGuests])
+  }, [initialCheckIn, initialCheckOut, guests, refresh])
 
+  const selection = { checkIn: initialCheckIn || "", checkOut: initialCheckOut || "", guests }
+  const currentQuery = buildStayQuery({ ...Object.fromEntries(new URLSearchParams(queryString)), guests: String(guests), experience }, selection)
+  const updatePreferences = (nextGuests: number, nextExperience: string) => {
+    setGuests(nextGuests); setExperience(nextExperience)
+    replaceStayUrl({ ...selection, guests: nextGuests }, { guests: String(nextGuests), experience: nextExperience })
+  }
   const hasDateSearch = Boolean(initialCheckIn && initialCheckOut)
   const availabilityPending = hasDateSearch && checkingAvailability && !availability && !availabilityMessage
   const filtered = useMemo<CollectionEntry[]>(() => properties.flatMap((property) => {
@@ -102,13 +117,17 @@ export function CollectionBrowser({ properties, initialGuests = 1, initialCheckI
         <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
           <div className="flex items-center gap-3 text-[0.66rem] font-bold uppercase tracking-[0.17em] text-[#173c33]"><SlidersHorizontal className="size-4" /> Shape your stay</div>
           <div className="flex flex-1 flex-wrap gap-2 lg:max-w-4xl lg:justify-center">
-            {experienceOptions.map((option) => <button key={option} type="button" onClick={() => setExperience(experience === option ? "" : option)} className={`border px-3.5 py-2 text-[0.66rem] font-semibold tracking-[0.04em] transition ${experience === option ? "border-[#173c33] bg-[#173c33] text-white" : "border-black/14 text-black/58 hover:border-[#173c33] hover:text-[#173c33]"}`}>{option}</button>)}
+            {experienceOptions.map((option) => <button key={option} type="button" onClick={() => updatePreferences(guests, experience === option ? "" : option)} className={`border px-3.5 py-2 text-[0.66rem] font-semibold tracking-[0.04em] transition ${experience === option ? "border-[#173c33] bg-[#173c33] text-white" : "border-black/14 text-black/58 hover:border-[#173c33] hover:text-[#173c33]"}`}>{option}</button>)}
           </div>
-          <div className="flex items-center justify-between gap-3 text-xs lg:justify-start"><span className="font-bold uppercase tracking-[0.13em] text-[#173c33]">Guests</span><GuestCountControl value={guests} onChange={setGuests} max={maxGuests} appearance="filter" ariaLabel="Filter by guests" /></div>
+          <div className="flex items-center justify-between gap-3 text-xs lg:justify-start"><span className="font-bold uppercase tracking-[0.13em] text-[#173c33]">Guests</span><GuestCountControl value={guests} onChange={(value) => updatePreferences(value, experience)} max={maxGuests} appearance="filter" ariaLabel="Filter by guests" /></div>
         </div>
       </div>
 
-      {availabilityMessage && <p className="mb-10 border border-[#805a27]/35 bg-[#f3eee3] px-5 py-4 text-sm leading-6 text-[#173c33]">{availabilityMessage} The collection remains available to browse, and each property links to the current booking engine as a fallback.</p>}
+      {availabilityMessage && <p className="mb-10 border border-[#805a27]/35 bg-[#f3eee3] px-5 py-4 text-sm leading-6 text-[#173c33]">{availabilityMessage} Availability is unconfirmed. Browse the homes below or contact the stay team.</p>}
+
+      {unknownCount > 0 && <p role="status" className="mb-8 border border-[#805a27]/35 bg-[#f3eee3] px-5 py-4 text-sm leading-6 text-[#173c33]">Availability is still unconfirmed for {unknownCount} {unknownCount === 1 ? "home" : "homes"}. Results below show confirmed matches only. Please retry or contact the stay team to check the remaining homes.</p>}
+
+      {(availabilityMessage || unknownCount > 0) && <button type="button" onClick={() => setRefresh((value) => value + 1)} className="button-outline mb-8 text-[#173c33]">Retry availability</button>}
 
       {initialIntent && initialPropertySlugs.length ? <div className="mb-10 flex flex-col gap-3 border-l-2 border-[#805a27] bg-[#f3eee3] px-5 py-4 text-sm leading-6 text-[#173c33] sm:flex-row sm:items-center sm:justify-between"><p>Showing havens matched to <strong>{initialIntent.replaceAll("-", " ")}</strong>. Your dates and guest count will stay attached as you compare.</p><Link href="/havens#collection" className="shrink-0 text-[0.64rem] font-bold uppercase tracking-[0.14em]">View full collection</Link></div> : null}
 
@@ -116,7 +135,7 @@ export function CollectionBrowser({ properties, initialGuests = 1, initialCheckI
         <div data-testid="availability-results-status" role="status" aria-live="polite" className="mb-10 flex flex-col gap-3 border border-[#173c33]/14 bg-[#f3eee3] px-5 py-4 text-sm leading-6 text-[#173c33] sm:flex-row sm:items-center sm:justify-between">
           <p>{checkingAvailability || !availability
             ? "Checking live availability for your stay..."
-            : `${filtered.length} ${filtered.length === 1 ? "stay" : "stays"} available for ${format(parseISO(initialCheckIn!), "MMM d")}–${format(parseISO(initialCheckOut!), "MMM d, yyyy")} · ${initialGuests} ${initialGuests === 1 ? "guest" : "guests"}`}</p>
+            : `${filtered.length} ${filtered.length === 1 ? "stay" : "stays"} available for ${format(parseISO(initialCheckIn!), "MMM d")}–${format(parseISO(initialCheckOut!), "MMM d, yyyy")} · ${guests} ${guests === 1 ? "guest" : "guests"}`}</p>
           <Link href="/havens#collection" className="shrink-0 text-[0.64rem] font-bold uppercase tracking-[0.14em]">Browse without dates</Link>
         </div>
       )}
@@ -133,22 +152,22 @@ export function CollectionBrowser({ properties, initialGuests = 1, initialCheckI
         <>
           <div className="mb-9 flex items-center justify-between gap-5">
             <p className="text-sm text-black/60"><span className="font-semibold text-[#173c33]">{filtered.length}</span> {filtered.length === 1 ? "private stay" : "private stays"}</p>
-            {hasPreferenceFilters && <button type="button" onClick={() => { setGuests(1); setExperience("") }} className="inline-flex items-center gap-2 text-[0.64rem] font-bold uppercase tracking-[0.14em] text-[#173c33]"><RotateCcw className="size-3.5" /> Clear preferences</button>}
+            {hasPreferenceFilters && <button type="button" onClick={() => updatePreferences(1, "")} className="inline-flex items-center gap-2 text-[0.64rem] font-bold uppercase tracking-[0.14em] text-[#173c33]"><RotateCcw className="size-3.5" /> Clear preferences</button>}
           </div>
 
           <div className="grid gap-12 lg:gap-16">
-            {filtered.map((entry, index) => <div key={entry.key} onClick={() => trackConversionEvent("Stay Selected", { property: entry.property.slug, variant: entry.variant?.slug || entry.property.variants[0].slug })}><PropertyCard property={entry.property} variant={entry.variant} quote={entry.quote} priority={index === 0} layout="editorial" index={index} queryString={queryString} /></div>)}
+            {filtered.map((entry, index) => <div key={entry.key} onClick={() => trackConversionEvent("Stay Selected", { property: entry.property.slug, variant: entry.variant?.slug || entry.property.variants[0].slug })}><PropertyCard property={entry.property} variant={entry.variant} quote={entry.quote} priority={index === 0} layout="editorial" index={index} queryString={currentQuery} /></div>)}
           </div>
         </>
       )}
 
-      {!availabilityPending && filtered.length === 0 && (
+      {!availabilityPending && !availabilityMessage && unknownCount === 0 && filtered.length === 0 && (
         <div className="border border-black/10 bg-[#f3eee3] p-8 text-center sm:p-12">
           <h2 className="font-display text-4xl text-[#173c33]">Let us shape the right stay.</h2>
           <p className="mx-auto mt-3 max-w-2xl text-sm leading-7 text-black/58">These exact preferences are not available together. Explore flexible dates, clear one preference, or ask our stay team to recommend the closest fit.</p>
           <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
             {hasDateSearch ? <Link href="/havens#availability" className="button-outline text-[#173c33]">Explore flexible dates</Link> : null}
-            <button type="button" onClick={() => { setGuests(1); setExperience("") }} className="button-outline text-[#173c33]">View every haven</button>
+            <button type="button" onClick={() => updatePreferences(1, "")} className="button-outline text-[#173c33]">View every haven</button>
             <Link href="/contact" className="button-outline text-[#173c33]">Ask the stay team</Link>
           </div>
         </div>

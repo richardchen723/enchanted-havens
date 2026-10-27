@@ -1,44 +1,20 @@
-import { getCatalog } from "@/lib/catalog"
-import { getHostawayQuote, isHostawayConfigured, isListingAvailable } from "@/lib/hostaway"
-import { searchRequestSchema } from "@/lib/schemas"
-import { nightsBetween } from "@/lib/utils"
+import { searchPublicStays, freshness } from "@/lib/public-stays"
+import { limitStayRequests, readStayBody, stayErrorResponse, stayResponseHeaders, validatePublicStay } from "@/lib/public-stay-request"
+export const maxDuration = 60
 
 export async function POST(request: Request) {
   try {
-    const input = searchRequestSchema.parse(await request.json())
-    if (nightsBetween(input.checkIn, input.checkOut) < 1) return Response.json({ error: "Departure must be after arrival." }, { status: 400 })
-    if (!isHostawayConfigured()) return Response.json({ error: "Live availability will be enabled when Hostaway credentials are connected." }, { status: 503 })
-    const catalog = await getCatalog()
-    const checkedProperties = await Promise.all(catalog.map(async (property) => {
-      const eligible = property.variants.filter((variant) => variant.guests >= input.guests)
-      const checked = await Promise.all(eligible.map(async (variant) => {
-        try {
-          const available = await isListingAvailable(variant.id, input.checkIn, input.checkOut)
-          if (!available) return null
-          const quote = await getHostawayQuote(variant.id, input.checkIn, input.checkOut, input.guests)
-          if (!quote.available) return null
-          return {
-            listingId: variant.id,
-            variantSlug: variant.slug,
-            quote: { total: quote.total, currency: quote.currency, nights: quote.nights },
-          }
-        } catch {
-          return null
-        }
-      }))
-      const availableVariants = checked.filter(Boolean)
-      return availableVariants.length
-        ? {
-            propertySlug: property.slug,
-            availableListingIds: availableVariants.map((item) => item!.listingId),
-            variants: availableVariants,
-          }
-        : null
+    limitStayRequests(request)
+    const input = validatePublicStay(await readStayBody(request))
+    const checked = await searchPublicStays(input)
+    const unknown = checked.filter((item) => item.check.status === "unknown").map(({ property, variant }) => ({ propertySlug: property.slug, listingId: variant.id }))
+    const results = checked.filter((item) => item.check.status === "available" && item.check.quote).map(({ property, variant, check }) => ({
+      propertySlug: property.slug, availableListingIds: [variant.id],
+      variants: [{ listingId: variant.id, variantSlug: variant.slug, quote: { total: check.quote!.total, currency: "USD", nights: check.quote!.nights } }],
     }))
-    const results = checkedProperties.filter((result) => result !== null)
-    return Response.json({ results })
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "Invalid search request"
-    return Response.json({ error: message }, { status: 400 })
-  }
+    const allUnknown = checked.length > 0 && unknown.length === checked.length
+    return Response.json({ status: allUnknown ? "unknown" : unknown.length ? "partial" : "complete", results, unknown, ...freshness(new Date(), 60), ...(allUnknown ? { error: "We could not confirm availability. Please retry or contact the stay team." } : {}) }, {
+      status: allUnknown ? 503 : 200, headers: { ...stayResponseHeaders, ...(allUnknown ? { "Retry-After": "60" } : {}) },
+    })
+  } catch (error) { return stayErrorResponse(error) }
 }

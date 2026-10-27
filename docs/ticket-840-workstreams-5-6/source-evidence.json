@@ -1,0 +1,110 @@
+{
+  "checkedAt": "2026-10-27",
+  "reviewMethod": "Read each original Airbnb listing in signed-in Chrome; header rating and review count. No review-text scraping or generated endorsements.",
+  "reviews": [
+    {
+      "slug": "blue-haven",
+      "listingId": 146889,
+      "sourceUrl": "https://www.airbnb.com/rooms/634384398560090584",
+      "rating": 4.94,
+      "reviewCount": 210,
+      "checkedAt": "2026-10-27"
+    },
+    {
+      "slug": "sea-renity-haven",
+      "listingId": 157299,
+      "sourceUrl": "https://www.airbnb.com/rooms/862304966484869756",
+      "rating": 4.86,
+      "reviewCount": 116,
+      "checkedAt": "2026-10-27"
+    },
+    {
+      "slug": "emerald-haven",
+      "listingId": 178403,
+      "sourceUrl": "https://www.airbnb.com/rooms/922135705438701292",
+      "rating": 4.95,
+      "reviewCount": 132,
+      "checkedAt": "2026-10-27"
+    },
+    {
+      "slug": "fair-haven",
+      "listingId": 178994,
+      "sourceUrl": "https://www.airbnb.com/rooms/923125727364307502",
+      "rating": 4.89,
+      "reviewCount": 137,
+      "checkedAt": "2026-10-27"
+    },
+    {
+      "slug": "aurora-haven",
+      "listingId": 184081,
+      "sourceUrl": "https://www.airbnb.com/rooms/942394610289436238",
+      "rating": 4.93,
+      "reviewCount": 119,
+      "checkedAt": "2026-10-27"
+    },
+    {
+      "slug": "reflection-haven",
+      "listingId": 335403,
+      "sourceUrl": "https://www.airbnb.com/rooms/1294876804636674762",
+      "rating": 4.88,
+      "reviewCount": 91,
+      "checkedAt": "2026-10-27"
+    }
+  ],
+  "distribution": {
+    "checkedAt": "2026-10-27",
+    "source": "Hostaway Dashboard > Channel Manager > Google; Booking Websites > Enchanted Havens > Listings",
+    "channelStatus": "Active",
+    "bookingWebsiteId": 4346,
+    "bookingWebsiteStatus": "Published",
+    "customDomain": "book.enchantedhavens.com",
+    "hostedDomain": "57690_2.holidayfuture.com",
+    "includedHomes": 6,
+    "googleListings": [
+      {
+        "listingId": 146889,
+        "status": "On",
+        "bookingEngine": "Enchanted Havens",
+        "imageCount": 56
+      },
+      {
+        "listingId": 157299,
+        "status": "On",
+        "bookingEngine": "Enchanted Havens",
+        "imageCount": 68
+      },
+      {
+        "listingId": 178403,
+        "status": "On",
+        "bookingEngine": "Enchanted Havens",
+        "imageCount": 67
+      },
+      {
+        "listingId": 178994,
+        "status": "On",
+        "bookingEngine": "Enchanted Havens",
+        "imageCount": 63
+      },
+      {
+        "listingId": 184081,
+        "status": "On",
+        "bookingEngine": "Enchanted Havens",
+        "imageCount": 55
+      },
+      {
+        "listingId": 335403,
+        "status": "On",
+        "bookingEngine": "Enchanted Havens",
+        "imageCount": 66
+      }
+    ],
+    "retiredPropertiesIncluded": false,
+    "legacyHandoffTest": {
+      "requested": "https://book.enchantedhavens.com/listings/146889?checkIn=2027-04-15&checkOut=2027-04-19&guests=2",
+      "final": "https://www.enchantedhavens.com/havens/blue-haven?checkIn=2027-04-15&checkOut=2027-04-19&guests=2",
+      "httpStatus": 200
+    },
+    "googleApprovalAndActualFeedUrlsVerified": false,
+    "changesMade": false
+  }
+}

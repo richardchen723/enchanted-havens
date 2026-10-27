@@ -19,7 +19,7 @@ export function isHostawayConfigured() {
   )
 }
 
-async function getAccessToken() {
+async function getAccessToken(signal?: AbortSignal | null) {
   if (process.env.HOSTAWAY_ACCESS_TOKEN) return process.env.HOSTAWAY_ACCESS_TOKEN
   if (tokenCache && tokenCache.expiresAt > Date.now()) return tokenCache.value
   if (!process.env.HOSTAWAY_CLIENT_ID || !process.env.HOSTAWAY_CLIENT_SECRET) {
@@ -33,6 +33,7 @@ async function getAccessToken() {
     scope: "general",
   })
   const response = await fetch(TOKEN_URL, {
+    signal,
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded", Accept: "application/json" },
     body: form,
@@ -50,7 +51,7 @@ async function getAccessToken() {
 }
 
 async function hostawayRequest<T>(path: string, init: RequestInit = {}, attempt = 0): Promise<T> {
-  const token = await getAccessToken()
+  const token = await getAccessToken(init.signal)
   const response = await fetch(`${API_BASE}${path}`, {
     ...init,
     cache: "no-store",
@@ -193,9 +194,10 @@ export async function getListingMapId(listingId: number) {
   return numberValue(listing.listingMap ?? listing.listingMapId ?? listing.id, listingId)
 }
 
-export async function getListingCalendar(listingId: number, checkIn: string, checkOut: string) {
+export async function getListingCalendar(listingId: number, checkIn: string, checkOut: string, signal?: AbortSignal) {
   return hostawayRequest<Array<Record<string, unknown>>>(
     `/listings/${listingId}/calendar?startDate=${encodeURIComponent(checkIn)}&endDate=${encodeURIComponent(checkOut)}&includeResources=1`,
+    { signal },
   )
 }
 
@@ -265,8 +267,9 @@ export function normalizeHostawayQuoteResult(result: Record<string, unknown>, li
   })
 }
 
-export async function getHostawayQuote(listingId: number, checkIn: string, checkOut: string, guests: number): Promise<Quote> {
+export async function getHostawayQuote(listingId: number, checkIn: string, checkOut: string, guests: number, signal?: AbortSignal): Promise<Quote> {
   const result = await bookingEngineRequest<Record<string, unknown>>(`/listings/${listingId}/calendar/priceDetails`, {
+    signal,
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({

@@ -9,7 +9,7 @@ import { GuestCountControl } from "@/components/guest-count-control"
 import { useTextInquiry } from "@/components/text-inquiry/text-inquiry-provider"
 import { buildInquiryHref } from "@/lib/contact-handoff"
 import type { Property, PropertyVariant, Quote } from "@/lib/schemas"
-import type { StaySelection } from "@/lib/stay-search"
+import { parseStaySelection, replaceStayUrl, type StaySelection } from "@/lib/stay-search"
 import { formatCurrency } from "@/lib/utils"
 
 type BookingPanelProps = {
@@ -33,6 +33,8 @@ export function BookingPanel({ property, variant, bookingLive, quoteAvailable, i
   const [quoteSource, setQuoteSource] = useState<QuoteSource | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
+  const [expiresAt, setExpiresAt] = useState("")
+  const [refresh, setRefresh] = useState(0)
   const hasDates = Boolean(checkIn && checkOut)
   const availabilityError = hasDates && !quoteAvailable
     ? "Live pricing is temporarily unavailable. Send an inquiry and our stay team will confirm the stay for you."
@@ -44,6 +46,9 @@ export function BookingPanel({ property, variant, bookingLive, quoteAvailable, i
     const controller = new AbortController()
     async function loadQuote() {
       setLoading(true)
+      setQuote(null)
+      setQuoteSource(null)
+      setError("")
       try {
         const response = await fetch("/api/quotes", {
           method: "POST",
@@ -53,11 +58,13 @@ export function BookingPanel({ property, variant, bookingLive, quoteAvailable, i
         })
         const data = await response.json()
         if (!response.ok) throw new Error(data.error || "Unable to calculate this stay.")
+        if (controller.signal.aborted) return
         setQuote(data.quote)
+        setExpiresAt(data.expiresAt || new Date(Date.now() + 300000).toISOString())
         setQuoteSource(data.source === "sandbox" ? "sandbox" : "hostaway")
         trackConversionEvent("Stay Quote Viewed", { property: property.slug, nights: data.quote.nights, guests })
       } catch (requestError) {
-        if (requestError instanceof DOMException && requestError.name === "AbortError") return
+        if (controller.signal.aborted) return
         setError(requestError instanceof Error ? requestError.message : "Unable to calculate this stay.")
       } finally {
         if (!controller.signal.aborted) setLoading(false)
@@ -66,7 +73,23 @@ export function BookingPanel({ property, variant, bookingLive, quoteAvailable, i
     void loadQuote()
 
     return () => controller.abort()
-  }, [checkIn, checkOut, guests, hasDates, property.slug, quoteAvailable, variant.id])
+  }, [checkIn, checkOut, guests, hasDates, property.slug, quoteAvailable, variant.id, refresh])
+
+  useEffect(() => {
+    if (!quote || !expiresAt) return
+    const timer = window.setTimeout(() => { setQuote(null); setRefresh((value) => value + 1) }, Math.max(0, Date.parse(expiresAt) - Date.now()))
+    return () => window.clearTimeout(timer)
+  }, [quote, expiresAt])
+
+  useEffect(() => {
+    const restore = () => {
+      const selection = parseStaySelection(Object.fromEntries(new URLSearchParams(window.location.search)), 2)
+      setCheckIn(selection.checkIn); setCheckOut(selection.checkOut); setGuests(Math.min(selection.guests, variant.guests))
+      setQuote(null); setError("")
+    }
+    window.addEventListener("popstate", restore)
+    return () => window.removeEventListener("popstate", restore)
+  }, [variant.guests])
 
   const inquiryHref = useMemo(() => {
     return buildInquiryHref({
@@ -89,7 +112,7 @@ export function BookingPanel({ property, variant, bookingLive, quoteAvailable, i
     return `/booking/${property.slug}?${params.toString()}`
   }, [checkIn, checkOut, guests, preservedQuery, property.slug, variant.slug])
 
-  const canBook = Boolean(quote?.available && bookingLive)
+  const canBook = Boolean(quote?.available && bookingLive && !loading && !error && quote.checkIn === checkIn && quote.checkOut === checkOut && quote.guests === guests)
   const calendarSuppressionKey = `booking-calendar:${variant.slug}`
   const handleCalendarOpenChange = useCallback((calendarOpen: boolean) => {
     setLauncherSuppressed(calendarSuppressionKey, calendarOpen)
@@ -143,6 +166,7 @@ export function BookingPanel({ property, variant, bookingLive, quoteAvailable, i
             setError("")
             setCheckIn(arrival)
             setCheckOut(departure)
+            replaceStayUrl({ checkIn: arrival, checkOut: departure, guests })
             if (arrival && departure) {
               window.setTimeout(() => document.getElementById("reserve")?.scrollIntoView({ behavior: "smooth", block: "start" }), 180)
             }
@@ -150,7 +174,7 @@ export function BookingPanel({ property, variant, bookingLive, quoteAvailable, i
         />
         <div>
           <span className="eyebrow mb-2 block text-black/60">Guests</span>
-          <GuestCountControl value={guests} onChange={(value) => { setQuote(null); setQuoteSource(null); setError(""); setGuests(value) }} max={variant.guests} ariaLabel="Reservation guests" />
+          <GuestCountControl value={guests} onChange={(value) => { setQuote(null); setQuoteSource(null); setError(""); setGuests(value); replaceStayUrl({ checkIn, checkOut, guests: value }) }} max={variant.guests} ariaLabel="Reservation guests" />
         </div>
       </div>
 
@@ -165,7 +189,11 @@ export function BookingPanel({ property, variant, bookingLive, quoteAvailable, i
         </div>
       )}
 
+      {quote && <p className="mt-3 text-xs leading-5 text-black/58">Prices and availability are checked again at checkout. Dates are not held by this quote.</p>}
+
       {(error || availabilityError) && <p role="alert" className="mt-5 border border-[#805a27]/25 bg-[#f3eee3] p-4 text-xs leading-6 text-[#173c33]">{error || availabilityError}</p>}
+
+      {error && quoteAvailable && <button type="button" disabled={loading} onClick={() => setRefresh((value) => value + 1)} className="mt-4 text-xs font-semibold underline underline-offset-4">Retry availability</button>}
 
       <div className={`mt-6 grid gap-3 ${bookingLive ? "sm:grid-cols-2" : "grid-cols-1"}`}>
         <Link data-testid="booking-send-inquiry" href={inquiryHref} onClick={() => trackConversionEvent("Stay Inquiry Clicked", { property: property.slug, variant: variant.slug, hasDates })} className={`${bookingLive ? "button-outline text-[#173c33]" : "button-primary"} justify-center px-4`}>{hasDates ? "Request This Stay" : "Ask About This Haven"} <ArrowRight className="size-4" /></Link>
