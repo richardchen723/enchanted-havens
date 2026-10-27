@@ -8,7 +8,7 @@ Scope: workstreams 5 and 6. Prepared October 27, 2026. Production release remain
 - Public coordinates remain approved; street addresses, guest records, access instructions/codes, internal source notes, and credentials are excluded from the new catalog.
 - All prices and handoffs use USD. Payment-processing fees, payment/cancellation calculations, and reservation/payment endpoints are unchanged.
 - No channel activation, DNS change, republish action, external outreach, or partnership claim was made.
-- Google destination routing: confirmation decision pending owner response. Current routing remains unchanged.
+- Google destination routing: the owner confirmed on October 27, 2026 that Google Vacation Rentals links should point to this custom Enchanted Havens site through Hostaway. That configuration change is deferred to later; current routing remains unchanged.
 
 ## Workstream 5 — source checks and review freshness
 
@@ -39,7 +39,7 @@ The dashboard lists `book.enchantedhavens.com` as the custom domain and `57690_2
 
 This establishes working website routing, **not Google feed approval or compatibility**. [Hostaway's current instructions](https://support.hostaway.com/hc/en-us/articles/15313739960091-Google-Vacation-Rentals-Overview), updated September 8, 2026, require the exported domain to serve a published Hostaway Booking Website. A channel marked On does not resolve that requirement. The dashboard did not expose the actual Google feed landing-page template or Google-side approval/price-accuracy diagnostics.
 
-Before changing routing, the proposed verification is to obtain Hostaway confirmation of the exact exported URL/template for these six IDs and whether redirects to a custom API-backed checkout are supported. If unsupported, prepare a separate plan to serve a genuine Hostaway Booking Website on the chosen booking subdomain while keeping the marketing site on www. Review effects on existing links, analytics, booking API configuration, and checkout before a DNS change. No support message was sent.
+Owner decision, October 27, 2026: update the Google Vacation Rentals destination in Hostaway to this custom Enchanted Havens site in a later follow-up. Restoring the booking subdomain to a Hostaway-hosted website is not the selected direction. The follow-up should confirm Hostaway's supported destination-setting mechanism and the exact exported URL/template for these six IDs, then verify that each Google landing link reaches the corresponding property with dates and guest count preserved, and check Google-side approval/price-accuracy diagnostics. Compatibility and approval remain unverified. This follow-up is deferred and does not block review of PR #11. No routing, DNS, or channel setting was changed, and no support message was sent.
 
 ### Legitimate reputation/distribution follow-up
 
