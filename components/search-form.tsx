@@ -2,10 +2,11 @@
 
 import { ArrowRight, LoaderCircle } from "lucide-react"
 import { useRouter } from "next/navigation"
-import { type FormEvent, useState, useTransition } from "react"
+import { type FormEvent, useEffect, useState, useTransition } from "react"
 import { DateRangePicker } from "@/components/date-range-picker"
 import { GuestCountControl } from "@/components/guest-count-control"
 import { trackConversionEvent } from "@/lib/analytics"
+import { buildStayQuery, parseStaySelection, staySelectionChangeEvent } from "@/lib/stay-search"
 
 export function SearchForm({
   dark = false,
@@ -28,16 +29,31 @@ export function SearchForm({
   const [guests, setGuests] = useState(Math.max(1, initialGuests))
   const [searching, startSearch] = useTransition()
 
+  useEffect(() => {
+    const restoreSelection = () => {
+      const selection = parseStaySelection(Object.fromEntries(new URLSearchParams(window.location.search)), initialGuests)
+      setCheckIn(selection.checkIn)
+      setCheckOut(selection.checkOut)
+      setGuests(selection.guests)
+    }
+    window.addEventListener(staySelectionChangeEvent, restoreSelection)
+    window.addEventListener("popstate", restoreSelection)
+    return () => {
+      window.removeEventListener(staySelectionChangeEvent, restoreSelection)
+      window.removeEventListener("popstate", restoreSelection)
+    }
+  }, [initialGuests])
+
   function submitSearch(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     if (!checkIn || !checkOut || searching) return
 
-    const params = new URLSearchParams(preservedQuery)
-    params.set("checkIn", checkIn)
-    params.set("checkOut", checkOut)
-    params.set("guests", String(guests))
+    const params = buildStayQuery({
+      ...Object.fromEntries(new URLSearchParams(preservedQuery)),
+      ...Object.fromEntries(new URLSearchParams(window.location.search)),
+    }, { checkIn, checkOut, guests })
     trackConversionEvent("Stay Search Started", { checkIn, checkOut, guests })
-    startSearch(() => router.push(`/havens?${params.toString()}#collection`))
+    startSearch(() => router.push(`/havens?${params}#collection`))
   }
 
   return (

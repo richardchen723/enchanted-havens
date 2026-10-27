@@ -8,6 +8,8 @@ export type StaySelection = {
   guests: number
 }
 
+export const staySelectionChangeEvent = "enchanted-havens:stay-selection-change"
+
 const attributionParameter = /^(utm_[a-z0-9_]+|gclid|fbclid|msclkid)$/i
 const intentParameter = /^(intent|matches|experience|coupon)$/i
 const isoDate = /^\d{4}-\d{2}-\d{2}$/
@@ -70,4 +72,5 @@ export function replaceStayUrl(selection: StaySelection, extra: RawSearchParams 
   const params = { ...Object.fromEntries(current.searchParams), ...extra, guests: String(selection.guests) }
   const query = buildStayQuery(params, selection)
   window.history.replaceState(window.history.state, "", `${current.pathname}${query ? `?${query}` : ""}${current.hash}`)
+  window.dispatchEvent(new Event(staySelectionChangeEvent))
 }
