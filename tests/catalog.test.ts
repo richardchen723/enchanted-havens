@@ -43,14 +43,10 @@ afterEach(() => {
 })
 
 describe("curated inventory", () => {
-  it("publishes seven standalone homes", () => {
-    expect(fallbackProperties).toHaveLength(7)
-    expect(fallbackProperties.find((property) => property.slug === "reflection-point")?.variants[0]).toMatchObject({
-      id: 576478,
-      guests: 6,
-      bedrooms: 3,
-      bathrooms: 2,
-    })
+  it("publishes six standalone homes", () => {
+    expect(fallbackProperties).toHaveLength(6)
+    expect(fallbackProperties.some((property) => property.slug === "reflection-point")).toBe(false)
+    expect(fallbackProperties.some((property) => property.slug === "reflection-haven")).toBe(true)
     expect(fallbackProperties.every((property) => !property.estate)).toBe(true)
   })
 
@@ -166,13 +162,16 @@ describe("build-time catalog reads", () => {
 })
 
 describe("retired inventory", () => {
-  it("does not resurrect a removed property from a saved catalog snapshot", async () => {
+  it.each([
+    ["whidbey-estate", "The Cove Club", 558677],
+    ["reflection-point", "Reflection Point", 576478],
+  ])("does not resurrect %s from a saved catalog snapshot", async (slug, displayName, id) => {
     process.env.NEXT_PHASE = "phase-production-build"
     const retired = {
       ...fallbackProperties[0],
-      slug: "whidbey-estate",
-      displayName: "The Cove Club",
-      variants: [{ ...fallbackProperties[0].variants[0], id: 558677, slug: "full-estate" }],
+      slug,
+      displayName,
+      variants: [{ ...fallbackProperties[0].variants[0], id, slug }],
     }
     mocks.getLatestCatalogSnapshot.mockResolvedValueOnce([...fallbackProperties, retired])
 
@@ -185,7 +184,7 @@ describe("retired inventory", () => {
     process.env.STRIPE_SECRET_KEY = "sk_test_configured"
     process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY = "pk_test_configured"
 
-    for (const id of [558675, 558676, 558677, 558678, 571917]) {
+    for (const id of [558675, 558676, 558677, 558678, 571917, 576478]) {
       expect(bookingIsLiveFor(id)).toBe(false)
     }
   })

@@ -5,7 +5,6 @@ export const LEGACY_LISTING_DESTINATIONS: Record<number, string> = {
   178994: "/havens/fair-haven",
   184081: "/havens/aurora-haven",
   335403: "/havens/reflection-haven",
-  576478: "/havens/reflection-point",
 }
 
 const checkInNames = ["checkIn", "startDate", "arrivalDate", "arrival", "from", "start"]

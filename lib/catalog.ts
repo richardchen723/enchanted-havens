@@ -77,7 +77,7 @@ async function fetchCatalog(): Promise<Property[]> {
   }
 }
 
-const getCachedCatalog = unstable_cache(fetchCatalog, ["enchanted-havens-catalog-v20"], {
+const getCachedCatalog = unstable_cache(fetchCatalog, ["enchanted-havens-catalog-v21"], {
   revalidate: 3600,
   tags: ["catalog"],
 })

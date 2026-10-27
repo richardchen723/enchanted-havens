@@ -33,15 +33,13 @@ describe("Havens collection SEO", () => {
     expect(source).not.toMatch(/Questions Guests Search|organic-search hub/)
   })
 
-  it("includes Reflection Point in inventory while keeping The Cove Club out of the Havens collection", () => {
-    const collection = fallbackProperties
-
-    expect(collection.map((property) => property.slug)).toContain("reflection-point")
-    expect(collection.map((property) => property.slug)).not.toContain("whidbey-estate")
-    expect(getCollectionPropertySummary(collection.find((property) => property.slug === "reflection-point")!)).toMatchObject({
-      capacity: "Up to 6 guests",
-      rooms: "3 bedrooms · 2 baths",
-    })
+  it("excludes retired properties while preserving Reflection Haven", () => {
+    const slugs = fallbackProperties.map((property) => property.slug)
+    expect(slugs).not.toContain("reflection-point")
+    expect(slugs).not.toContain("whidbey-estate")
+    expect(slugs).toContain("reflection-haven")
+    const graph = buildHavensCollectionJsonLd(fallbackProperties, featuredReviews)
+    expect(JSON.stringify(graph)).not.toMatch(/Reflection Point|reflection-point|576478/)
   })
 
   it("covers core organic search intents with crawlable collection data", () => {

@@ -14,7 +14,6 @@ export const textInquiryListings: TextInquiryListing[] = [
   { listingId: 178994, listingSlug: "fair-haven", propertySlug: "fair-haven", propertyName: "Fair Haven", name: "Fair Haven", maxGuests: 10 },
   { listingId: 184081, listingSlug: "aurora-haven", propertySlug: "aurora-haven", propertyName: "Aurora Haven", name: "Aurora Haven", maxGuests: 10 },
   { listingId: 335403, listingSlug: "reflection-haven", propertySlug: "reflection-haven", propertyName: "Reflection Haven", name: "Reflection Haven", maxGuests: 10 },
-  { listingId: 576478, listingSlug: "reflection-point", propertySlug: "reflection-point", propertyName: "Reflection Point", name: "Reflection Point", maxGuests: 6 },
 ]
 
 export function getTextInquiryListing(listingSlug: string) {

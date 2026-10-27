@@ -250,34 +250,6 @@ const propertyContent: Record<string, PropertySeoContent> = {
       { label: "Company retreat rentals", href: "/groups/company-retreat-rental-pnw", text: "Compare quiet PNW homes for focused team time and retreat-style planning." },
     ],
   },
-  "reflection-point": {
-    keywords: ["Lake Sutherland vacation rental with private dock", "Port Angeles lake house rental", "Olympic National Park vacation rental", "Washington lakefront house", "Lake Sutherland kayak rental"],
-    localSections: [
-      {
-        heading: "Private waterfront on Lake Sutherland",
-        body: "Reflection Point places guests directly on Lake Sutherland near Port Angeles, with a private dock and practical access to Lake Crescent and the northern side of Olympic National Park.",
-      },
-      {
-        heading: "Designed for lake days and comfortable nights",
-        body: "Three king bedrooms give couples and families an unusually balanced layout, while kayaks, paddleboards, outdoor seating, and the waterfront fire pit keep the stay centered on the lake.",
-      },
-    ],
-    faq: [
-      { question: "What should families know about waterfront safety?", answer: "Reflection Point opens directly onto Lake Sutherland with a private dock and swimming access. Children need continuous adult supervision near the water, and everyone should wear appropriate safety gear and use the water equipment responsibly." },
-      { question: "Where can I see the exact price?", answer: "Select your dates and guest count in the booking panel for the current stay total. Rates vary by season, length of stay, and occupancy, so the live quote is more useful than a fixed nightly estimate." },
-      { question: "How are the three bedrooms arranged?", answer: "All three bedrooms have king beds. One bedroom and a full bathroom are on the main floor; two king bedrooms upstairs share the second bathroom." },
-      { question: "Does Reflection Point have air conditioning?", answer: "The current listing includes heating and ceiling fans but does not list whole-home air conditioning. Guests who are sensitive to warm weather should keep that in mind when choosing summer dates." },
-      { question: "Is there a hot tub, and what is included outdoors?", answer: "There is no hot tub listed. The outdoor experience centers on the private dock, waterfront fire pit, kayaks, and paddleboards, with direct access for swimming and paddling." },
-    ],
-    relatedLinks: [
-      { label: "Lake Sutherland vacation rentals", href: "/destinations/lake-sutherland-vacation-rentals", text: "Compare Reflection Point with other private Lake Sutherland stays." },
-      { label: "Port Angeles lake house rentals", href: "/destinations/port-angeles-lake-house-rentals", text: "Explore Port Angeles-area lake homes with water access and park proximity." },
-      { label: "Olympic National Park vacation rentals", href: "/destinations/olympic-national-park-vacation-rentals", text: "Plan park days around a private Lake Sutherland home." },
-      { label: "Washington lake house rentals", href: "/stays/washington-lake-house-rentals", text: "Compare waterfront Washington stays with docks, paddling, and mountain views." },
-      { label: "Private dock vacation rentals", href: "/amenities/washington-vacation-rentals-with-private-dock", text: "Find Washington stays where private dock access shapes the day." },
-      { label: "Direct book vacation rentals", href: "/stays/direct-book-vacation-rentals-washington", text: "Book Reflection Point directly with date-based pricing and stay-team support." },
-    ],
-  },
 }
 
 export function getPropertySeoContent(property: Property): PropertySeoContent {
