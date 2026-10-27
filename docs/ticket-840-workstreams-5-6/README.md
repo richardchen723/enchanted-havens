@@ -68,7 +68,7 @@ Validation: actual calendar dates, Pacific local day, integer guests, owner-conf
 
 Abuse controls: 20 live requests/minute/connection **per server instance**, bounded rate-limit memory, two homes checked concurrently per search, and a 15-second upstream deadline per home. This is not a distributed quota across Vercel instances. Edge/WAF restrictions remain useful if traffic rises; no hosting security setting was changed. No new browser CORS access was granted.
 
-Website controls now update the address-bar dates and guest count, preserve approved attribution, and carry current selections into property, inquiry, and checkout links. Collection guest changes trigger a new price check. Unknown results get clear wording and retry controls. The property panel clears stale quotes when selections change and refreshes after expiry; checkout cannot proceed on a quote for another selection.
+Website controls now update the address-bar dates and guest count, preserve approved attribution, and carry current selections into property, inquiry, and checkout links, including an inquiry's return link. Collection guest changes trigger a new price check and synchronize the search form above the results. Unknown results get clear wording and retry controls. The property panel clears stale quotes when selections change and refreshes after expiry; checkout cannot proceed on a quote for another selection.
 
 ### Optional WebMCP assessment
 
@@ -76,7 +76,27 @@ Website controls now update the address-bar dates and guest count, preserve appr
 
 ## Validation
 
-- Unit/regression tests: 272 passed, 6 existing integration skips.
+- Unit/regression tests after the final search-form correction: 273 passed, 6 existing integration skips.
 - Production build and TypeScript passed. ESLint: only the two existing unused-variable warnings in `lib/owner-inquiries.ts`.
 - [Local HTTP checks](local-http-validation.json): planner documentation, catalog, specification, invalid dates, repeated parameters, and retired inventory, without JavaScript.
-- Hosted live-price and browser validation: pending below before review completion.
+- [Hosted validation](preview-validation.json): all six homes returned live Hostaway USD quotes for April 15–19, 2027, two guests. Blue Haven's agent and website quote matched at USD 3,315.40; included components summed to the total. A known blocked stay returned 409/unavailable. Invalid dates and over-capacity requests returned 400; retired inventory returned 404.
+- Actual hosted catalog, search, quote, and error responses passed the published OpenAPI response schemas using Ajv 8 / JSON Schema 2020-12 with format validation.
+- Browser: changing Blue Haven's guests and departure updated the address bar, inquiry link, and return link; reload retained the selection and attribution. Collection guest changes triggered loading, then returned six priced property links for the new party size. Final search-form synchronization evidence is in [browser-validation.json](browser-validation.json).
+- Hosted planner page has one main landmark, the expected title, and no horizontal overflow at 1606 px. The local planner layout was also checked at 390 × 844. Checkout/payment submission was not exercised.
+- Preview reservation/payment writes remain disabled by the existing environment gate. No reservation, payment, inquiry, or outbound message was created during validation. Returned booking URLs were checked for current stay values; final payment remains in the existing checkout flow.
+
+## Visual comparison
+
+The before image is current production; the after image is the workstream preview. The preview's absent booking/chat controls reflect existing environment settings, not a production UI removal.
+
+Before: Blue Haven's older snapshot showed 4.95 / 202 reviews with an August 2026 date and unverified themes.
+
+![Before review refresh](reviews-before.jpg)
+
+After: the original Airbnb listing now shows 4.94 / 210 reviews, checked October 27, 2026, with a direct source link.
+
+![After review refresh](reviews-after.jpg)
+
+The new planner resource page introduces the public catalog and OpenAPI specification.
+
+![Travel planner resources](agent-resources-desktop.jpg)

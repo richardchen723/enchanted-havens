@@ -1,0 +1,130 @@
+{
+  "checkedAt": "2026-10-27T11:16:16.520875+00:00",
+  "commit": "fbf20fdb0dc3cf818e4873036289227e7ed83097",
+  "deploymentId": "dpl_3n4u5K1HbH6DNM2yZEQwYVMGCQdL",
+  "previewUrl": "https://enchanted-havens-p15kq3phw-richardchen-6494s-projects.vercel.app",
+  "results": [
+    {
+      "name": "catalog",
+      "path": "/agent/catalog",
+      "httpStatus": 200,
+      "passed": true
+    },
+    {
+      "name": "spec",
+      "path": "/agent/openapi.json",
+      "httpStatus": 200,
+      "passed": true
+    },
+    {
+      "name": "quote",
+      "path": "/agent/quote?listingId=146889&checkIn=2027-04-15&checkOut=2027-04-19&guests=2&utm_source=agent-qa",
+      "httpStatus": 200,
+      "passed": true
+    },
+    {
+      "name": "website-quote",
+      "path": "/api/quotes",
+      "httpStatus": 200,
+      "passed": true
+    },
+    {
+      "name": "search",
+      "path": "/agent/search?checkIn=2027-04-15&checkOut=2027-04-19&guests=2",
+      "httpStatus": 200,
+      "passed": true
+    },
+    {
+      "name": "invalid-date",
+      "path": "/agent/quote?listingId=146889&checkIn=2027-02-30&checkOut=2027-03-05&guests=2",
+      "httpStatus": 400,
+      "passed": true
+    },
+    {
+      "name": "retired",
+      "path": "/agent/quote?listingId=576478&checkIn=2027-04-15&checkOut=2027-04-19&guests=2",
+      "httpStatus": 404,
+      "passed": true
+    },
+    {
+      "name": "overcapacity",
+      "path": "/agent/quote?listingId=146889&checkIn=2027-04-15&checkOut=2027-04-19&guests=7",
+      "httpStatus": 400,
+      "passed": true
+    },
+    {
+      "name": "calendar",
+      "path": "/api/calendar/146889?startDate=2026-11-01&endDate=2026-12-01",
+      "httpStatus": 200,
+      "passed": true
+    },
+    {
+      "name": "unavailable",
+      "path": "/agent/quote?listingId=146889&checkIn=2026-11-01&checkOut=2026-11-04&guests=2",
+      "httpStatus": 409,
+      "passed": true
+    }
+  ],
+  "liveQuoteMatchesWebsite": {
+    "listingId": 146889,
+    "checkIn": "2027-04-15",
+    "checkOut": "2027-04-19",
+    "guests": 2,
+    "currency": "USD",
+    "total": 3315.4,
+    "source": "hostaway"
+  },
+  "reservationsOrPaymentsCreated": false,
+  "passed": true,
+  "searchOutcomes": [
+    {
+      "listingId": 146889,
+      "status": "available",
+      "currency": "USD",
+      "total": 3315.4
+    },
+    {
+      "listingId": 157299,
+      "status": "available",
+      "currency": "USD",
+      "total": 2561.22
+    },
+    {
+      "listingId": 178403,
+      "status": "available",
+      "currency": "USD",
+      "total": 3329.65
+    },
+    {
+      "listingId": 178994,
+      "status": "available",
+      "currency": "USD",
+      "total": 2539.88
+    },
+    {
+      "listingId": 184081,
+      "status": "available",
+      "currency": "USD",
+      "total": 2225.92
+    },
+    {
+      "listingId": 335403,
+      "status": "available",
+      "currency": "USD",
+      "total": 3077.39
+    }
+  ],
+  "openApiResponseSchemaValidation": {
+    "validator": "Ajv 8 / JSON Schema 2020-12 with ajv-formats",
+    "validatedResponses": [
+      "catalog",
+      "quote",
+      "search",
+      "invalid-date",
+      "retired",
+      "overcapacity",
+      "unavailable"
+    ],
+    "passed": true
+  }
+}

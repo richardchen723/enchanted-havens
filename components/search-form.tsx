@@ -14,14 +14,12 @@ export function SearchForm({
   initialCheckIn = "",
   initialCheckOut = "",
   initialGuests = 2,
-  preservedQuery = "",
 }: {
   dark?: boolean
   compact?: boolean
   initialCheckIn?: string
   initialCheckOut?: string
   initialGuests?: number
-  preservedQuery?: string
 }) {
   const router = useRouter()
   const [checkIn, setCheckIn] = useState(initialCheckIn)
@@ -48,10 +46,7 @@ export function SearchForm({
     event.preventDefault()
     if (!checkIn || !checkOut || searching) return
 
-    const params = buildStayQuery({
-      ...Object.fromEntries(new URLSearchParams(preservedQuery)),
-      ...Object.fromEntries(new URLSearchParams(window.location.search)),
-    }, { checkIn, checkOut, guests })
+    const params = buildStayQuery(Object.fromEntries(new URLSearchParams(window.location.search)), { checkIn, checkOut, guests })
     trackConversionEvent("Stay Search Started", { checkIn, checkOut, guests })
     startSearch(() => router.push(`/havens?${params}#collection`))
   }

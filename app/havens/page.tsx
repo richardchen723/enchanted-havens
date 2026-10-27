@@ -65,7 +65,7 @@ export default async function HavensPage({ searchParams }: { searchParams: Promi
       />
       <section id="availability" className="relative z-10 bg-[#f3eee3] pb-12 lg:pb-16">
         <div className="container-shell -translate-y-8 sm:-translate-y-1/2">
-          <SearchForm compact initialCheckIn={checkIn} initialCheckOut={checkOut} initialGuests={guests} preservedQuery={preservedQuery} />
+          <SearchForm compact initialCheckIn={checkIn} initialCheckOut={checkOut} initialGuests={guests} />
         </div>
         <div className="container-shell -mt-1 text-center sm:-mt-8"><p className="text-xs leading-6 text-black/60">Search exact dates, or browse the full collection below.</p></div>
       </section>

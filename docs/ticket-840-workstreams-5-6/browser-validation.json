@@ -1,0 +1,37 @@
+{
+  "checkedAt": "2026-10-27",
+  "propertySelectionPreview": {
+    "commit": "fbf20fdb0dc3cf818e4873036289227e7ed83097",
+    "url": "https://enchanted-havens-p15kq3phw-richardchen-6494s-projects.vercel.app",
+    "checks": [
+      "Blue Haven April 15\u201319, 2027, two guests showed USD 3,315.40 live total",
+      "Increasing guests to three updated the address bar, inquiry link, and nested returnTo link",
+      "Changing departure to April 20 updated the same links while preserving utm_source",
+      "Reload preserved arrival April 15, departure April 20, and three guests",
+      "Planner documentation has one main landmark, expected title, and no overflow at 1606 px"
+    ]
+  },
+  "collectionSynchronizationPreview": {
+    "commit": "e9cfd5f0df1b7edd9515e5d315d8bd3abb88cd43",
+    "deploymentId": "dpl_7N5xNhaVLexjqr5cibZKrKrKeLkX",
+    "url": "https://enchanted-havens-q5n1zdvm6-richardchen-6494s-projects.vercel.app",
+    "checks": [
+      "Increasing collection filter from two to three guests immediately updated both guest controls and address bar",
+      "Loading replaced stale prices, followed by six available homes for three guests",
+      "Blue Haven property link retained April 15\u201319, 2027, three guests, and utm_source=ticket840",
+      "Submitting the search form retained three guests"
+    ]
+  },
+  "mobileLayout": {
+    "environment": "local build",
+    "viewport": "390 x 844",
+    "horizontalOverflow": false
+  },
+  "screenshots": {
+    "reviews-before.jpg": "Production before workstreams 5\u20136",
+    "reviews-after.jpg": "Preview fbf20fd after review refresh; booking writes disabled by existing preview settings",
+    "agent-resources-desktop.jpg": "Preview fbf20fd new planner documentation"
+  },
+  "reservationsOrPaymentsCreated": false,
+  "passed": true
+}
