@@ -1,9 +1,10 @@
+import { buildVacationRentalEntity, propertySchemaImages } from "@/lib/vacation-rental-schema"
 import type { Property, PropertyVariant, Review } from "@/lib/schemas"
 import { brandEntityFields } from "@/lib/brand-schema"
 import { propertyGalleryImageAlt, propertyGalleryImageTitle } from "@/lib/property-image-seo"
 import { directBookingOffer } from "@/lib/seo-offers"
 import { absoluteUrl } from "@/lib/utils"
-import { confirmedStayPolicies, getVerifiedPropertyFacts, propertyFactDetails, propertySleepingSummary } from "@/lib/property-facts"
+import { confirmedStayPolicies, propertySleepingSummary } from "@/lib/property-facts"
 
 export type PropertySeoLink = {
   label: string
@@ -283,10 +284,8 @@ function propertyAreaNames(property: Property, variant: PropertyVariant) {
   ]).slice(0, 8)
 }
 
-export function buildPropertyJsonLd({ property, variant, reviews, path, heroImage }: { property: Property; variant: PropertyVariant; reviews: Review[]; path: string; heroImage: string }) {
-  const facts = getVerifiedPropertyFacts(variant.id)
+export function buildPropertyJsonLd({ property, variant, path, heroImage }: { property: Property; variant: PropertyVariant; reviews: Review[]; path: string; heroImage: string }) {
   const pageUrl = absoluteUrl(path)
-  const selectedReviews = reviews.slice(0, 3)
   const keywords = getPropertyKeywords(property, variant)
   const areaNames = propertyAreaNames(property, variant)
   const spatialCoverage = areaNames.map((name) => ({
@@ -299,12 +298,12 @@ export function buildPropertyJsonLd({ property, variant, reviews, path, heroImag
     },
   }))
   const reserveAction = { "@type": "ReserveAction", target: `${pageUrl}#reserve` }
-  const galleryImages = uniqueStrings([heroImage, ...variant.images, ...property.gallery]).slice(0, 8)
+  const galleryImages = propertySchemaImages(property, variant, heroImage)
   const imageObjects = galleryImages.map((image, index) => ({
     "@type": "ImageObject",
     "@id": `${pageUrl}#image-${index + 1}`,
     name: propertyGalleryImageTitle({ name: variant.shortName, index }),
-    caption: propertyGalleryImageAlt({ name: variant.shortName, location: property.location, index, tags: [...property.experienceTags, ...variant.amenities] }),
+    caption: propertyGalleryImageAlt({ name: variant.shortName, location: property.location, index, src: image, tags: [...property.experienceTags, ...variant.amenities] }),
     contentUrl: absoluteImageUrl(image),
     url: absoluteImageUrl(image),
     representativeOfPage: index === 0 ? true : undefined,
@@ -319,70 +318,8 @@ export function buildPropertyJsonLd({ property, variant, reviews, path, heroImag
     sellerId: `${absoluteUrl()}#organization`,
   })
   const lodgingBusiness = {
-    "@type": "LodgingBusiness",
-    "@id": `${pageUrl}#lodging`,
-    name: variant.shortName === property.displayName ? property.displayName : `${variant.shortName} at ${property.displayName}`,
-    url: pageUrl,
-    image: [absoluteImageUrl(heroImage), ...variant.images.slice(0, 5).map(absoluteImageUrl)],
-    description: property.seoDescription || variant.description,
-    slogan: property.narrative,
-    parentOrganization: { "@id": `${absoluteUrl()}#organization` },
-    sameAs: brandEntityFields().sameAs,
-    address: {
-      "@type": "PostalAddress",
-      addressLocality: variant.city || property.location,
-      addressRegion: "WA",
-      addressCountry: "US",
-    },
-    amenityFeature: variant.amenities.slice(0, 12).map((amenity) => ({
-      "@type": "LocationFeatureSpecification",
-      name: amenity,
-      value: true,
-    })),
-    maximumAttendeeCapacity: variant.guests || undefined,
-    numberOfRooms: variant.bedrooms || undefined,
-    containsPlace: {
-      "@type": "Accommodation",
-      "@id": `${pageUrl}#accommodation`,
-      name: variant.shortName,
-      occupancy: { "@type": "QuantitativeValue", maxValue: variant.guests },
-      numberOfBedrooms: variant.bedrooms,
-      numberOfBathroomsTotal: variant.bathrooms,
-      amenityFeature: variant.amenities.slice(0, 12).map((amenity) => ({
-        "@type": "LocationFeatureSpecification",
-        name: amenity,
-        value: true,
-      })),
-    },
-    additionalProperty: [
-      { "@type": "PropertyValue", name: "Maximum overnight guests", value: variant.guests },
-      { "@type": "PropertyValue", name: "Bedrooms", value: variant.bedrooms },
-      { "@type": "PropertyValue", name: "Bathrooms", value: variant.bathrooms },
-      ...(facts ? propertyFactDetails(facts).map((detail) => ({ "@type": "PropertyValue", name: detail.label, value: detail.text })) : []),
-    ],
+    ...buildVacationRentalEntity(property, variant, heroImage),
     photo: imageRefs,
-    offers: { "@id": directOffer["@id"] },
-    potentialAction: reserveAction,
-    ...(variant.rating && variant.reviewsCount
-      ? {
-          aggregateRating: {
-            "@type": "AggregateRating",
-            ratingValue: variant.rating,
-            reviewCount: variant.reviewsCount,
-          },
-        }
-      : {}),
-    ...(selectedReviews.length
-      ? {
-          review: selectedReviews.map((review) => ({
-            "@type": "Review",
-            author: { "@type": "Person", name: review.guestName },
-            reviewRating: { "@type": "Rating", ratingValue: review.rating, bestRating: 5 },
-            reviewBody: review.text,
-            datePublished: review.date,
-          })),
-        }
-      : {}),
   }
 
   return {

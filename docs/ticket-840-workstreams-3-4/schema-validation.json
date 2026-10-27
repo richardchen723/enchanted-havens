@@ -1,0 +1,25 @@
+{
+  "checkedAt": "2026-10-27",
+  "method": "Code snippet assembled from the six emitted property-page JSON-LD graphs, deduplicated by @id",
+  "inputSha256": "9849c069407d597f1edfb3c8376c89c032812ed68f144a4cad398893e63ff0cd",
+  "schemaOrg": {
+    "errors": 0,
+    "warnings": 0,
+    "items": 13
+  },
+  "googleRichResults": {
+    "resultUrl": "https://search.google.com/test/rich-results/result?id=JyqOA8t1Bfn4gOQlI98-Yg",
+    "validItems": 26,
+    "validVacationRentals": 6,
+    "criticalIssues": 0,
+    "optionalFields": [
+      "aggregateRating",
+      "review",
+      "streetAddress",
+      "postalCode",
+      "bed"
+    ],
+    "additionalOptionalFieldForFractionalBathroomCounts": "numberOfBathroomsTotal"
+  },
+  "limits": "Code validation, not Google crawl/index confirmation, Hotel Center enrollment, or a recommendation/ranking guarantee."
+}

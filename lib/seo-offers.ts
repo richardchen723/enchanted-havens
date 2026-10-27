@@ -7,10 +7,9 @@ export type DirectBookingOffer = {
   "@id": string
   name: string
   url: string
-  availability: "https://schema.org/LimitedAvailability"
   businessFunction: "https://purl.org/goodrelations/v1#LeaseOut"
   seller: SchemaRef
-  itemOffered: SchemaRef | { "@type": "LodgingBusiness"; name: string; url: string }
+  itemOffered: SchemaRef | { "@type": "VacationRental"; name: string; url: string }
   potentialAction: { "@type": "ReserveAction"; target: string }
 }
 
@@ -38,12 +37,11 @@ export function directBookingOffer({
     "@id": id || `${absoluteOfferUrl}#offer`,
     name,
     url: absoluteOfferUrl,
-    availability: "https://schema.org/LimitedAvailability",
     businessFunction: "https://purl.org/goodrelations/v1#LeaseOut",
     seller: { "@id": sellerId },
     itemOffered: itemOfferedId
       ? { "@id": itemOfferedId }
-      : { "@type": "LodgingBusiness", name: itemOfferedName || name, url: absoluteOfferUrl },
+      : { "@type": "VacationRental", name: itemOfferedName || name, url: absoluteOfferUrl },
     potentialAction: {
       "@type": "ReserveAction",
       target: reserveTarget || `${absoluteOfferUrl}#reserve`,

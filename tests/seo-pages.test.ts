@@ -24,14 +24,9 @@ describe("evergreen SEO landing architecture", () => {
     expect(source).toContain("real guest reflections")
     expect(source).toContain("View @enchanted.havens")
     expect(source).toContain("Planning Details")
-    expect(source).toContain("Local Fit")
-    expect(source).toContain("Compare Havens")
     expect(source).toContain("Compare Matched Havens")
-    expect(source).toContain("Compare the setting, capacity, and rhythm of each stay")
     expect(source).toContain("Homes this path returns to again and again.")
-    expect(source).toContain("Best Fit")
     expect(source).toContain("Select dates for exact pricing")
-    expect(source).toContain("Booking Clarity")
     expect(source).toContain("aria-label=\"Breadcrumb\"")
     expect(source).not.toMatch(/Search Intent|Trust Signals|Questions Guests Search|Hub Questions|Evergreen Search Guides|Referenced across|Common in/)
   })
@@ -181,8 +176,8 @@ describe("evergreen SEO landing architecture", () => {
     expect(brand?.contactPoint).toEqual(expect.arrayContaining([
       expect.objectContaining({ "@type": "ContactPoint", email: BRAND_CONTACT_EMAIL, url: absoluteUrl("/contact") }),
     ]))
-    expect(brand?.aggregateRating).toMatchObject({ "@type": "AggregateRating", bestRating: 5 })
-    expect(brand?.review).toHaveLength(featuredReviews.length)
+    expect(brand?.aggregateRating).toBeUndefined()
+    expect(brand?.review).toBeUndefined()
     expect(brand?.potentialAction).toMatchObject({ "@type": "ReserveAction", target: absoluteUrl("/havens#availability") })
     expect(brand?.hasOfferCatalog).toMatchObject({ "@id": `${absoluteUrl(page.path)}#direct-book-offers` })
     expect(brand?.makesOffer).toHaveLength(properties.length)
@@ -190,14 +185,13 @@ describe("evergreen SEO landing architecture", () => {
     expect(offerCatalog?.itemListElement).toHaveLength(properties.length)
     expect(offerCatalog?.itemListElement?.[0]).toMatchObject({
       "@type": "Offer",
-      availability: "https://schema.org/LimitedAvailability",
       businessFunction: "https://purl.org/goodrelations/v1#LeaseOut",
       potentialAction: { "@type": "ReserveAction", target: expect.stringMatching(/#reserve$/) },
     })
     expect(itemList?.numberOfItems).toBe(properties.length)
     expect(itemList?.itemListElement).toHaveLength(properties.length)
     expect(itemList?.itemListElement?.every((item) => (item.item?.potentialAction as JsonObject | undefined)?.["@type"] === "ReserveAction")).toBe(true)
-    expect(itemList?.itemListElement?.every((item) => Boolean((item.item?.offers as JsonObject | undefined)?.["@id"]))).toBe(true)
+    expect(itemList?.itemListElement?.every((item) => item.item?.makesOffer === undefined)).toBe(true)
     expect(faq?.mainEntity).toHaveLength(page.faq.length)
   })
 
@@ -565,8 +559,8 @@ describe("evergreen SEO landing architecture", () => {
       expect(brand?.contactPoint, hub.path).toEqual(expect.arrayContaining([
         expect.objectContaining({ "@type": "ContactPoint", email: BRAND_CONTACT_EMAIL, url: absoluteUrl("/contact") }),
       ]))
-      expect(brand?.aggregateRating, hub.path).toMatchObject({ "@type": "AggregateRating", bestRating: 5 })
-      expect(brand?.review, hub.path).toHaveLength(featuredReviews.length)
+      expect(brand?.aggregateRating, hub.path).toBeUndefined()
+      expect(brand?.review, hub.path).toBeUndefined()
       expect(brand?.potentialAction, hub.path).toMatchObject({ "@type": "ReserveAction", target: absoluteUrl("/havens#availability") })
       expect(itemList?.numberOfItems, hub.path).toBe(pages.length)
       expect(itemList?.itemListElement, hub.path).toHaveLength(pages.length)
@@ -582,7 +576,7 @@ describe("evergreen SEO landing architecture", () => {
       expect(matchedHavens?.itemListElement?.[0], hub.path).toMatchObject({
         url: absoluteUrl(`/havens/${matchedProperties[0].property.slug}`),
         item: {
-          "@type": "LodgingBusiness",
+          "@type": "VacationRental",
           "@id": `${absoluteUrl(`/havens/${matchedProperties[0].property.slug}`)}#lodging`,
           potentialAction: { "@type": "ReserveAction", target: `${absoluteUrl(`/havens/${matchedProperties[0].property.slug}`)}#reserve` },
         },

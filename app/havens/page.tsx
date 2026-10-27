@@ -50,7 +50,7 @@ export default async function HavensPage({ searchParams }: { searchParams: Promi
     .sort((a, b) => a.featuredOrder - b.featuredOrder)
   const searchableProperties = [...catalog].sort((a, b) => a.featuredOrder - b.featuredOrder)
   const stats = getHavensCollectionStats(properties)
-  const collectionJsonLd = buildHavensCollectionJsonLd(properties, [])
+  const collectionJsonLd = buildHavensCollectionJsonLd(properties)
 
   return (
     <>

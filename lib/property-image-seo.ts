@@ -1,27 +1,11 @@
-const fallbackVisualContexts = [
-  "gallery view",
-  "residence detail",
-  "Pacific Northwest setting",
-  "private-stay atmosphere",
-  "outdoor living detail",
-  "interior detail",
-]
+import { verifiedPropertyPhotos } from "@/lib/property-photos"
 
-function visualTags(tags: string[] = []) {
-  return tags
-    .map((tag) => tag.trim())
-    .filter(Boolean)
-    .filter((tag) => /view|water|lake|ocean|beach|dock|hot tub|sauna|fire|estate|forest|mountain|kayak|outdoor|interior|gathering|private/i.test(tag))
-}
-
-function imageContext(index: number, tags: string[] = []) {
-  const tag = visualTags(tags)[index % Math.max(visualTags(tags).length, 1)]
-  if (tag) return `${tag.toLowerCase()} ${fallbackVisualContexts[index % fallbackVisualContexts.length]}`
-  return fallbackVisualContexts[index % fallbackVisualContexts.length]
-}
-
-export function propertyGalleryImageAlt({ name, location, index, tags = [] }: { name: string; location: string; index: number; tags?: string[] }) {
-  return `${name} ${imageContext(index, tags)} in ${location}`
+// A property amenity does not identify what an individual photograph depicts.
+// Use a neutral caption until a photograph has a verified editorial caption.
+export function propertyGalleryImageAlt({ name, location, index, src }: { name: string; location: string; index: number; tags?: string[]; src?: string }) {
+  const caption = src ? Object.values(verifiedPropertyPhotos).flat().find((photo) => new URL(photo.url).pathname === new URL(src, "https://enchantedhavens.com").pathname)?.caption : undefined
+  if (caption) return `${name}: ${caption.toLowerCase()} in ${location}`
+  return `${name} gallery view ${index + 1} in ${location}`
 }
 
 export function propertyGalleryImageTitle({ name, index }: { name: string; index: number }) {

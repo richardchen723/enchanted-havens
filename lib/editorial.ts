@@ -1,6 +1,7 @@
 import { BRAND_BOOKING_ENGINE_URL } from "@/lib/brand"
 import { propertySchema, reviewSchema, type Property, type Review } from "@/lib/schemas"
 import { getHighResolutionImageSet } from "@/lib/images"
+import { verifiedPropertyPhotos } from "@/lib/property-photos"
 import { applyVerifiedPropertyFacts } from "@/lib/property-facts"
 
 export const LOGO_URL = "/images/enchanted-havens-logo-small.webp"
@@ -119,7 +120,7 @@ function variant(
     guests,
     bedrooms,
     bathrooms,
-    images: variantImages,
+    images: [...new Set([...variantImages, ...(verifiedPropertyPhotos[id] || []).map((photo) => photo.url)])],
     amenities,
     rating,
     reviewsCount,
@@ -226,7 +227,10 @@ export const fallbackProperties: Property[] = propertySchema.array().parse([
     seoDescription: "A Lake Dawn waterfront retreat near Port Angeles and Olympic National Park, with a hot tub, kayaks, and a canoe.",
     variants: [variant(335403, "reflection-haven", "Reflection Haven: Lakeside, Hot Tub, By Park Entry", "Reflection Haven", "A Lake Dawn waterfront stay with a hot tub near Olympic National Park.", "Lake Dawn", "Port Angeles", 10, 4, 2, images.reflection, ["Lake access", "Hot tub", "Kitchen", "Air conditioning", "Near national park", "Pet-friendly"], 4.95, 0)],
   },
-]).map(applyVerifiedPropertyFacts)
+]).map((property) => applyVerifiedPropertyFacts({
+  ...property,
+  gallery: [...new Set([...property.gallery, ...property.variants.flatMap((variant) => variant.images)])],
+}))
 
 export function getEditorialVariantDescription(listingId: number) {
   return fallbackProperties

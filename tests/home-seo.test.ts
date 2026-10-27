@@ -146,13 +146,12 @@ describe("homepage SEO", () => {
     expect(lodging?.potentialAction).toMatchObject({ "@type": "ReserveAction", target: "https://enchantedhavens.com/havens#availability" })
     expect(lodging?.hasOfferCatalog).toMatchObject({ "@id": "https://enchantedhavens.com/#direct-book-offers" })
     expect(lodging?.makesOffer).toHaveLength(fallbackProperties.length)
-    expect(lodging?.aggregateRating).toBeTruthy()
-    expect(lodging?.review?.length).toBeGreaterThanOrEqual(3)
+    expect(lodging?.aggregateRating).toBeUndefined()
+    expect(lodging?.review).toBeUndefined()
     expect(offerCatalog?.numberOfItems).toBe(fallbackProperties.length)
     expect(offerCatalog?.itemListElement).toHaveLength(fallbackProperties.length)
     expect(offerCatalog?.itemListElement?.[0]).toMatchObject({
       "@type": "Offer",
-      availability: "https://schema.org/LimitedAvailability",
       businessFunction: "https://purl.org/goodrelations/v1#LeaseOut",
       potentialAction: { "@type": "ReserveAction" },
     })

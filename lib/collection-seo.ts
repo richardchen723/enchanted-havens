@@ -1,4 +1,5 @@
-import type { Property, PropertyVariant, Review } from "@/lib/schemas"
+import { buildVacationRentalEntity } from "@/lib/vacation-rental-schema"
+import type { Property, PropertyVariant } from "@/lib/schemas"
 import { brandEntityFields } from "@/lib/brand-schema"
 import { significantLinks, webpageRefs } from "@/lib/seo-link-graph"
 import { directBookingOffer, directBookingOfferCatalog, schemaRefs } from "@/lib/seo-offers"
@@ -47,7 +48,7 @@ export const collectionGuides: CollectionGuide[] = [
     title: "Lakefront cabins and Olympic Peninsula lake houses",
     href: "/destinations/lake-sutherland-vacation-rentals",
     text: "Clear water, docks, kayaks, hot tubs, and Port Angeles access for guests searching Lake Sutherland cabin rentals or Olympic National Park vacation rentals.",
-    propertySlugs: ["blue-haven", "emerald-haven", "reflection-haven"],
+    propertySlugs: ["blue-haven", "emerald-haven"],
     keywords: ["Washington lake house rental", "Lake Sutherland cabin rental", "Port Angeles vacation rental", "Port Angeles lake house rental", "Olympic National Park basecamp"],
   },
   {
@@ -206,25 +207,6 @@ function absoluteImageUrl(src: string) {
   return src.startsWith("/") ? absoluteUrl(src) : src
 }
 
-function aggregateRating(reviews: Review[]) {
-  const rated = reviews.filter((review) => review.rating > 0)
-  if (!rated.length) return undefined
-  const ratingValue = Math.round((rated.reduce((sum, review) => sum + review.rating, 0) / rated.length) * 100) / 100
-  return {
-    "@type": "AggregateRating",
-    ratingValue,
-    reviewCount: rated.length,
-    bestRating: 5,
-  }
-}
-
-function selectSchemaReviews(reviews: Review[]) {
-  return reviews
-    .filter((review) => review.rating >= 4.8)
-    .filter((review, index, all) => all.findIndex((item) => item.id === review.id || item.text === review.text) === index)
-    .slice(0, 5)
-}
-
 export function getCollectionPropertySummary(property: Property) {
   const variant = primaryVariant(property)
   return {
@@ -251,10 +233,8 @@ export function getHavensCollectionStats(catalog: Property[]) {
   ]
 }
 
-export function buildHavensCollectionJsonLd(catalog: Property[], reviews: Review[] = []) {
+export function buildHavensCollectionJsonLd(catalog: Property[]) {
   const pageUrl = absoluteUrl(HAVENS_COLLECTION_PATH)
-  const selectedReviews = selectSchemaReviews(reviews)
-  const rating = aggregateRating(selectedReviews)
   const summaries = catalog.map(getCollectionPropertySummary)
   const bookingOffers = summaries.map(({ property, href }) => {
     const propertyUrl = absoluteUrl(href)
@@ -339,19 +319,6 @@ export function buildHavensCollectionJsonLd(catalog: Property[], reviews: Review
         potentialAction: { "@type": "ReserveAction", target: absoluteUrl("/havens#availability") },
         makesOffer: schemaRefs(bookingOffers),
         hasOfferCatalog: { "@id": offerCatalogId },
-        ...(rating ? { aggregateRating: rating } : {}),
-        ...(selectedReviews.length
-          ? {
-              review: selectedReviews.map((review) => ({
-                "@type": "Review",
-                author: { "@type": "Person", name: review.guestName },
-                reviewRating: { "@type": "Rating", ratingValue: review.rating, bestRating: 5 },
-                reviewBody: review.text,
-                datePublished: review.date,
-                itemReviewed: review.propertyName,
-              })),
-            }
-          : {}),
       },
       {
         ...directBookingOfferCatalog({
@@ -366,43 +333,11 @@ export function buildHavensCollectionJsonLd(catalog: Property[], reviews: Review
         name: "Enchanted Havens Pacific Northwest vacation rental collection",
         numberOfItems: summaries.length,
         itemListElement: summaries.map(({ property, variant, href }, index) => {
-          const offer = bookingOffers[index]
           return {
             "@type": "ListItem",
             position: index + 1,
             url: absoluteUrl(href),
-            item: {
-              "@type": "LodgingBusiness",
-              "@id": `${absoluteUrl(href)}#lodging`,
-              name: property.displayName,
-              url: absoluteUrl(href),
-              image: [property.heroImage, ...property.gallery.slice(0, 5)].map(absoluteImageUrl),
-              description: property.seoDescription,
-              address: {
-                "@type": "PostalAddress",
-                addressLocality: variant.city || property.location,
-                addressRegion: "WA",
-                addressCountry: "US",
-              },
-              amenityFeature: property.experienceTags.slice(0, 8).map((tag) => ({
-                "@type": "LocationFeatureSpecification",
-                name: tag,
-                value: true,
-              })),
-              maximumAttendeeCapacity: variant.guests || undefined,
-              numberOfRooms: variant.bedrooms || undefined,
-              offers: { "@id": offer["@id"] },
-              potentialAction: { "@type": "ReserveAction", target: absoluteUrl(`${href}#reserve`) },
-              ...(variant.rating && variant.reviewsCount
-                ? {
-                    aggregateRating: {
-                      "@type": "AggregateRating",
-                      ratingValue: variant.rating,
-                      reviewCount: variant.reviewsCount,
-                    },
-                  }
-                : {}),
-            },
+            item: buildVacationRentalEntity(property, variant),
           }
         }),
       },
