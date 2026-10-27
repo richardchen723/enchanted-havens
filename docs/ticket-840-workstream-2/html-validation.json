@@ -1,0 +1,85 @@
+{
+  "checkedAt": "2026-10-27",
+  "preview": "https://enchanted-havens-git-codex-ti-9db142-richardchen-6494s-projects.vercel.app",
+  "method": "Authenticated HTTP GET, parse ordinary HTML without executing JavaScript, compare each complete description byte-for-byte (after boundary whitespace trim) with the current production RSC description. Script content is excluded from readable HTML counts.",
+  "properties": [
+    {
+      "slug": "blue-haven",
+      "descriptionCharacters": 7357,
+      "completeProductionDescriptionPreserved": true,
+      "descriptionPresentInOrdinaryHTML": true,
+      "beforeReadableAboutCharacters": 152,
+      "afterReadableAboutCharacters": 7518,
+      "existingProcessingFeeDisclosurePresent": true,
+      "hasArrival": true,
+      "hasTimezone": true,
+      "hasPetFee": true,
+      "hasEventApproval": true
+    },
+    {
+      "slug": "sea-renity-haven",
+      "descriptionCharacters": 7557,
+      "completeProductionDescriptionPreserved": true,
+      "descriptionPresentInOrdinaryHTML": true,
+      "beforeReadableAboutCharacters": 139,
+      "afterReadableAboutCharacters": 7705,
+      "existingProcessingFeeDisclosurePresent": false,
+      "hasArrival": true,
+      "hasTimezone": true,
+      "hasPetFee": true,
+      "hasEventApproval": true
+    },
+    {
+      "slug": "emerald-haven",
+      "descriptionCharacters": 8097,
+      "completeProductionDescriptionPreserved": true,
+      "descriptionPresentInOrdinaryHTML": true,
+      "beforeReadableAboutCharacters": 144,
+      "afterReadableAboutCharacters": 8250,
+      "existingProcessingFeeDisclosurePresent": true,
+      "hasArrival": true,
+      "hasTimezone": true,
+      "hasPetFee": true,
+      "hasEventApproval": true
+    },
+    {
+      "slug": "fair-haven",
+      "descriptionCharacters": 8521,
+      "completeProductionDescriptionPreserved": true,
+      "descriptionPresentInOrdinaryHTML": true,
+      "beforeReadableAboutCharacters": 144,
+      "afterReadableAboutCharacters": 8674,
+      "existingProcessingFeeDisclosurePresent": true,
+      "hasArrival": true,
+      "hasTimezone": true,
+      "hasPetFee": true,
+      "hasEventApproval": true
+    },
+    {
+      "slug": "aurora-haven",
+      "descriptionCharacters": 6839,
+      "completeProductionDescriptionPreserved": true,
+      "descriptionPresentInOrdinaryHTML": true,
+      "beforeReadableAboutCharacters": 147,
+      "afterReadableAboutCharacters": 6995,
+      "existingProcessingFeeDisclosurePresent": true,
+      "hasArrival": true,
+      "hasTimezone": true,
+      "hasPetFee": true,
+      "hasEventApproval": true
+    },
+    {
+      "slug": "reflection-haven",
+      "descriptionCharacters": 6424,
+      "completeProductionDescriptionPreserved": true,
+      "descriptionPresentInOrdinaryHTML": true,
+      "beforeReadableAboutCharacters": 143,
+      "afterReadableAboutCharacters": 6576,
+      "existingProcessingFeeDisclosurePresent": true,
+      "hasArrival": true,
+      "hasTimezone": true,
+      "hasPetFee": true,
+      "hasEventApproval": true
+    }
+  ]
+}
