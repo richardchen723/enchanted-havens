@@ -148,7 +148,7 @@ export const destinationPages: SeoLandingPage[] = [
     heroPropertySlug: "blue-haven",
     heroImageIndex: 1,
     imageAlt: "Lake Sutherland cabin rental with private dock and clear water in Port Angeles",
-    propertySlugs: ["blue-haven", "emerald-haven", "reflection-haven"],
+    propertySlugs: ["blue-haven", "emerald-haven"],
     lead: "Lake Sutherland is one of the rare places where Olympic Peninsula drama feels immediately livable: glassy water, cedar-covered slopes, and homes close enough to the lake that the day begins outside before you decide what to do.",
     highlights: [
       { title: "Private lake access", text: "Choose homes with docks, kayaks, beaches, and lake-facing decks." },
@@ -158,7 +158,7 @@ export const destinationPages: SeoLandingPage[] = [
     sections: [
       { heading: "Why Lake Sutherland works for direct-book stays", body: "The lake gives guests an immediate reason to stay put, while Port Angeles and Olympic National Park keep the itinerary flexible. Families can swim and paddle without building every day around a drive; couples can keep the stay slow and scenic." },
       { heading: "Best-fit travelers", body: "Lake Sutherland is strongest for waterfront weekends, national park trips, summer lake days, quiet shoulder-season retreats, and small groups who want a polished home with real access to the landscape." },
-      { heading: "How to choose between the lake homes", body: "Blue Haven leans intimate and iconic, Emerald Haven adds a larger designer footprint with hot tub and private dock, and Reflection Haven is a relaxed lakeside basecamp close to park entry points." },
+      { heading: "How to choose between the lake homes", body: "Blue Haven offers a classic Lake Sutherland cabin setting. Emerald Haven pairs a private dock with a hot tub and a larger designer footprint." },
     ],
     faq: [
       { question: "Is Lake Sutherland a good place to stay for Olympic National Park?", answer: "Yes. Lake Sutherland sits near Port Angeles and Lake Crescent, making it a strong base for Olympic National Park while still giving guests a private lakefront setting." },

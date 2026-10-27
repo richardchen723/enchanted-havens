@@ -22,7 +22,6 @@ const featuredHavenLinks = [
   ["Fair Haven", "/havens/fair-haven"],
   ["Aurora Haven", "/havens/aurora-haven"],
   ["Reflection Haven", "/havens/reflection-haven"],
-  ["Reflection Point", "/havens/reflection-point"],
 ] as const
 
 function FooterLink({ href, children }: { href: string; children: ReactNode }) {

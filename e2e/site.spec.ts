@@ -190,7 +190,7 @@ test("homepage calendar stays above the header while changing months", async ({ 
 test("mobile calendar uses large tap targets and ignores repeated month taps", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "mobile", "Mobile month controls are tested at the mobile breakpoint")
   await page.clock.setFixedTime(new Date("2026-08-14T12:00:00"))
-  await page.goto("/havens/reflection-point")
+  await page.goto("/havens/blue-haven")
   await page.locator('button[aria-label^="Arrival,"]').click()
 
   const dialog = page.getByRole("dialog", { name: "Choose stay dates" })
@@ -442,7 +442,6 @@ test("legacy Hostaway listing URLs permanently redirect with stay and campaign p
     [178994, "/havens/fair-haven"],
     [184081, "/havens/aurora-haven"],
     [335403, "/havens/reflection-haven"],
-    [576478, "/havens/reflection-point"],
   ] as const
 
   for (const [listingId, destination] of legacyDestinations) {
@@ -466,15 +465,15 @@ test("legacy Hostaway listing URLs permanently redirect with stay and campaign p
 })
 
 test("property inquiry handoff carries the stay and returns to the booking panel", async ({ page }) => {
-  await page.goto("/havens/reflection-point?checkIn=2026-09-18&checkOut=2026-09-23&guests=4#reserve")
+  await page.goto("/havens/blue-haven?checkIn=2026-09-18&checkOut=2026-09-23&guests=4#reserve")
   await page.getByTestId("booking-send-inquiry").click()
 
-  await expect(page.getByRole("heading", { name: "Request Reflection Point." })).toBeVisible()
+  await expect(page.getByRole("heading", { name: "Request Blue Haven." })).toBeVisible()
   await expect(page.getByTestId("inquiry-stay-context")).toContainText("Sep 18–Sep 23, 2026 · 4 guests")
-  await expect(page.getByLabel("Tell us about the stay")).toHaveValue(/Reflection Point[\s\S]*Sep 18–Sep 23, 2026[\s\S]*Guests: 4/)
+  await expect(page.getByLabel("Tell us about the stay")).toHaveValue(/Blue Haven[\s\S]*Sep 18–Sep 23, 2026[\s\S]*Guests: 4/)
 
   await page.getByRole("link", { name: "Adjust stay" }).click()
-  await expect(page).toHaveURL(/\/havens\/reflection-point\?checkIn=2026-09-18&checkOut=2026-09-23&guests=4#reserve/)
+  await expect(page).toHaveURL(/\/havens\/blue-haven\?checkIn=2026-09-18&checkOut=2026-09-23&guests=4#reserve/)
   await expect(page.locator('button[aria-label^="Arrival,"]')).toContainText("Sep 18, 2026")
   await expect(page.locator('button[aria-label^="Departure,"]')).toContainText("Sep 23, 2026")
 })

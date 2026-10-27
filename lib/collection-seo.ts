@@ -194,7 +194,6 @@ const propertyBestFits: Record<string, string> = {
   "fair-haven": "Hood Canal beachfront resets, barrel sauna sessions, oyster-country evenings, and slower coastal stays.",
   "aurora-haven": "Private Olympic Peninsula group escapes with sea views, games, and room for high-energy families.",
   "reflection-haven": "Lakeside Olympic National Park basecamp stays with hot tub recovery after days outside.",
-  "reflection-point": "Lake Sutherland stays with three king bedrooms, a private dock, paddling gear, and firelit waterfront evenings.",
 }
 
 function primaryVariant(property: Property): PropertyVariant {

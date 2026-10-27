@@ -20,8 +20,8 @@ const row = {
 beforeEach(() => query.mockReset())
 
 describe("public promotions use current inventory", () => {
-  it("hides offers that only apply to retired properties", async () => {
-    query.mockResolvedValue([{ ...row, property_slugs: ["whidbey-estate"] }])
+  it.each(["whidbey-estate", "reflection-point"])("hides offers that only apply to %s", async (slug) => {
+    query.mockResolvedValue([{ ...row, property_slugs: [slug] }])
     await expect(getAdvertisedCouponForPage("/", ["blue-haven"])).resolves.toBeNull()
   })
 

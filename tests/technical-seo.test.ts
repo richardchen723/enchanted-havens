@@ -57,7 +57,7 @@ describe("technical SEO", () => {
 
   it("adds image sitemap coverage to core collection and support pages", () => {
     expectAbsoluteImages("", 3)
-    expectAbsoluteImages("/havens", 7)
+    expectAbsoluteImages("/havens", 6)
     expectAbsoluteImages("/experiences", 3)
     expectAbsoluteImages("/story", 2)
     expectAbsoluteImages("/contact", 1)
@@ -130,13 +130,13 @@ describe("technical SEO", () => {
       "/havens/fair-haven",
       "/havens/aurora-haven",
       "/havens/reflection-haven",
-      "/havens/reflection-point",
       "/experiences",
       "/story",
       "/contact",
     ]
 
     for (const href of requiredFooterLinks) expect(footerSource).toContain(href)
+    expect(footerSource).not.toContain("reflection-point")
     expect(footerSource).not.toContain("collectionLinks")
     expect(footerSource).not.toContain("experiencePathLinks")
     expect(footerSource).not.toMatch(/\/destinations|\/stays|\/groups|\/amenities/)

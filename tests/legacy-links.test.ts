@@ -5,7 +5,7 @@ describe("legacy booking link cleanup", () => {
   it("maps old listing paths to the canonical Haven routes", () => {
     expect(legacyListingDestination("/listings/146889")).toBe("/havens/blue-haven")
     expect(legacyListingDestination("/listing/558677/")).toBeNull()
-    expect(legacyListingDestination("/listings/576478")).toBe("/havens/reflection-point")
+    expect(legacyListingDestination("/listings/576478")).toBeNull()
   })
 
   it("normalizes aliases, removes duplicates, and preserves attribution", () => {

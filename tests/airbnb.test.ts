@@ -39,10 +39,10 @@ describe("Airbnb review destinations", () => {
     })
   })
 
-  it("links Reflection Point to its property-specific Airbnb page without inventing a review snapshot", () => {
+  it("does not promote the retired Reflection Point Airbnb listing", () => {
     expect(getAirbnbReviewDestination(576478)).toEqual({
-      href: "https://www.airbnb.com/rooms/1718464591834030571",
-      isListingSpecific: true,
+      href: BRAND_AIRBNB_URL,
+      isListingSpecific: false,
       snapshot: null,
     })
   })

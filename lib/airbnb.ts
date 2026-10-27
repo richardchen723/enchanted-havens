@@ -32,9 +32,6 @@ const AIRBNB_LISTINGS: Record<number, { href: string; snapshot?: AirbnbReviewSna
     href: "https://www.airbnb.com/rooms/1294876804636674762",
     snapshot: { rating: 4.88, reviewCount: 82, mentions: ["Location", "Hot tub", "Comfort"], checkedAt: "August 2026" },
   },
-  576478: {
-    href: "https://www.airbnb.com/rooms/1718464591834030571",
-  },
 }
 
 export function getAirbnbReviewDestination(listingId: number) {

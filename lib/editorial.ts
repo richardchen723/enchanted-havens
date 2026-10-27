@@ -88,13 +88,6 @@ const images = {
     "https://bookingenginecdn.hostaway.com/listing/57690-335403-kjmeDpEcGDW1LN0-lOYhdl-y65tUpYNVKheDHsG9wmg-67570375bbc94?width=1920&quality=82&format=webp&v=2",
     "https://bookingenginecdn.hostaway.com/listing/57690-335403-wTrBAkSNzl6mnTZBo3kAjMEiapeo-D0fKSJ5kaQjEcM-67570370abcce?width=1920&quality=82&format=webp&v=2",
   ]),
-  reflectionPoint: getHighResolutionImageSet([
-    "https://hostaway-platform.s3.us-west-2.amazonaws.com/listing/57690-576478-ccvpFy4EgK5MdhJq-rjcGBrawmFStiCDtuWOXCObJ5A-6a7937c8e988d",
-    "https://hostaway-platform.s3.us-west-2.amazonaws.com/listing/57690-576478-JHPabdPQ5vOYyRBBgclhYNrwE6VrvBxf5IhPl--R--cLo-6a7937c84c118",
-    "https://hostaway-platform.s3.us-west-2.amazonaws.com/listing/57690-576478-Zj5dAPZenZDuf7KmT6HB12KsLFAFXETjZmF-F8cwjyU-6a7937c788afb",
-    "https://hostaway-platform.s3.us-west-2.amazonaws.com/listing/57690-576478-OVYf9ugimw8nexWXTzwl1OMKzcoX9YLC9VJXFzr--XvE-6a7937c6e5a6c",
-    "https://hostaway-platform.s3.us-west-2.amazonaws.com/listing/57690-576478-6XhgAiMTpLPVy7saOSeGyav--msA9QbCzR37AusjuyRo-6a7937c61c526",
-  ]),
 }
 
 function variant(
@@ -232,22 +225,6 @@ export const fallbackProperties: Property[] = propertySchema.array().parse([
     seoDescription: "A lakeside Port Angeles retreat with a hot tub near the entrance to Olympic National Park.",
     variants: [variant(335403, "reflection-haven", "Reflection Haven: Lakeside, Hot Tub, By Park Entry", "Reflection Haven", "A relaxed lakeside stay with a hot tub near Olympic National Park.", "Olympic Peninsula", "Port Angeles", 10, 4, 2, images.reflection, ["Lake access", "Hot tub", "Kitchen", "Air conditioning", "Near national park", "Pet-friendly"], 4.95, 0)],
   },
-  {
-    slug: "reflection-point",
-    displayName: "Reflection Point",
-    eyebrow: "Lake Sutherland",
-    location: "Port Angeles, Washington",
-    narrative: "A renewed Lake Sutherland retreat with three king bedrooms, a private dock, and mountain views from first light through firelit evenings.",
-    longNarrative: "Reflection Point brings everyone close to the water without giving up room to settle in. Three king bedrooms make the home unusually comfortable for couples, while the private dock, kayaks, paddleboards, and waterfront fire pit keep each day connected to Lake Sutherland. Olympic National Park adventures begin nearby, with a calm, view-filled return waiting at the lake.",
-    heroImage: images.reflectionPoint[0],
-    gallery: images.reflectionPoint,
-    experienceTags: ["Private dock", "Three king bedrooms", "Kayaks & paddleboards", "Fire pit", "Lake & mountain views", "Pet-friendly"],
-    featuredOrder: 7,
-    featured: true,
-    seoTitle: "Reflection Point | Lake Sutherland House with Private Dock",
-    seoDescription: "A three-bedroom Lake Sutherland vacation rental near Olympic National Park with a private dock, kayaks, paddleboards, and waterfront fire pit.",
-    variants: [variant(576478, "reflection-point", "Reflection Point: Lake House & Private Dock", "Reflection Point", "A private Lake Sutherland home with three king bedrooms, a dock, kayaks, paddleboards, and a waterfront fire pit.", "Lake Sutherland", "Port Angeles", 6, 3, 2, images.reflectionPoint, ["Private dock", "Waterfront", "Lake access", "Kayaks", "Paddleboards", "Fire pit", "Fireplace", "Pet-friendly"], 5, 0)],
-  },
 ])
 
 export function getEditorialVariantDescription(listingId: number) {
@@ -263,7 +240,6 @@ const editorialHeroIndexes: Record<number, number> = {
   178994: 0,
   184081: 0,
   335403: 0,
-  576478: 0,
 }
 
 export function getEditorialVariantHero(listingId: number) {
