@@ -4,12 +4,27 @@ import { applyVerifiedPropertyFacts, confirmedStayPolicies, getVerifiedPropertyF
 import { buildPropertyJsonLd } from "@/lib/property-seo"
 import { seoLandingPages } from "@/lib/seo-pages"
 import { getStandoutAmenities } from "@/lib/standout-amenities"
+import { getBookingTermsSummary } from "@/lib/booking-terms"
 
 function property(slug: string) {
   return fallbackProperties.find((item) => item.slug === slug)!
 }
 
 describe("verified property facts", () => {
+  it.each([
+    [146889, 15, 23, 10, "Check-in 3:00 p.m.–11:00 p.m.; check-out by 10:00 a.m."],
+    [157299, 16, 23, 11, "Check-in 4:00 p.m.–11:00 p.m.; check-out by 11:00 a.m."],
+    [178403, 16, 23, 11, "Check-in 4:00 p.m.–11:00 p.m.; check-out by 11:00 a.m."],
+    [178994, 15, 23, 10, "Check-in 3:00 p.m.–11:00 p.m.; check-out by 10:00 a.m."],
+    [184081, 15, 23, 10, "Check-in 3:00 p.m.–11:00 p.m.; check-out by 10:00 a.m."],
+    [335403, 16, null, 11, "Check-in from 4:00 p.m.; check-out by 11:00 a.m."],
+  ] as const)("keeps listing %i arrival facts and checkout terms aligned with Airbnb", (id, checkInStart, checkInEnd, checkOut, copy) => {
+    expect(getBookingTermsSummary({ id })).toMatchObject({ checkInStart, checkInEnd, checkOut })
+    const facts = getVerifiedPropertyFacts(id)!
+    expect(propertyFactDetails(facts)).toContainEqual({ label: "Check-in and checkout", text: `${copy} All times are local Pacific time.` })
+    expect(facts.source.sections).toContain("Things to know: check-in and checkout")
+  })
+
   it("documents sources for active inventory without restoring retired homes", () => {
     expect(verifiedPropertyFacts.map((facts) => facts.listingId).sort()).toEqual(
       fallbackProperties.flatMap((home) => home.variants.map((variant) => variant.id)).sort(),
