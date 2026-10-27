@@ -1,7 +1,7 @@
 import { BRAND_BOOKING_ENGINE_URL, BRAND_CONTACT_EMAIL, BRAND_CONTACT_PHONE, BRAND_INSTAGRAM_URL, BRAND_LOGO_PATH, BRAND_NAME, BRAND_SAME_AS } from "@/lib/brand"
 import { absoluteUrl } from "@/lib/utils"
 
-export const BRAND_AREA_SERVED = ["Lake Sutherland", "Olympic Peninsula", "Hood Canal", "Whidbey Island", "Puget Sound", "Washington Coast"]
+export const BRAND_AREA_SERVED = ["Lake Sutherland", "Lake Dawn", "Olympic Peninsula", "Hood Canal", "Whidbey Island", "Puget Sound", "Washington Coast"]
 
 type BrandEntityInput = {
   areaServed?: string[]

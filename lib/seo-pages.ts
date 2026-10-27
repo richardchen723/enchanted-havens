@@ -1,3 +1,5 @@
+import { confirmedStayPolicies, propertySlugsOnWater, propertySlugsWithFeature } from "@/lib/property-facts"
+
 export type SeoPageGroup = "destinations" | "stays" | "groups" | "experiences" | "amenities"
 
 export type SeoFaq = {
@@ -148,7 +150,7 @@ export const destinationPages: SeoLandingPage[] = [
     heroPropertySlug: "blue-haven",
     heroImageIndex: 1,
     imageAlt: "Lake Sutherland cabin rental with private dock and clear water in Port Angeles",
-    propertySlugs: ["blue-haven", "emerald-haven"],
+    propertySlugs: propertySlugsOnWater("Lake Sutherland"),
     lead: "Lake Sutherland is one of the rare places where Olympic Peninsula drama feels immediately livable: glassy water, cedar-covered slopes, and homes close enough to the lake that the day begins outside before you decide what to do.",
     highlights: [
       { title: "Private lake access", text: "Choose homes with docks, kayaks, beaches, and lake-facing decks." },
@@ -194,7 +196,7 @@ export const destinationPages: SeoLandingPage[] = [
       { heading: "How to choose the right Port Angeles base", body: "Choose Blue Haven for an intimate lake stay, Emerald Haven for a larger designer lake house with dock and hot tub energy, Reflection Haven for a quiet lakeside return, and Aurora Haven for a private group-friendly Olympic Peninsula base." },
     ],
     faq: [
-      { question: "Does Enchanted Havens offer Port Angeles vacation rentals?", answer: "Yes. The Port Angeles-area collection includes Blue Haven, Emerald Haven, Reflection Haven, and Aurora Haven around Lake Sutherland and the Olympic Peninsula." },
+      { question: "Does Enchanted Havens offer Port Angeles vacation rentals?", answer: "Yes. Blue Haven and Emerald Haven are on Lake Sutherland; Reflection Haven is on Lake Dawn. Aurora Haven offers hilltop ocean views near Port Angeles." },
       { question: "Are Port Angeles vacation rentals good for Olympic National Park?", answer: "Yes. Port Angeles and nearby Lake Sutherland are practical bases for Lake Crescent, Hurricane Ridge, Sol Duc routes, ferries, groceries, restaurants, and northern Olympic National Park itineraries." },
       { question: "Should I choose a Port Angeles lake house or a broader Port Angeles stay?", answer: "Choose the lake-house guide when private dock, kayaks, lake views, and water access are the priority. Use this broader Port Angeles guide when park access, town logistics, group fit, and general Olympic Peninsula planning matter most." },
     ],
@@ -206,9 +208,9 @@ export const destinationPages: SeoLandingPage[] = [
     path: "/destinations/port-angeles-lake-house-rentals",
     eyebrow: "Port Angeles",
     title: "Port Angeles Lake House Rentals",
-    h1: "Port Angeles lake house rentals for Olympic National Park days and Lake Sutherland mornings.",
-    metaDescription: "Book curated Port Angeles lake house rentals near Lake Sutherland, Lake Crescent, and Olympic National Park with private water access and direct booking.",
-    description: "A focused destination page for travelers searching Port Angeles lake houses, Olympic National Park vacation rentals, and Lake Sutherland stays with real water access.",
+    h1: "Port Angeles lake house rentals on Lake Sutherland and Lake Dawn for Olympic National Park days.",
+    metaDescription: "Compare Port Angeles lake house rentals on Lake Sutherland and Lake Dawn, with water access, Olympic National Park trip planning, and direct booking.",
+    description: "Compare Lake Sutherland and Lake Dawn homes by their actual lake setting, sleeping layout, water access, and amenities.",
     primaryKeyword: "Port Angeles lake house rental",
     keywords: ["Port Angeles vacation rental", "Lake Sutherland cabin rental", "Olympic National Park vacation rental", "Lake Crescent vacation rental"],
     heroPropertySlug: "emerald-haven",
@@ -217,17 +219,17 @@ export const destinationPages: SeoLandingPage[] = [
     propertySlugs: ["blue-haven", "emerald-haven", "reflection-haven", "aurora-haven"],
     lead: "Port Angeles works because it keeps the trip practical without flattening the magic. Groceries, ferries, park routes, and restaurants are close, while Lake Sutherland and the surrounding forest keep the stay deeply Northwest.",
     highlights: [
-      { title: "Lake Sutherland anchor", text: "Stay west of Port Angeles with clear water, decks, docks, kayaks, and mountain light." },
+      { title: "Two distinct lake settings", text: "Blue Haven and Emerald Haven are on Lake Sutherland. Reflection Haven is on Lake Dawn." },
       { title: "Olympic National Park access", text: "Reach Lake Crescent, Hurricane Ridge, Sol Duc routes, and northern peninsula day trips." },
       { title: "Direct-book clarity", text: "Select exact dates for live pricing, then ask the stay team about fit, pets, or group plans." },
     ],
     sections: [
       { heading: "Why Port Angeles works for lake-house searches", body: "A Port Angeles lake house gives guests more than proximity to town. It combines Olympic National Park access with a home setting strong enough to hold whole days on the water." },
       { heading: "Lake Sutherland vs. in-town lodging", body: "Hotels and in-town rentals can make sense for quick park trips. Lake Sutherland homes are better when the property itself matters: morning coffee by the water, paddling, meals outside, and space for the group to recover after long days." },
-      { heading: "How to choose the right Port Angeles base", body: "Choose Blue Haven for an intimate classic lake stay, Emerald Haven for a larger designer lake house with hot tub and dock energy, Reflection Haven for a relaxed park-return rhythm, and Aurora Haven for a private group-friendly peninsula base." },
+      { heading: "How to choose the right Port Angeles base", body: "Compare Blue Haven and Emerald Haven on Lake Sutherland with Reflection Haven on Lake Dawn. Aurora Haven is a hilltop ocean-view alternative near Port Angeles." },
     ],
     faq: [
-      { question: "Are Enchanted Havens Port Angeles rentals on Lake Sutherland?", answer: "Several Port Angeles-area homes are centered around Lake Sutherland or nearby lakeside settings, giving guests water access while staying close to Olympic Peninsula routes." },
+      { question: "Are Enchanted Havens Port Angeles rentals on Lake Sutherland?", answer: "Blue Haven and Emerald Haven are on Lake Sutherland. Reflection Haven is on Lake Dawn. Aurora Haven offers hilltop ocean views near Port Angeles." },
       { question: "Is Port Angeles a good base for Olympic National Park?", answer: "Yes. Port Angeles and nearby Lake Sutherland are practical bases for Lake Crescent, Hurricane Ridge, northern Olympic National Park routes, ferries, groceries, and restaurants." },
       { question: "Which Port Angeles lake house is best for a group?", answer: "Emerald Haven, Reflection Haven, and Aurora Haven are strong group candidates depending on bedroom needs, amenities, pets, and planned use. Select dates for pricing and ask the stay team about fit before booking." },
     ],
@@ -585,7 +587,7 @@ export const stayPages: SeoLandingPage[] = [
     highlights: [
       { title: "Beachfront and oceanfront", text: "Compare Hood Canal beachfront, Whidbey Island oceanfront, and private Puget Sound shoreline settings." },
       { title: "Near Seattle, still removed", text: "Beach-house stays in Belfair and Oak Harbor work for weekend escapes and longer coastal resets." },
-      { title: "Rules made clear", text: "Direct booking support helps confirm tides, pets, fires, parking, quiet hours, and extra-visitor plans before arrival." },
+      { title: "Rules made clear", text: `Confirm tides, pets, fires, parking, and quiet hours. ${confirmedStayPolicies.events}` },
     ],
     sections: [
       { heading: "Hood Canal beach house rhythm", body: "Fair Haven is the clearest Hood Canal beach house in the collection: a Belfair beachfront stay with sauna time, oyster-country atmosphere, forested edges, and a shoreline pace that feels restorative without being isolated." },
@@ -626,8 +628,8 @@ export const stayPages: SeoLandingPage[] = [
       { heading: "How to compare the lake homes", body: "Choose Emerald Haven for a larger designer lake house with private dock, hot tub, and firepit energy. Choose Blue Haven for a more intimate lake-cabin feeling. Choose Reflection Haven for a quiet lakeside return after forest, lake, and park days." },
     ],
     faq: [
-      { question: "Does Enchanted Havens offer Washington lake house rentals?", answer: "Yes. The strongest lake-house stays are centered around Lake Sutherland and the Port Angeles area, including Emerald Haven, Blue Haven, and Reflection Haven." },
-      { question: "Which Washington lake house has the best dock experience?", answer: "Emerald Haven is the clearest private-dock match in the collection, while Blue Haven and Reflection Haven can also work well for water-focused Lake Sutherland or lakeside stays depending on the exact access desired." },
+      { question: "Does Enchanted Havens offer Washington lake house rentals?", answer: "Yes. Blue Haven and Emerald Haven are on Lake Sutherland, and Reflection Haven is on Lake Dawn near Port Angeles." },
+      { question: "Which Washington lake house has the best dock experience?", answer: "Blue Haven and Emerald Haven have private docks on Lake Sutherland. Reflection Haven has a private dock on Lake Dawn. Compare the individual layouts and water equipment before choosing." },
       { question: "Are these lake houses good for Olympic National Park trips?", answer: "Yes. Lake Sutherland and Port Angeles are practical bases for Lake Crescent, Hurricane Ridge, and northern Olympic National Park routes, while still giving guests a lake-centered home to return to." },
     ],
     relatedPaths: ["/destinations/port-angeles-vacation-rentals", "/destinations/lake-sutherland-vacation-rentals", "/destinations/port-angeles-lake-house-rentals", "/destinations/lake-crescent-vacation-rentals", "/stays/lakefront-cabins-washington", "/amenities/washington-vacation-rentals-with-private-dock", "/experiences/lake-days-kayaks-docks"],
@@ -991,7 +993,7 @@ export const groupPages: SeoLandingPage[] = [
       { heading: "How to inquire", body: "Share dates, guest count, visitor count, vendor plans, parking needs, event timing, and whether you expect amplified music, tenting, catering, photography, or ceremony use." },
     ],
     faq: [
-      { question: "Can I host an event at an Enchanted Havens property?", answer: "Possibly, but only with advance approval. Event-style use must follow the specific property's rules, local regulations, parking limits, quiet hours, and permit requirements." },
+      { question: "Can I host an event at an Enchanted Havens property?", answer: `${confirmedStayPolicies.events} Any approved use must follow the property's rules, local regulations, parking limits, quiet hours, and permit requirements.` },
       { question: "Can I book first and explain the event later?", answer: "No. Event-adjacent plans should be discussed before booking so the stay team can confirm whether the property is appropriate." },
       { question: "What information should I send?", answer: "Send dates, overnight guest count, extra visitor count, vendor details, parking needs, schedule, music plans, and any ceremony or production requirements." },
     ],
@@ -1149,7 +1151,7 @@ export const amenityPages: SeoLandingPage[] = [
     heroPropertySlug: "emerald-haven",
     heroImageIndex: 1,
     imageAlt: "Washington vacation rental with hot tub near Lake Sutherland and Olympic Peninsula views",
-    propertySlugs: ["emerald-haven", "reflection-haven", "fair-haven", "blue-haven"],
+    propertySlugs: propertySlugsWithFeature("hotTub"),
     lead: "A hot tub is not just an amenity in the Pacific Northwest. It changes the shape of the day, turning cold swims, park hikes, lake wind, and rainy evenings into part of the pleasure.",
     highlights: [
       { title: "Lake and forest settings", text: "Compare hot tub stays near Lake Sutherland, Port Angeles, and Olympic National Park." },
@@ -1157,12 +1159,12 @@ export const amenityPages: SeoLandingPage[] = [
       { title: "Direct-book fit help", text: "Ask which home best matches your dates, guest count, and preferred outdoor ritual." },
     ],
     sections: [
-      { heading: "Best hot tub settings in the collection", body: "Emerald Haven is the polished Lake Sutherland choice, while Reflection Haven works well for Olympic Peninsula trips where the hot tub is part of the return after park days." },
-      { heading: "How to choose a hot tub stay", body: "Start with the landscape: lakefront if the water is the trip, forested if privacy matters most, and Hood Canal if sauna, beach, and coastal rituals are part of the plan." },
+      { heading: "Best hot tub settings in the collection", body: "Emerald Haven is on Lake Sutherland, Reflection Haven is on Lake Dawn, and Aurora Haven offers hilltop ocean views near Port Angeles." },
+      { heading: "How to choose a hot tub stay", body: "Choose Emerald Haven or Reflection Haven for a lakefront hot tub stay, or Aurora Haven for hilltop ocean views." },
       { heading: "Hot tub rules and quiet hours", body: "Hot tubs require respect for safety, covers, quiet hours, and neighbors. Review the individual haven page and ask before booking if your group has unusual timing or retreat plans." },
     ],
     faq: [
-      { question: "Which Enchanted Havens have hot tubs?", answer: "Emerald Haven and Reflection Haven are the clearest hot tub-focused stays. Some amenities can change, so confirm the current amenity list on the individual haven page before booking." },
+      { question: "Which Enchanted Havens have hot tubs?", answer: "Emerald Haven, Aurora Haven, and Reflection Haven have hot tubs." },
       { question: "Are hot tub rentals good for Olympic National Park trips?", answer: "Yes. A hot tub can be especially useful after long Olympic National Park days, wet gear, mountain drives, and cool evenings near Port Angeles or Lake Sutherland." },
       { question: "Can I book a hot tub cabin directly?", answer: "Yes. Select dates and guest count to see complete pricing, then book directly or contact the stay team for help comparing homes." },
     ],
@@ -1182,7 +1184,7 @@ export const amenityPages: SeoLandingPage[] = [
     heroPropertySlug: "fair-haven",
     heroImageIndex: 1,
     imageAlt: "Hood Canal Washington vacation rental with sauna and beachfront retreat setting",
-    propertySlugs: ["fair-haven", "emerald-haven", "reflection-haven"],
+    propertySlugs: propertySlugsWithFeature("sauna"),
     lead: "Sauna belongs naturally to the Northwest: heat, cedar, cold shoreline air, and quiet water close enough to make the body slow down.",
     highlights: [
       { title: "Hood Canal anchor", text: "Fair Haven is the collection's clearest sauna stay, with beachfront atmosphere near Belfair." },
@@ -1195,7 +1197,7 @@ export const amenityPages: SeoLandingPage[] = [
       { heading: "Planning sauna-focused trips", body: "Ask about current amenity status, towels, safety rules, quiet hours, and whether your planned retreat or gathering use fits the property." },
     ],
     faq: [
-      { question: "Which Enchanted Havens property has a sauna?", answer: "Fair Haven is marketed around a Hood Canal barrel sauna and beachfront setting near Belfair." },
+      { question: "Which Enchanted Havens property has a sauna?", answer: "Fair Haven is the only home in the collection with a sauna: a barrel sauna overlooking Hood Canal near Belfair." },
       { question: "Is a sauna stay good in winter?", answer: "Yes. Cooler weather often makes sauna, firelight, beach walks, and slow meals even more memorable." },
       { question: "Can I plan a wellness retreat around a sauna rental?", answer: "Possibly. Share dates, overnight guests, day visitors, vendors, schedule, and retreat plans before booking so the stay team can confirm fit." },
     ],
@@ -1208,27 +1210,27 @@ export const amenityPages: SeoLandingPage[] = [
     eyebrow: "Private Docks",
     title: "Washington Vacation Rentals with Private Dock",
     h1: "Washington vacation rentals with private docks for lake days and water-first stays.",
-    metaDescription: "Find Washington vacation rentals with private dock access on Lake Sutherland and other Enchanted Havens water-first homes with direct booking.",
+    metaDescription: "Compare Washington vacation rentals with private docks on Lake Sutherland and Lake Dawn, with verified water-access details and direct booking.",
     description: "An amenity guide for travelers who want the dock to become the center of the trip: morning coffee, swimming, paddling, fishing, and lake light at dusk.",
     primaryKeyword: "Washington vacation rental with private dock",
     keywords: ["Lake Sutherland private dock rental", "Washington lake house with dock", "Port Angeles lake house rental", "lakefront cabin with dock Washington"],
     heroPropertySlug: "emerald-haven",
     heroImageIndex: 0,
     imageAlt: "Washington lakefront vacation rental with private dock on Lake Sutherland",
-    propertySlugs: ["emerald-haven", "blue-haven", "reflection-haven"],
+    propertySlugs: propertySlugsWithFeature("privateDock"),
     lead: "A private dock changes a lake house from a place near water into a place organized by water. Guests can swim before breakfast, sit outside at dusk, and let the lake become the itinerary.",
     highlights: [
-      { title: "Lake Sutherland focus", text: "The strongest dock-led stays are around Lake Sutherland near Port Angeles." },
+      { title: "Lake Sutherland and Lake Dawn", text: "Compare private docks at Blue Haven and Emerald Haven on Lake Sutherland, and Reflection Haven on Lake Dawn." },
       { title: "Swim and paddle days", text: "Private dock access supports kayaking, paddle boards, lake lounging, and easy water returns." },
       { title: "Park-trip flexibility", text: "A dock makes staying home feel as compelling as leaving for Olympic National Park." },
     ],
     sections: [
-      { heading: "Best dock-led stays", body: "Emerald Haven is the strongest private-dock match in the collection, while Blue Haven and Reflection Haven keep guests close to lake access and Olympic Peninsula water days." },
+      { heading: "Compare the dock settings", body: "Blue Haven and Emerald Haven have private docks on Lake Sutherland. Reflection Haven has a private dock on Lake Dawn, a separate lake near Port Angeles." },
       { heading: "Dock vs. beach access", body: "Private docks are ideal for sitting, paddling, and quick water entry. Beach or shoreline access can feel more relaxed for mixed-age groups and slower days outside." },
       { heading: "Safety and seasonal notes", body: "Lake conditions, swimming ability, watercraft, children, and weather all matter. Review each property's current rules and amenity details before booking." },
     ],
     faq: [
-      { question: "Which Enchanted Havens have private dock access?", answer: "Emerald Haven is the clearest private-dock stay. Blue Haven and Reflection Haven are also strong Lake Sutherland or lakeside options depending on the exact water access desired." },
+      { question: "Which Enchanted Havens have private dock access?", answer: "Blue Haven and Emerald Haven have private docks on Lake Sutherland. Reflection Haven has a private dock on Lake Dawn. Each dock is for that home's guests." },
       { question: "Are dock rentals good for family trips?", answer: "Yes, when the group fits the home and water safety expectations. Private docks can make a family trip easier because the property itself becomes the main activity." },
       { question: "Can I compare dock homes before booking?", answer: "Yes. Use the Lake Sutherland guide, property galleries, and direct inquiry support to compare dock access, sleeping layout, pets, and amenities." },
     ],
@@ -1240,8 +1242,8 @@ export const amenityPages: SeoLandingPage[] = [
     path: "/amenities/washington-kayak-vacation-rentals",
     eyebrow: "Kayaks and Water Toys",
     title: "Washington Vacation Rentals with Kayaks",
-    h1: "Washington vacation rentals with kayaks for Lake Sutherland and quiet water days.",
-    metaDescription: "Browse Washington vacation rentals with kayaks, paddle boards, lake access, and water-first amenities near Lake Sutherland and Port Angeles.",
+    h1: "Washington vacation rentals with kayaks for Lake Sutherland, Lake Dawn, and quiet water days.",
+    metaDescription: "Browse Washington vacation rentals with kayaks on Lake Sutherland and Lake Dawn, with verified water-access details and direct booking near Port Angeles.",
     description: "An amenity guide for guests who want kayaks, paddle boards, lake access, and easy water days built into a private Pacific Northwest stay.",
     primaryKeyword: "Washington vacation rental with kayaks",
     keywords: ["Lake Sutherland kayak rental", "Washington lake house with kayaks", "PNW cabin with paddle boards", "Port Angeles lake house rental"],
@@ -1261,7 +1263,7 @@ export const amenityPages: SeoLandingPage[] = [
       { heading: "Water safety expectations", body: "Amenities and watercraft availability should be confirmed before arrival. Guests should follow posted rules, weather guidance, and life-jacket expectations." },
     ],
     faq: [
-      { question: "Which properties are best for kayaking?", answer: "Blue Haven and Emerald Haven are strong Lake Sutherland choices for guests interested in kayaks, paddle boards, and water-first stays." },
+      { question: "Which properties are best for kayaking?", answer: "Blue Haven and Emerald Haven provide kayaks on Lake Sutherland. Reflection Haven provides two kayaks and a canoe on Lake Dawn." },
       { question: "Are kayaks included with every lake stay?", answer: "Not necessarily. Amenities can vary by home and season, so review the individual property page and ask the stay team to confirm current water-toy availability." },
       { question: "Is Lake Sutherland good for families who want water activities?", answer: "Yes. Lake Sutherland works well for families who want the property itself to provide swimming, paddling, deck time, and easy days together." },
     ],
@@ -1290,7 +1292,7 @@ export const amenityPages: SeoLandingPage[] = [
     ],
     sections: [
       { heading: "Best settings for pet-friendly stays", body: "Lake Sutherland, Hood Canal, Whidbey Island, and the Olympic Peninsula all offer outdoor rhythms that can work well for pet-inclusive travel when the property rules fit." },
-      { heading: "How to book responsibly with pets", body: "Share pet details before booking: number of pets, size, breed if relevant, and any special needs. The stay team can help confirm whether the home and setting fit." },
+      { heading: "How to book responsibly with pets", body: `${confirmedStayPolicies.pets} Share the number of pets and any special needs so the stay team can confirm fit.` },
       { heading: "Premium does not mean fragile", body: "A pet-friendly premium stay should still feel design-forward and calm. Clear expectations protect the home, the guest experience, and future pet-friendly availability." },
     ],
     faq: [

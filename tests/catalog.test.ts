@@ -50,12 +50,12 @@ describe("curated inventory", () => {
     expect(fallbackProperties.every((property) => !property.estate)).toBe(true)
   })
 
-  it("keeps editorial slugs and images while applying live facts", () => {
+  it("keeps verified capacity and editorial identity while refreshing live images", () => {
     const fallback = fallbackProperties[0]
     const live = { ...fallback.variants[0], slug: "146889", guests: 8, images: ["https://example.com/live.jpg"] }
     const merged = mergeCatalogVariants([fallback], [live])
     expect(merged[0].variants[0].slug).toBe("blue-haven")
-    expect(merged[0].variants[0].guests).toBe(8)
+    expect(merged[0].variants[0].guests).toBe(6)
     expect(merged[0].heroImage).toBe(fallback.variants[0].images[0])
     expect(merged[0].variants[0].images).toEqual([...fallback.variants[0].images, "https://example.com/live.jpg"])
     expect(merged[0].gallery).toContain("https://example.com/live.jpg")

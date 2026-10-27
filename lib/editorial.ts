@@ -1,6 +1,7 @@
 import { BRAND_BOOKING_ENGINE_URL } from "@/lib/brand"
 import { propertySchema, reviewSchema, type Property, type Review } from "@/lib/schemas"
 import { getHighResolutionImageSet } from "@/lib/images"
+import { applyVerifiedPropertyFacts } from "@/lib/property-facts"
 
 export const LOGO_URL = "/images/enchanted-havens-logo-small.webp"
 
@@ -214,18 +215,18 @@ export const fallbackProperties: Property[] = propertySchema.array().parse([
     displayName: "Reflection Haven",
     eyebrow: "Olympic Peninsula",
     location: "Port Angeles, Washington",
-    narrative: "A lakeside basecamp beside Olympic National Park, with a hot tub waiting after each day outside.",
-    longNarrative: "Reflection Haven makes the Olympic Peninsula feel wonderfully accessible. Begin with coffee beside the lake, spend the day among forest trails and mountain overlooks, then return to the hot tub as evening settles. The house is relaxed, generous, and made for reconnecting after full days in the park.",
+    narrative: "A Lake Dawn basecamp near Olympic National Park, with a hot tub waiting after each day outside.",
+    longNarrative: "Reflection Haven sits on Lake Dawn's north shore near Port Angeles and Olympic National Park. Begin with coffee beside Lake Dawn, spend the day among forest trails and mountain overlooks, then return to the hot tub as evening settles. The house is relaxed, generous, and made for reconnecting after full days in the park.",
     heroImage: images.reflection[0],
     gallery: images.reflection,
     experienceTags: ["Lakeside", "Hot tub", "Near Olympic National Park", "Family gatherings", "Pet-friendly"],
     featuredOrder: 6,
     featured: true,
-    seoTitle: "Reflection Haven | Lakeside Olympic National Park Stay",
-    seoDescription: "A lakeside Port Angeles retreat with a hot tub near the entrance to Olympic National Park.",
-    variants: [variant(335403, "reflection-haven", "Reflection Haven: Lakeside, Hot Tub, By Park Entry", "Reflection Haven", "A relaxed lakeside stay with a hot tub near Olympic National Park.", "Olympic Peninsula", "Port Angeles", 10, 4, 2, images.reflection, ["Lake access", "Hot tub", "Kitchen", "Air conditioning", "Near national park", "Pet-friendly"], 4.95, 0)],
+    seoTitle: "Reflection Haven | Lake Dawn Stay near Olympic National Park",
+    seoDescription: "A Lake Dawn waterfront retreat near Port Angeles and Olympic National Park, with a hot tub, kayaks, and a canoe.",
+    variants: [variant(335403, "reflection-haven", "Reflection Haven: Lakeside, Hot Tub, By Park Entry", "Reflection Haven", "A Lake Dawn waterfront stay with a hot tub near Olympic National Park.", "Lake Dawn", "Port Angeles", 10, 4, 2, images.reflection, ["Lake access", "Hot tub", "Kitchen", "Air conditioning", "Near national park", "Pet-friendly"], 4.95, 0)],
   },
-])
+]).map(applyVerifiedPropertyFacts)
 
 export function getEditorialVariantDescription(listingId: number) {
   return fallbackProperties

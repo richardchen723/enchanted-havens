@@ -302,7 +302,7 @@ describe("individual property SEO", () => {
     expect(imageObjects[0]).toMatchObject({
       "@id": "https://enchantedhavens.com/havens/blue-haven#image-1",
       name: "Blue Haven gallery image 1",
-      caption: "Blue Haven lakefront gallery view in Port Angeles, Washington",
+      caption: "Blue Haven lakefront gallery view in Lake Sutherland, Port Angeles, Washington",
       representativeOfPage: true,
     })
     expect(accommodation).toMatchObject({

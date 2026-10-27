@@ -4,6 +4,7 @@ import { allowedListingIds, fallbackProperties, featuredReviews } from "@/lib/ed
 import { getLatestCatalogSnapshot, saveCatalogSnapshot } from "@/lib/db"
 import { getHostawayListing, getHostawayReviews, getListingMapId, isHostawayConfigured } from "@/lib/hostaway"
 import { getHighResolutionImageSet } from "@/lib/images"
+import { applyVerifiedPropertyFacts } from "@/lib/property-facts"
 import { propertySchema, type Property, type PropertyVariant, type Review } from "@/lib/schemas"
 import { isEmailConfigured } from "@/lib/email"
 import { isSandboxBooking, isStripeLiveConfigured, isStripeSandboxConfigured } from "@/lib/sandbox-booking"
@@ -50,7 +51,7 @@ export function mergeCatalogVariants(base: Property[], liveVariants: PropertyVar
       heroImage: property.heroImage || variants[0]?.images[0],
       gallery: gallery.length ? gallery : property.gallery,
     }
-  })
+  }).map(applyVerifiedPropertyFacts)
 }
 
 export function shouldUseStaticCatalogSnapshot() {
@@ -77,7 +78,7 @@ async function fetchCatalog(): Promise<Property[]> {
   }
 }
 
-const getCachedCatalog = unstable_cache(fetchCatalog, ["enchanted-havens-catalog-v21"], {
+const getCachedCatalog = unstable_cache(fetchCatalog, ["enchanted-havens-catalog-v22-verified-facts"], {
   revalidate: 3600,
   tags: ["catalog"],
 })

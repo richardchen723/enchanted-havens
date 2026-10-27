@@ -6,6 +6,7 @@ import { ExpandableDescription } from "@/components/expandable-description"
 import { ImageGallery } from "@/components/image-gallery"
 import { OpenDatePickerButton } from "@/components/open-date-picker-button"
 import { PropertyMap } from "@/components/property-map"
+import { PropertyFacts } from "@/components/property-facts"
 import { TrackedEventLink } from "@/components/tracked-contact-link"
 import { buildInquiryHref } from "@/lib/contact-handoff"
 import { getAirbnbReviewDestination } from "@/lib/airbnb"
@@ -217,6 +218,7 @@ export function PropertyDetail({ property, variant, bookingLive = false, quoteAv
                 <ExpandableDescription summary={property.narrative} description={fullDescription} />
               </section>
 
+              <PropertyFacts listingId={variant.id} />
               <PropertyAmenities standout={standoutAmenities} allAmenities={allAmenities} />
               <PropertyMap variant={variant} location={property.location} locationSummary={locationSummary} />
               <AirbnbReviews variant={variant} />

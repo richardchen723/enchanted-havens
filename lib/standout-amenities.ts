@@ -1,4 +1,5 @@
 import type { PropertyVariant } from "@/lib/schemas"
+import { confirmedStayPolicies } from "@/lib/property-facts"
 
 const preferredAmenities = [
   { label: "Private dock", pattern: /\bprivate dock\b/i },
@@ -7,6 +8,7 @@ const preferredAmenities = [
   { label: "Game room", pattern: /\bgame room\b/i },
   { label: "Pool table", pattern: /\bpool table\b/i },
   { label: "EV charger", pattern: /\belectric vehicle charger\b|\bev charger\b/i },
+  { label: "EV outlet — bring your own charging equipment", pattern: /\bev outlet\b/i },
   { label: "Outdoor kitchen", pattern: /\boutdoor kitchen\b/i },
   { label: "Hot tub", pattern: /\bhot ?tub\b|\bjacuzzi\b/i },
   { label: "Kayaks", pattern: /\bkayak\b|\bkayaks\b|\bkayak canoe\b/i },
@@ -16,7 +18,7 @@ const preferredAmenities = [
   { label: "Fire pit", pattern: /\bfire ?pit\b/i },
   { label: "Fireplace", pattern: /\bfireplace\b/i },
   { label: "Hammock", pattern: /\bhammock\b/i },
-  { label: "Event-friendly", pattern: /\bsuitable for events\b|\bevent-friendly\b/i },
+  { label: confirmedStayPolicies.eventAmenity, pattern: /\bsuitable for events\b|\bevent-friendly\b|\bevents require written approval\b/i },
   { label: "Pet-friendly", pattern: /\bpets allowed\b|\bpet-friendly\b/i },
   { label: "Air conditioning", pattern: /\bair conditioning\b/i },
 ] as const
@@ -28,7 +30,8 @@ const amenityLabels = new Map<string, string>([
   ["pets allowed", "Pet-friendly"],
   ["beach", "Beach access"],
   ["lake", "Lake access"],
-  ["suitable for events", "Event-friendly"],
+  ["suitable for events", confirmedStayPolicies.eventAmenity],
+  ["event-friendly", confirmedStayPolicies.eventAmenity],
   ["garden or backyard", "Private outdoor space"],
   ["free parking on premises", "Free parking"],
   ["wireless internet", "Wi-Fi"],

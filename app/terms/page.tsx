@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { LegalPage } from "@/components/legal-page"
 import { BRAND_CONTACT_EMAIL } from "@/lib/brand"
+import { confirmedStayPolicies } from "@/lib/property-facts"
 
 export const metadata: Metadata = { title: "Booking Terms", description: "Enchanted Havens reservation, pricing, payment, cancellation, guest responsibility, and property-care terms." }
 
@@ -10,7 +11,7 @@ export default function TermsPage() {
       eyebrow="Legal"
       title="Booking Terms"
       introduction="These terms describe the framework for inquiries and direct reservations made with Enchanted Havens. Property-specific terms are presented with each reservation."
-      lastUpdated="August 12, 2026"
+      lastUpdated="October 27, 2026"
       contactEmail={BRAND_CONTACT_EMAIL}
       sections={[
         {
@@ -36,7 +37,8 @@ export default function TermsPage() {
         {
           title: "Guest responsibilities",
           body: [
-            "Guests must follow occupancy limits, parking instructions, quiet hours, pet rules, safety guidance, and the house rules provided for the reserved property. Events, vendors, commercial activity, and additional visitors require written approval before arrival.",
+            `Guests must follow occupancy limits, parking instructions, quiet hours, pet rules, safety guidance, and the house rules provided for the reserved property. ${confirmedStayPolicies.events} Vendors and commercial activity also require written approval before booking.`,
+            confirmedStayPolicies.pets,
           ],
         },
         {

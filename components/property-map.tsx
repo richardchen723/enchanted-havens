@@ -9,7 +9,7 @@ export function PropertyMap({ variant, location, locationSummary }: { variant: P
   const hasCoordinates = typeof variant.latitude === "number" && typeof variant.longitude === "number"
   const query = hasCoordinates
     ? `${roundedCoordinate(variant.latitude as number)},${roundedCoordinate(variant.longitude as number)}`
-    : `${variant.city}, ${variant.region}` || location
+    : [variant.location, variant.city, variant.region].filter((value, index, all) => value && all.indexOf(value) === index).join(", ") || location
   const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(query)}&z=11&output=embed`
   const mapHref = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`
 
