@@ -1,4 +1,5 @@
 import { track } from "@vercel/analytics"
+import { browserTrafficContext } from "@/lib/traffic-attribution"
 
 type ClarityClient = {
   (command: "event", value: string): void
@@ -12,6 +13,9 @@ declare global {
 }
 
 const CLARITY_DIMENSIONS = new Set([
+  "aiSource",
+  "attributionEvidence",
+  "trafficType",
   "destination",
   "guests",
   "hasDates",
@@ -77,8 +81,14 @@ function setClarityTag(clarity: ClarityClient, key: string, value: string | numb
 }
 
 export function trackConversionEvent(name: string, data: Record<string, string | number | boolean> = {}) {
+  const context = browserTrafficContext()
+  if (context?.trafficType === "qa") {
+    tagTrafficContext()
+    return
+  }
+  const eventData = context ? { ...data, ...context } : data
   try {
-    track(name, data)
+    track(name, eventData)
   } catch {
     // Conversion behavior must remain available when analytics is blocked.
   }
@@ -86,7 +96,7 @@ export function trackConversionEvent(name: string, data: Record<string, string |
   if (typeof window === "undefined" || !window.clarity) return
 
   const clarity = window.clarity
-  for (const [key, value] of Object.entries(data)) {
+  for (const [key, value] of Object.entries(eventData)) {
     if (CLARITY_DIMENSIONS.has(key)) setClarityTag(clarity, key, value)
   }
 
@@ -98,4 +108,10 @@ export function trackConversionEvent(name: string, data: Record<string, string |
   } catch {
     // Clarity is optional and must never interrupt a conversion action.
   }
+}
+
+export function tagTrafficContext() {
+  const context = browserTrafficContext()
+  if (!context || !window.clarity) return
+  for (const [key, value] of Object.entries(context)) setClarityTag(window.clarity, key, value)
 }

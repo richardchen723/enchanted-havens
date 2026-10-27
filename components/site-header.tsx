@@ -103,7 +103,7 @@ export function SiteHeader() {
             href={`tel:${BRAND_CONTACT_PHONE}`}
             eventName="Phone Contact Clicked"
             location="header-desktop"
-            aria-label={`Call Enchanted Havens at ${BRAND_CONTACT_PHONE_DISPLAY}`}
+            ariaLabel={`Call Enchanted Havens at ${BRAND_CONTACT_PHONE_DISPLAY}`}
             className={`hidden min-h-10 items-center justify-center gap-2 px-2 text-[0.67rem] font-bold tracking-[0.08em] transition-opacity hover:opacity-55 lg:inline-flex xl:px-0 ${overImage ? "text-white" : "text-[#173c33]"}`}
           >
             <Phone className="size-3.5" />
@@ -122,7 +122,7 @@ export function SiteHeader() {
             href={`tel:${BRAND_CONTACT_PHONE}`}
             eventName="Phone Contact Clicked"
             location="header-mobile"
-            aria-label={`Call Enchanted Havens at ${BRAND_CONTACT_PHONE_DISPLAY}`}
+            ariaLabel={`Call Enchanted Havens at ${BRAND_CONTACT_PHONE_DISPLAY}`}
             className="grid size-11 place-items-center lg:hidden"
           >
             <Phone className="size-5" />

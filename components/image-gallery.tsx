@@ -4,13 +4,7 @@ import Image from "next/image"
 import { useCallback, useEffect, useRef, useState } from "react"
 import { ChevronLeft, ChevronRight, Images, LoaderCircle, X } from "lucide-react"
 import { trackConversionEvent } from "@/lib/analytics"
-import { propertyGalleryImageAlt } from "@/lib/property-image-seo"
-
-const galleryCaptions = [
-  { eyebrow: "The Setting", title: "Arrive in the landscape" },
-  { eyebrow: "The Outlook", title: "Follow the light outside" },
-  { eyebrow: "The Residence", title: "Settle into the room" },
-] as const
+import { propertyGalleryCaption, propertyGalleryImageAlt } from "@/lib/property-image-seo"
 
 export function ImageGallery({ images, listingId, name, location, tags = [], previewStart = 0 }: { images: string[]; listingId: number; name: string; location?: string; tags?: string[]; previewStart?: number }) {
   const [open, setOpen] = useState(false)
@@ -130,7 +124,7 @@ export function ImageGallery({ images, listingId, name, location, tags = [], pre
 
       <div className="mt-8 grid gap-4 md:grid-cols-12 md:grid-rows-2">
         {gallery.map((image, index) => {
-          const caption = galleryCaptions[index] || galleryCaptions[galleryCaptions.length - 1]
+          const caption = propertyGalleryCaption(image) || `${name} · Photograph ${previewStart + index + 1}`
           return (
             <button
               key={`${image}-${index}`}
@@ -144,8 +138,8 @@ export function ImageGallery({ images, listingId, name, location, tags = [], pre
               <span className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#071e19]/72 via-transparent to-transparent" aria-hidden="true" />
               <span className="pointer-events-none absolute right-4 top-4 inline-flex min-h-10 items-center gap-2 rounded-full bg-[#faf7f0]/92 px-4 text-[0.61rem] font-bold uppercase tracking-[0.12em] text-[#173c33] shadow-[0_4px_18px_rgba(7,30,25,.18)] backdrop-blur-md"><Images className="size-3.5" /> Open gallery</span>
               <span className="pointer-events-none absolute inset-x-0 bottom-0 p-6 text-white sm:p-8">
-                <span className="eyebrow text-[#e7c892]">{caption.eyebrow}</span>
-                <span className="mt-2 block font-display text-3xl leading-none">{caption.title}</span>
+                <span className="eyebrow text-[#e7c892]">{name}</span>
+                <span className="mt-2 block font-display text-3xl leading-tight">{caption}</span>
               </span>
             </button>
           )
@@ -173,7 +167,7 @@ export function ImageGallery({ images, listingId, name, location, tags = [], pre
             ) : null}
           </div>
           <div className="mx-auto flex max-w-7xl items-center justify-between gap-5 border-t border-white/12 py-4 text-xs text-white/54">
-            <p>Use the controls or arrow keys to move through the residence.</p>
+            <p aria-live="polite">{propertyGalleryCaption(activeImage) || `Photograph ${displayedIndex + 1} of ${name}`}</p>
             <p className="shrink-0">{displayedIndex + 1} / {fullGallery.length}</p>
           </div>
         </div>

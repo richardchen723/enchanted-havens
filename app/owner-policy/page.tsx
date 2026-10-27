@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   title: "Property Owner Policy",
   description: "Enchanted Havens property owner policy covering management responsibilities, booking channels, termination, future reservations, and final settlement.",
   robots: { index: false, follow: false },
+  alternates: { canonical: "/owner-policy" },
 }
 
 export default function OwnerPolicyPage() {

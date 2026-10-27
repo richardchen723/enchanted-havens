@@ -3,7 +3,7 @@ import { LegalPage } from "@/components/legal-page"
 import { BRAND_CONTACT_EMAIL } from "@/lib/brand"
 import { confirmedStayPolicies } from "@/lib/property-facts"
 
-export const metadata: Metadata = { title: "Booking Terms", description: "Enchanted Havens reservation, pricing, payment, cancellation, guest responsibility, and property-care terms." }
+export const metadata: Metadata = { title: "Booking Terms", description: "Enchanted Havens reservation, pricing, payment, cancellation, guest responsibility, and property-care terms.", alternates: { canonical: "/terms" } }
 
 export default function TermsPage() {
   return (

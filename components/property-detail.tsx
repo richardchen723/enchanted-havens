@@ -53,7 +53,7 @@ function AirbnbReviews({ variant }: { variant: PropertyVariant }) {
           rel="noopener noreferrer"
           eventName="Airbnb Reviews Clicked"
           data={{ property: variant.slug, listingId: variant.id }}
-          aria-label={`Read verified Airbnb reviews for ${variant.shortName} (opens in a new tab)`}
+          ariaLabel={`Read verified Airbnb reviews for ${variant.shortName} (opens in a new tab)`}
           className="button-outline justify-center text-[#173c33] sm:justify-start"
         >
           Read verified reviews on Airbnb

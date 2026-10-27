@@ -23,3 +23,10 @@ describe("legacy booking link cleanup", () => {
     expect(reversed.toString()).toBe("guests=3")
   })
 })
+
+it("drops impossible dates and unsafe query values, retaining Pacific-local arrivals", () => {
+  const now = new Date("2026-10-28T01:00:00Z") // October 27 in Washington
+  expect(canonicalLegacyQuery(new URLSearchParams("checkIn=2026-10-27&checkOut=2026-10-29&guests=6"), now).get("checkIn")).toBe("2026-10-27")
+  const invalid = canonicalLegacyQuery(new URLSearchParams("checkIn=2027-02-30&checkOut=2027-03-04&guests=6&utm_source=x%0Ay&redirect=https://bad.example"), now)
+  expect(invalid.toString()).toBe("guests=6")
+})

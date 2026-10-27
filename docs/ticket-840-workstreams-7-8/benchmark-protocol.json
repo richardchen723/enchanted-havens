@@ -1,0 +1,131 @@
+{
+  "version": "eh-ai-visibility-v1",
+  "createdAt": "2026-10-27",
+  "scope": "Post-workstreams-1-through-6 baseline; before workstreams 7–8 release. Not a baseline of the original site.",
+  "platforms": [
+    "chatgpt",
+    "gemini",
+    "claude",
+    "muse"
+  ],
+  "samplesPerPrompt": 2,
+  "traveler": {
+    "city": "Seattle",
+    "language": "en-US",
+    "currency": "USD"
+  },
+  "executionLocation": "Malaysia; prompt perspective is Seattle, actual platform geolocation is not overridden",
+  "schedule": {
+    "day": "Monday",
+    "time": "09:00",
+    "timezone": "Asia/Kuala_Lumpur"
+  },
+  "dateCohort": {
+    "checkIn": "2027-04-15",
+    "checkOut": "2027-04-19",
+    "replaceOnlyWithNewProtocolVersion": true
+  },
+  "prefix": "I am planning a trip from Seattle, Washington. Reply in US English and quote prices only in USD. Search the current public web and cite the sources you use. Recommend up to three specific homes where appropriate, explain the fit and any facts that need confirmation. Do not make a reservation, contact a host, or take any action beyond research.\n\n",
+  "prompts": [
+    {
+      "id": "broad-pnw",
+      "text": "Recommend Pacific Northwest vacation rentals for a family of six. Compare specific homes, not just booking platforms.",
+      "rankedRecommendations": true
+    },
+    {
+      "id": "direct-waterfront",
+      "text": "Find Washington waterfront vacation homes for six guests that can be booked directly.",
+      "rankedRecommendations": true
+    },
+    {
+      "id": "sutherland-dock",
+      "text": "Find a Lake Sutherland cabin for six guests with a dock exclusively for its guests.",
+      "rankedRecommendations": true
+    },
+    {
+      "id": "sutherland-kayaks",
+      "text": "Compare Lake Sutherland vacation rentals that provide kayaks.",
+      "rankedRecommendations": true
+    },
+    {
+      "id": "hot-tub-ten",
+      "text": "Find an Olympic Peninsula lake house for ten guests with a hot tub. Explain the sleeping arrangements.",
+      "rankedRecommendations": true
+    },
+    {
+      "id": "national-park-family",
+      "text": "Find a family vacation rental near Lake Crescent and Olympic National Park for six guests.",
+      "rankedRecommendations": true
+    },
+    {
+      "id": "dawn-sutherland",
+      "text": "Compare specific vacation homes at Lake Dawn and Lake Sutherland, and identify each home’s actual lake.",
+      "rankedRecommendations": true
+    },
+    {
+      "id": "hood-canal-sauna",
+      "text": "Find a Hood Canal beachfront vacation home with a sauna.",
+      "rankedRecommendations": true
+    },
+    {
+      "id": "whidbey-twelve",
+      "text": "Find a Whidbey Island ocean-view home for a family gathering of twelve. Explain which sleeping spaces are beds and which are folding mattresses.",
+      "rankedRecommendations": true
+    },
+    {
+      "id": "pets",
+      "text": "Compare dog-friendly Washington waterfront rentals for six guests and explain their pet fees and advance-notice requirements.",
+      "rankedRecommendations": true
+    },
+    {
+      "id": "stairs",
+      "text": "Find an Olympic Peninsula vacation home for grandparents who struggle with stairs. Distinguish step-free entry from access to every floor; do not assume wheelchair suitability.",
+      "rankedRecommendations": true
+    },
+    {
+      "id": "layout",
+      "text": "Find waterfront vacation homes for ten guests with clearly documented bedroom, bathroom, and sleeping arrangements.",
+      "rankedRecommendations": true
+    },
+    {
+      "id": "workspace-proof",
+      "text": "Find a small-team vacation retreat with verified internet of at least 100 Mbps download and 20 Mbps upload, plus a dedicated desk for each of six people. If measurements are not verified, say what must be confirmed rather than assuming a match.",
+      "rankedRecommendations": true
+    },
+    {
+      "id": "dining-proof",
+      "text": "Compare Washington vacation homes for ten guests with verified indoor dining seating for all ten together. Identify any seating count that still needs confirmation.",
+      "rankedRecommendations": true
+    },
+    {
+      "id": "ev-equipment",
+      "text": "Find Washington vacation rentals with EV charging. Distinguish a charger with a cable from an outlet requiring guests to bring their own equipment.",
+      "rankedRecommendations": true
+    },
+    {
+      "id": "dock-access",
+      "text": "Compare private and shared dock access at specific Lake Sutherland vacation rentals.",
+      "rankedRecommendations": true
+    },
+    {
+      "id": "seattle-weekend",
+      "text": "Recommend waterfront vacation rentals for a weekend trip from Seattle and explain ferry-versus-driving choices without promising exact travel times.",
+      "rankedRecommendations": true
+    },
+    {
+      "id": "dated-total",
+      "text": "Compare complete USD stay totals for April 15–19, 2027, six guests and one dog at Washington waterfront vacation homes. Include fees and taxes when verified, and say whether the pet fee is included. If a live total is unavailable, do not invent a price.",
+      "rankedRecommendations": true
+    },
+    {
+      "id": "cancellation",
+      "text": "Find direct-book Washington vacation rentals with clearly stated cancellation rules and non-refundable fees. Distinguish verified policies from details that need confirmation.",
+      "rankedRecommendations": true
+    },
+    {
+      "id": "visitor-approval",
+      "text": "Find a private Washington vacation home for a small family gathering and explain whether extra visitors or event-style use require advance written approval.",
+      "rankedRecommendations": true
+    }
+  ]
+}
