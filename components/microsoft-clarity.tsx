@@ -1,4 +1,7 @@
+"use client"
+
 import Script from "next/script"
+import { tagTrafficContext } from "@/lib/analytics"
 
 type MicrosoftClarityProps = {
   projectId?: string
@@ -13,6 +16,7 @@ export function MicrosoftClarity({ projectId, allowedHosts = [], siteLabel }: Mi
     <Script
       id="microsoft-clarity"
       strategy="afterInteractive"
+      onReady={tagTrafficContext}
       dangerouslySetInnerHTML={{
         __html: `
           if (${JSON.stringify(allowedHosts)}.includes(window.location.hostname.toLowerCase())) {

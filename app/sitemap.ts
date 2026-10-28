@@ -5,8 +5,7 @@ import type { Property } from "@/lib/schemas"
 import { seoHubs, seoLandingPages } from "@/lib/seo-pages"
 import { absoluteUrl } from "@/lib/utils"
 import { OWNER_PAGE_UPDATED_DATE, OWNER_HERO_IMAGE, OWNER_PAGE_PATH, ownerRegions } from "@/lib/owner-management"
-
-const SITEMAP_LAST_MODIFIED = new Date().toISOString()
+import { contentUpdatedAt } from "@/lib/content-freshness"
 const HAVENS_HERO_IMAGE = "/images/home-hero/heros-zip/hero-04.webp"
 
 function absoluteImageUrl(src: string) {
@@ -66,21 +65,21 @@ export function buildSitemap(catalog: Property[]): MetadataRoute.Sitemap {
     },
     ...staticPaths.map((path) => ({
       url: absoluteUrl(path),
-      lastModified: SITEMAP_LAST_MODIFIED,
+      lastModified: contentUpdatedAt[path || "/"],
       changeFrequency: "monthly" as const,
       priority: path === "" ? 1 : 0.7,
       images: staticPageImages(path, catalog),
     })),
     ...hubs.map((hub) => ({
       url: absoluteUrl(hub.path),
-      lastModified: SITEMAP_LAST_MODIFIED,
+      lastModified: contentUpdatedAt[hub.path],
       changeFrequency: "monthly" as const,
       priority: 0.78,
       images: sitemapImages([propertyHero(catalog, hub.heroPropertySlug, hub.heroImageIndex || 0)], 4),
     })),
     ...seoLandingPages.map((page) => ({
       url: absoluteUrl(page.path),
-      lastModified: SITEMAP_LAST_MODIFIED,
+      lastModified: contentUpdatedAt[page.path],
       changeFrequency: "monthly" as const,
       priority: page.group === "destinations" || page.slug === "pacific-northwest-vacation-rentals" ? 0.86 : 0.82,
       images: seoPageImages(catalog, page),
@@ -88,7 +87,7 @@ export function buildSitemap(catalog: Property[]): MetadataRoute.Sitemap {
     ...catalog.flatMap((property) => [
       {
         url: absoluteUrl(`/havens/${property.slug}`),
-        lastModified: SITEMAP_LAST_MODIFIED,
+        lastModified: contentUpdatedAt[`/havens/${property.slug}`],
         changeFrequency: "weekly" as const,
         priority: 0.9,
         images: propertyImages(property),
@@ -97,7 +96,7 @@ export function buildSitemap(catalog: Property[]): MetadataRoute.Sitemap {
         .filter(() => property.estate)
         .map((variant) => ({
           url: absoluteUrl(`/havens/${property.slug}/${variant.slug}`),
-          lastModified: SITEMAP_LAST_MODIFIED,
+          lastModified: contentUpdatedAt[`/havens/${property.slug}/${variant.slug}`],
           changeFrequency: "weekly" as const,
           priority: 0.8,
           images: sitemapImages([variant.images[0], ...variant.images], 10),

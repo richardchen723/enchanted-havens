@@ -11,6 +11,15 @@ afterEach(() => {
 })
 
 describe("conversion analytics", () => {
+  it("suppresses QA conversions while refreshing the Clarity exclusion tag", () => {
+    const clarity = vi.fn()
+    vi.stubGlobal("window", { clarity, location: { href: "https://www.enchantedhavens.com/?utm_source=internal&utm_medium=qa" } })
+    trackConversionEvent("Checkout Confirmed", { property: "blue-haven" })
+    expect(track).not.toHaveBeenCalled()
+    expect(clarity).toHaveBeenCalledWith("set", "eh_traffic_type", "qa")
+    expect(clarity.mock.calls.some(([command]) => command === "event")).toBe(false)
+  })
+
   it("mirrors conversion events into an explicitly named Clarity event", () => {
     const clarity = vi.fn()
     vi.stubGlobal("window", { clarity })

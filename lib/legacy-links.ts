@@ -1,3 +1,5 @@
+import { parseStaySelection } from "@/lib/stay-search"
+
 export const LEGACY_LISTING_DESTINATIONS: Record<number, string> = {
   146889: "/havens/blue-haven",
   157299: "/havens/sea-renity-haven",
@@ -11,7 +13,6 @@ const checkInNames = ["checkIn", "startDate", "arrivalDate", "arrival", "from", 
 const checkOutNames = ["checkOut", "endDate", "departureDate", "departure", "to", "end"]
 const guestNames = ["guests", "numberOfGuests", "guestCount", "adults"]
 const attributionParameter = /^(utm_[a-z0-9_]+|gclid|fbclid|msclkid|intent|matches|experience)$/i
-const isoDate = /^\d{4}-\d{2}-\d{2}$/
 
 function firstValue(params: URLSearchParams, names: string[]) {
   for (const name of names) {
@@ -25,8 +26,8 @@ export function canonicalLegacyQuery(params: URLSearchParams, today = new Date()
   const canonical = new URLSearchParams()
   const checkIn = firstValue(params, checkInNames)
   const checkOut = firstValue(params, checkOutNames)
-  const todayIso = today.toISOString().slice(0, 10)
-  const validDates = isoDate.test(checkIn) && isoDate.test(checkOut) && checkIn >= todayIso && checkOut > checkIn
+  const todayIso = new Intl.DateTimeFormat("en-CA", { timeZone: "America/Los_Angeles", year: "numeric", month: "2-digit", day: "2-digit" }).format(today)
+  const validDates = Boolean(parseStaySelection({ checkIn, checkOut }).checkIn) && checkIn >= todayIso
 
   if (validDates) {
     canonical.set("checkIn", checkIn)
@@ -37,7 +38,7 @@ export function canonicalLegacyQuery(params: URLSearchParams, today = new Date()
   if (Number.isInteger(guestValue) && guestValue > 0) canonical.set("guests", String(Math.min(guestValue, 60)))
 
   for (const [key, value] of params) {
-    if (attributionParameter.test(key) && value.trim() && !canonical.has(key)) canonical.set(key, value.trim())
+    if (attributionParameter.test(key) && key.length <= 64 && value.trim() && value.length <= 256 && !/[\x00-\x1f\x7f]/.test(value) && !canonical.has(key)) canonical.set(key, value.trim())
   }
 
   return canonical

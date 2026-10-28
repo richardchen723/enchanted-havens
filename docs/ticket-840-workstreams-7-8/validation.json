@@ -1,0 +1,55 @@
+{
+  "checkedAt": "2026-10-27",
+  "codeCommit": "7cd21d02c8c6f6b6a408a1cac2f02e05ca31b161",
+  "pullRequest": "https://github.com/richardchen723/enchanted-havens/pull/12",
+  "localHTTP": {
+    "checkedURLs": 63,
+    "statuses": {
+      "200": 59,
+      "308": 1,
+      "404": 2,
+      "307": 1
+    },
+    "notes": [
+      "59 successful responses; one collection 308; invalid confirmation and retired Reflection Point 404; undated booking route 307 with noindex.",
+      "Legal canonicals and explicit sitemap dates checked; booking and owner-policy noindex retained."
+    ]
+  },
+  "hostedPreview": {
+    "url": "https://enchanted-havens-git-codex-ti-c52022-richardchen-6494s-projects.vercel.app",
+    "deployment": "https://vercel.com/richardchen-6494s-projects/enchanted-havens/6EAZMeZ6tYvaQLcgTngms4HFxQbj",
+    "status": "READY",
+    "checks": [
+      "Emerald gallery loaded 67 photographs; caption and image alt updated with keyboard arrows, including photograph 14 loaded from Hostaway.",
+      "Escape closed the viewer and returned focus to its trigger.",
+      "Desktop and icon-only mobile phone links expose the call label.",
+      "Legacy collection browser navigation normalized arrival/departure/adults, preserved dates/guests/QA tracking, and removed unknown parameter.",
+      "Legal canonical paths resolve against the existing preview environment origin; owner-policy remains noindex."
+    ],
+    "limitation": "Preview is protected and uses its existing enchanted-havens.vercel.app canonical base. Production environment uses its own canonical base; verify www.enchantedhavens.com after an approved release."
+  },
+  "automatedChecks": {
+    "fullVitestSuiteBeforeFinalSmallRefinements": {
+      "passed": 281,
+      "skipped": 6
+    },
+    "subsequentFocusedRuns": [
+      "11 attribution/crawlability/legacy tests passed",
+      "7 final attribution/conversion tests passed, including the added QA exclusion regression",
+      "6 analytics tests passed before the added QA regression"
+    ],
+    "pythonScorerTests": 6,
+    "typecheck": "passed",
+    "productionBuild": "passed; 83 routes",
+    "lint": "0 errors, 2 pre-existing unused-variable warnings in lib/owner-inquiries.ts"
+  },
+  "release": "Review only; no merge or production deployment performed for workstreams 7\u20138.",
+  "followUpValidation": {
+    "checkedAt": "2026-10-28",
+    "scope": "Benchmark scorer and evidence documentation only; earlier application checks above were not repeated.",
+    "pythonScorerTests": 9,
+    "result": "passed",
+    "scoreSchemaVersion": 2,
+    "jsonEvidence": "October 28 run scored successfully with all 160 planned rows retained."
+  }
+}

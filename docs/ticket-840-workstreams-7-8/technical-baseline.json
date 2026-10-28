@@ -1,0 +1,65 @@
+{
+  "checkedAt": "2026-10-27T12:39:48.698040+00:00",
+  "baseCommit": "449417bc2ab925e4541b1de7a64065d2fd979a55",
+  "type": "technical_baseline_not_agent_recommendation_benchmark",
+  "results": [
+    {
+      "path": "/all-listings?startDate=2027-04-15&endDate=2027-04-19&numberOfGuests=3&utm_source=baseline840",
+      "status": 404,
+      "canonical": null,
+      "robots": [
+        "noindex",
+        "index, follow"
+      ],
+      "location": null
+    },
+    {
+      "path": "/privacy",
+      "status": 200,
+      "canonical": null,
+      "robots": [
+        "index, follow"
+      ],
+      "location": null
+    },
+    {
+      "path": "/terms",
+      "status": 200,
+      "canonical": null,
+      "robots": [
+        "index, follow"
+      ],
+      "location": null
+    },
+    {
+      "path": "/owner-policy",
+      "status": 200,
+      "canonical": null,
+      "robots": [
+        "noindex, nofollow"
+      ],
+      "location": null
+    },
+    {
+      "path": "/havens/blue-haven?guests=3&utm_source=baseline840",
+      "status": 200,
+      "canonical": "https://www.enchantedhavens.com/havens/blue-haven",
+      "robots": [
+        "index, follow"
+      ],
+      "location": null
+    },
+    {
+      "path": "/sitemap.xml",
+      "status": 200,
+      "canonical": null,
+      "robots": [],
+      "location": null,
+      "lastmodValues": [
+        "2026-10-26",
+        "2026-10-27T12:31:03.351Z"
+      ],
+      "urlCount": 55
+    }
+  ]
+}

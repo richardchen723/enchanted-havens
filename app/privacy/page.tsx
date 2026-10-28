@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import { LegalPage } from "@/components/legal-page"
 import { BRAND_CONTACT_EMAIL } from "@/lib/brand"
 
-export const metadata: Metadata = { title: "Privacy Policy", description: "How Enchanted Havens collects, uses, safeguards, and shares website, inquiry, reservation, payment, map, and analytics information." }
+export const metadata: Metadata = { title: "Privacy Policy", description: "How Enchanted Havens collects, uses, safeguards, and shares website, inquiry, reservation, payment, map, and analytics information.", alternates: { canonical: "/privacy" } }
 
 export default function PrivacyPage() {
   return (

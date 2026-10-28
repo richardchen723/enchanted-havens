@@ -1,0 +1,311 @@
+{
+  "generatedAt": "2026-10-27T13:34:07.680092+00:00",
+  "protocolVersion": "eh-ai-visibility-v1",
+  "protocolSha256": "a6d45ee07b4f3f8350e31c2065deaaa49ed798f9e62d596ed794e202a4d8babe",
+  "scope": "Post-workstreams-1-through-6 baseline; before workstreams 7\u20138 release. Not a baseline of the original site.",
+  "traveler": {
+    "city": "Seattle",
+    "language": "en-US",
+    "currency": "USD"
+  },
+  "executionLocation": "Malaysia; prompt perspective is Seattle, actual platform geolocation is not overridden",
+  "model": "Gemini Auto (Gemini 3 models); routed submodel and account tier not exposed",
+  "mode": "Independent Temporary Chat for every sample",
+  "plannedTotal": 160,
+  "scoredTotal": 38,
+  "coveragePct": 23.75,
+  "platforms": {
+    "chatgpt": {
+      "planned": 40,
+      "scored": 0,
+      "coveragePct": 0.0,
+      "searchVerifiedResponses": 0,
+      "mentionRatePct": null,
+      "topThreeRatePct": null,
+      "ownedSiteCitationRatePct": null,
+      "checkedFacts": 0,
+      "supportedFactRatePct": null,
+      "verifiedFactAccuracyPct": null,
+      "incorrectFacts": 0,
+      "unverifiedFacts": 0,
+      "retiredPropertyErrorRatePct": null,
+      "appropriateGuardrailRatePct": null,
+      "status": "Awaiting owner email-verification handoff for the requested free Larry account."
+    },
+    "gemini": {
+      "planned": 40,
+      "scored": 38,
+      "coveragePct": 95.0,
+      "searchVerifiedResponses": 34,
+      "mentionRatePct": 26.32,
+      "topThreeRatePct": 26.32,
+      "ownedSiteCitationRatePct": 5.26,
+      "checkedFacts": 116,
+      "supportedFactRatePct": 84.48,
+      "verifiedFactAccuracyPct": 98.0,
+      "incorrectFacts": 2,
+      "unverifiedFacts": 16,
+      "retiredPropertyErrorRatePct": 0.0,
+      "appropriateGuardrailRatePct": 72.73,
+      "status": "All 40 planned samples attempted: 38 answers reviewed, 2 provider/UI failures."
+    },
+    "claude": {
+      "planned": 40,
+      "scored": 0,
+      "coveragePct": 0.0,
+      "searchVerifiedResponses": 0,
+      "mentionRatePct": null,
+      "topThreeRatePct": null,
+      "ownedSiteCitationRatePct": null,
+      "checkedFacts": 0,
+      "supportedFactRatePct": null,
+      "verifiedFactAccuracyPct": null,
+      "incorrectFacts": 0,
+      "unverifiedFacts": 0,
+      "retiredPropertyErrorRatePct": null,
+      "appropriateGuardrailRatePct": null,
+      "status": "Existing account is signed in; awaiting owner choice of that account or a separate Larry account."
+    },
+    "muse": {
+      "planned": 40,
+      "scored": 0,
+      "coveragePct": 0.0,
+      "searchVerifiedResponses": 0,
+      "mentionRatePct": null,
+      "topThreeRatePct": null,
+      "ownedSiteCitationRatePct": null,
+      "checkedFacts": 0,
+      "supportedFactRatePct": null,
+      "verifiedFactAccuracyPct": null,
+      "incorrectFacts": 0,
+      "unverifiedFacts": 0,
+      "retiredPropertyErrorRatePct": null,
+      "appropriateGuardrailRatePct": null,
+      "status": "Awaiting access by owner decision."
+    }
+  },
+  "geminiByPrompt": [
+    {
+      "promptId": "broad-pnw",
+      "scored": 2,
+      "errors": 0,
+      "mentioned": 0,
+      "topThree": 0,
+      "ownedCitations": 0
+    },
+    {
+      "promptId": "direct-waterfront",
+      "scored": 2,
+      "errors": 0,
+      "mentioned": 0,
+      "topThree": 0,
+      "ownedCitations": 0
+    },
+    {
+      "promptId": "sutherland-dock",
+      "scored": 2,
+      "errors": 0,
+      "mentioned": 2,
+      "topThree": 2,
+      "ownedCitations": 1
+    },
+    {
+      "promptId": "sutherland-kayaks",
+      "scored": 2,
+      "errors": 0,
+      "mentioned": 2,
+      "topThree": 2,
+      "ownedCitations": 1
+    },
+    {
+      "promptId": "hot-tub-ten",
+      "scored": 2,
+      "errors": 0,
+      "mentioned": 0,
+      "topThree": 0,
+      "ownedCitations": 0
+    },
+    {
+      "promptId": "national-park-family",
+      "scored": 2,
+      "errors": 0,
+      "mentioned": 1,
+      "topThree": 1,
+      "ownedCitations": 0
+    },
+    {
+      "promptId": "dawn-sutherland",
+      "scored": 2,
+      "errors": 0,
+      "mentioned": 2,
+      "topThree": 2,
+      "ownedCitations": 0
+    },
+    {
+      "promptId": "hood-canal-sauna",
+      "scored": 2,
+      "errors": 0,
+      "mentioned": 2,
+      "topThree": 2,
+      "ownedCitations": 0
+    },
+    {
+      "promptId": "whidbey-twelve",
+      "scored": 2,
+      "errors": 0,
+      "mentioned": 0,
+      "topThree": 0,
+      "ownedCitations": 0
+    },
+    {
+      "promptId": "pets",
+      "scored": 2,
+      "errors": 0,
+      "mentioned": 0,
+      "topThree": 0,
+      "ownedCitations": 0
+    },
+    {
+      "promptId": "stairs",
+      "scored": 2,
+      "errors": 0,
+      "mentioned": 0,
+      "topThree": 0,
+      "ownedCitations": 0
+    },
+    {
+      "promptId": "layout",
+      "scored": 2,
+      "errors": 0,
+      "mentioned": 0,
+      "topThree": 0,
+      "ownedCitations": 0
+    },
+    {
+      "promptId": "workspace-proof",
+      "scored": 1,
+      "errors": 1,
+      "mentioned": 0,
+      "topThree": 0,
+      "ownedCitations": 0
+    },
+    {
+      "promptId": "dining-proof",
+      "scored": 2,
+      "errors": 0,
+      "mentioned": 0,
+      "topThree": 0,
+      "ownedCitations": 0
+    },
+    {
+      "promptId": "ev-equipment",
+      "scored": 2,
+      "errors": 0,
+      "mentioned": 0,
+      "topThree": 0,
+      "ownedCitations": 0
+    },
+    {
+      "promptId": "dock-access",
+      "scored": 2,
+      "errors": 0,
+      "mentioned": 1,
+      "topThree": 1,
+      "ownedCitations": 0
+    },
+    {
+      "promptId": "seattle-weekend",
+      "scored": 1,
+      "errors": 1,
+      "mentioned": 0,
+      "topThree": 0,
+      "ownedCitations": 0
+    },
+    {
+      "promptId": "dated-total",
+      "scored": 2,
+      "errors": 0,
+      "mentioned": 0,
+      "topThree": 0,
+      "ownedCitations": 0
+    },
+    {
+      "promptId": "cancellation",
+      "scored": 2,
+      "errors": 0,
+      "mentioned": 0,
+      "topThree": 0,
+      "ownedCitations": 0
+    },
+    {
+      "promptId": "visitor-approval",
+      "scored": 2,
+      "errors": 0,
+      "mentioned": 0,
+      "topThree": 0,
+      "ownedCitations": 0
+    }
+  ],
+  "errors": [
+    {
+      "promptId": "workspace-proof",
+      "sample": 1,
+      "reason": "Gemini returned a fulfillment error, with no research answer. Preserved as an error rather than a negative recommendation."
+    },
+    {
+      "promptId": "seattle-weekend",
+      "sample": 1,
+      "reason": "Searching state observed earlier; then conversation reset to an unsent composer with no answer."
+    }
+  ],
+  "ownedCitationURLs": [
+    "https://www.enchantedhavens.com/havens/blue-haven#:~:text=03What%20is%20included%20for%20time%20on%20Lake,dock.%2004How%20well%20equipped%20is%20the%20kitchen%3F",
+    "https://www.enchantedhavens.com/havens/blue-haven#:~:text=Blue%20Haven%20has%20three%20queen%20beds%20for,entrance.%20*%2002When%20are%20check%2Din%20and%20checkout%3F",
+    "https://www.enchantedhavens.com/havens/blue-haven#:~:text=The%20standard%20check%2Din%20window%20is%203%3A00%20p.m.,own%20boat%20may%20use%20the%20house%20dock."
+  ],
+  "propertyClaimCounts": {
+    "correct": 98,
+    "incorrect": 2,
+    "unverified": 16,
+    "total": 116
+  },
+  "confirmedErrors": [
+    {
+      "property": "Blue Haven",
+      "claim": "Capacity described as two to four guests",
+      "correction": "Maximum six guests; three queen beds."
+    },
+    {
+      "property": "Blue Haven",
+      "claim": "USD 100 pet fee described as per pet",
+      "correction": "Owner-confirmed USD 100 flat per stay; advance notice required."
+    }
+  ],
+  "unsupportedClaimExamples": [
+    "Undated nightly price ranges",
+    "Measured/high-speed Wi-Fi performance",
+    "Kayak type and water-depth/access assessments",
+    "Unverified additional equipment claims"
+  ],
+  "regionalErrorsOutsidePropertyClaimDenominator": [
+    "One answer called the Edmonds\u2013Kingston ferry Edmonds\u2013Seattle.",
+    "One answer placed Lake Sutherland east of Port Angeles.",
+    "One answer falsely treated April 2027 as beyond a 365\u2013500-day calendar window from October 2026."
+  ],
+  "methodLimits": [
+    "One provider only; no four-provider conclusion. Two samples per prompt are descriptive.",
+    "Four scored answers showed no source controls/links; actual search use is unknown. Search availability was enabled in the same Gemini Auto mode.",
+    "Two failed samples are errors, not zero-valued recommendation outcomes.",
+    "One interrupted in-flight direct-waterfront attempt and one canceled mismatched hot-tub input were replaced transparently; no complete answer was discarded for its result.",
+    "Property-claim metrics exclude competitor inventory and regional generalizations; qualification grading assesses stated uncertainty handling, not full verification of competitor facts.",
+    "The baseline follows WS1\u20136 and precedes WS7\u20138; it cannot estimate changes from the original site."
+  ],
+  "outcomeMetrics": {
+    "status": "not_collected",
+    "referralSessions": null,
+    "quotes": null,
+    "inquiries": null,
+    "reservations": null,
+    "revenueUSD": null
+  }
+}

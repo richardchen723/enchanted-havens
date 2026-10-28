@@ -2,6 +2,8 @@
 
 import { usePathname } from "next/navigation"
 import { Analytics } from "@vercel/analytics/next"
+import { browserTrafficContext } from "@/lib/traffic-attribution"
+import { tagTrafficContext } from "@/lib/analytics"
 import { MicrosoftClarity } from "@/components/microsoft-clarity"
 import { SiteFooter } from "@/components/site-footer"
 import { SiteHeader } from "@/components/site-header"
@@ -44,7 +46,10 @@ export function SiteFrame({
       <main id="main-content" className="site-main">{children}</main>
       <SiteFooter />
       <MicrosoftClarity projectId={clarityProjectId} allowedHosts={["enchantedhavens.com", "www.enchantedhavens.com"]} siteLabel="enchanted_havens" />
-      {analyticsEnabled ? <Analytics /> : null}
+      {analyticsEnabled ? <Analytics beforeSend={(event) => {
+        tagTrafficContext()
+        return browserTrafficContext()?.trafficType === "qa" ? null : event
+      }} /> : null}
     </TextInquiryProvider>
   )
 }

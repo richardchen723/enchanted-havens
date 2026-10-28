@@ -6,7 +6,7 @@ import { InstagramBrandIcon } from "@/components/instagram-brand-icon"
 import { PageHero } from "@/components/page-hero"
 import { SectionHeading } from "@/components/section-heading"
 import { getCatalog } from "@/lib/catalog"
-import { getAirbnbReviewSummary } from "@/lib/airbnb"
+import { getAirbnbReviewSummary, reviewSnapshotDate } from "@/lib/airbnb"
 import { buildHubJsonLd } from "@/lib/landing-page-seo"
 import { shareMetadata } from "@/lib/seo-metadata"
 import { experienceHub, experienceLandingPages } from "@/lib/seo-pages"
@@ -89,7 +89,7 @@ export default async function ExperiencesPage() {
           </div>
           <div className="grid gap-5 sm:grid-cols-3">
             {[
-              { icon: Star, title: airbnb ? `${airbnb.rating.toFixed(2)} on Airbnb` : "Verified reviews", text: airbnb ? `${formatCount(airbnb.reviewCount, "verified review")} linked to their original Airbnb listings.` : "Read property-specific review history on Airbnb." },
+              { icon: Star, title: airbnb ? `${airbnb.rating.toFixed(2)} collection average` : "Verified reviews", text: airbnb ? `Review-weighted average of ${formatCount(airbnb.reviewCount, "Airbnb review")}, checked ${reviewSnapshotDate(airbnb.checkedAt)}. See each home for its original listing.` : "Read property-specific review history on Airbnb." },
               { icon: InstagramBrandIcon, title: "See the setting", text: "Explore the homes, water, and Northwest details through @enchanted.havens." },
               { icon: ShieldCheck, title: "Personal planning", text: "Select dates for live pricing or ask which experience best fits the trip." },
             ].map((item) => (
