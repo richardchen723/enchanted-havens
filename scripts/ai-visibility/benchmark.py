@@ -39,7 +39,7 @@ def prepare(directory):
                     prompt=protocol['prefix'] + prompt['text'], status='pending', reason=None,
                     completedAt=None, model=None, mode=None, freshSession=None,
                     searchEnabled=True, searchUsed=None, searchEvidence=None, answerFile=None,
-                    citations=[], annotations=None))
+                    citations=[], citationCaptureComplete=None, annotations=None))
     write(path, dict(protocol=protocol, createdAt=NOW(), rows=rows))
     (directory / 'raw').mkdir(exist_ok=True)
     return {'run': str(path), 'plannedResponses': len(rows)}
@@ -56,11 +56,14 @@ def summarize(rows, planned):
     incorrect = sum(f['verdict'] == 'incorrect' for f in facts)
     guardrails = [r['annotations']['guardrailAppropriate'] for r in rows if r['annotations'].get('guardrailAppropriate') is not None]
     rankable = [r for r in rows if r['rankable']]
+    citation_rows = [r for r in rows if r['citationCaptureComplete']]
     return dict(planned=planned, scored=len(rows), coveragePct=ratio(len(rows), planned),
         searchVerifiedResponses=sum(r.get('searchUsed') is True for r in rows),
         mentionRatePct=ratio(sum(r['annotations']['mentioned'] for r in rows), len(rows)),
         topThreeRatePct=ratio(sum(r['annotations']['recommendedRank'] is not None and r['annotations']['recommendedRank'] <= 3 for r in rankable), len(rankable)),
-        ownedSiteCitationRatePct=ratio(sum(any(owned(u) for u in r['citations']) for r in rows), len(rows)),
+        citationScoredResponses=len(citation_rows), citationCoveragePct=ratio(len(citation_rows), len(rows)),
+        ownedSiteCitationRatePct=ratio(sum(any(owned(u) for u in r['citations']) for r in citation_rows), len(citation_rows)),
+        observedOwnedSiteCitationResponses=sum(any(owned(u) for u in r['citations']) for r in rows),
         checkedFacts=len(facts), supportedFactRatePct=ratio(correct, len(facts)),
         verifiedFactAccuracyPct=ratio(correct, correct + incorrect),
         incorrectFacts=incorrect, unverifiedFacts=sum(f['verdict'] == 'unverified' for f in facts),
@@ -120,10 +123,12 @@ def score(directory):
                 raise ValueError(f'Claim, verdict and evidence source required: {key}')
         if not isinstance(row['citations'], list) or any(urlparse(u).scheme not in ('http', 'https') or not urlparse(u).hostname for u in row['citations']):
             raise ValueError(f'Invalid citations: {key}')
+        if type(row.get('citationCaptureComplete')) is not bool:
+            raise ValueError(f'Explicit citation capture completeness required: {key}')
         accepted.append({**row, 'rankable': prompt_map[row['promptId']]['rankedRecommendations']})
     if seen != expected:
         raise ValueError('Missing planned rows; mark blocked/pending rather than deleting them')
-    report = dict(generatedAt=NOW(), protocolVersion=protocol['version'],
+    report = dict(generatedAt=NOW(), scoreSchemaVersion=2, protocolVersion=protocol['version'],
         protocolSha256=hashlib.sha256(json.dumps(protocol, sort_keys=True).encode()).hexdigest(),
         scope=protocol['scope'], traveler=protocol['traveler'], executionLocation=protocol['executionLocation'],
         allAvailable=summarize(accepted, len(expected)),

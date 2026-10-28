@@ -1,0 +1,144 @@
+{
+  "date": "2026-10-28",
+  "protocolVersion": "eh-ai-visibility-v1",
+  "scoreSchemaVersion": 2,
+  "phase": "After deployed workstreams 1\u20136; workstreams 7\u20138 not deployed",
+  "traveler": {
+    "city": "Seattle",
+    "language": "en-US",
+    "currency": "USD"
+  },
+  "executionLocation": "Malaysia; prompt perspective is Seattle, actual platform geolocation is not overridden",
+  "statusCounts": {
+    "chatgpt": {
+      "completed": 3,
+      "error": 4,
+      "blocked": 33
+    },
+    "gemini": {
+      "blocked": 40
+    },
+    "claude": {
+      "completed": 7,
+      "error": 1,
+      "blocked": 32
+    },
+    "muse": {
+      "blocked": 40
+    }
+  },
+  "platforms": {
+    "chatgpt": {
+      "planned": 40,
+      "scored": 3,
+      "coveragePct": 7.5,
+      "searchVerifiedResponses": 3,
+      "mentionRatePct": 33.33,
+      "topThreeRatePct": 0.0,
+      "citationScoredResponses": 1,
+      "citationCoveragePct": 33.33,
+      "ownedSiteCitationRatePct": 0.0,
+      "observedOwnedSiteCitationResponses": 1,
+      "checkedFacts": 9,
+      "supportedFactRatePct": 0.0,
+      "verifiedFactAccuracyPct": 0.0,
+      "incorrectFacts": 1,
+      "unverifiedFacts": 8,
+      "retiredPropertyErrorRatePct": 33.33,
+      "appropriateGuardrailRatePct": null,
+      "citationUrls": [
+        "https://bookings-sanjuanpm.escapia.com/Unit/Details/153935?utm_source=chatgpt.com",
+        "https://hoodcanaleaglepoint.com/?utm_source=chatgpt.com",
+        "https://hoodcanaleaglepoint.com/holiday-home/eagle-point-hood-canal/?utm_source=chatgpt.com",
+        "https://sandandseaescapes.com/hidden-hideaway-whidbey-island/?utm_source=chatgpt.com",
+        "https://staypinecrest.com/one?utm_source=chatgpt.com",
+        "https://www.airbnb.com/rooms/42301279?utm_source=chatgpt.com",
+        "https://www.airbnb.com/rooms/888007980156710257?utm_source=chatgpt.com",
+        "https://www.airbnb.com/rooms/929189366262888854?utm_source=chatgpt.com",
+        "https://www.beachcombersnw.com/washington-coast/long-beach/seanest?utm_source=chatgpt.com",
+        "https://www.bloomerestates.com/washington-coast-vacation-rentals/seanest?utm_source=chatgpt.com",
+        "https://www.byowner.com/vacation-rentals-details/private-vacation-home/beautiful-whidbey-island-waterfront-2-bedroom-2-bath-home-sleeps-6-direct-beach-access-13450358?utm_source=chatgpt.com",
+        "https://www.enchantedhavens.com/havens/reflection-point?experience=waterfront&utm_source=chatgpt.com",
+        "https://www.expedia.com/Port-Angeles-Hotels-The-Lakeside-Lodge-Updated-Cabin-On-Lake-Sutherland-With-Hottub-Private-Dock.h118791846.Hotel-Information?utm_source=chatgpt.com",
+        "https://www.vacationhomesonhoodcanal.com/?utm_source=chatgpt.com",
+        "https://www.vacationhomesonhoodcanal.com/giggle-fish?utm_source=chatgpt.com",
+        "https://www.vrbo.com/2731178?utm_source=chatgpt.com",
+        "https://www.vrbo.com/3286655?utm_source=chatgpt.com",
+        "https://www.vrbo.com/en-sg/p4699803vb?utm_source=chatgpt.com"
+      ]
+    },
+    "claude": {
+      "planned": 40,
+      "scored": 7,
+      "coveragePct": 17.5,
+      "searchVerifiedResponses": 7,
+      "mentionRatePct": 0.0,
+      "topThreeRatePct": 0.0,
+      "citationScoredResponses": 4,
+      "citationCoveragePct": 57.14,
+      "ownedSiteCitationRatePct": 0.0,
+      "observedOwnedSiteCitationResponses": 0,
+      "checkedFacts": 0,
+      "supportedFactRatePct": null,
+      "verifiedFactAccuracyPct": null,
+      "incorrectFacts": 0,
+      "unverifiedFacts": 0,
+      "retiredPropertyErrorRatePct": 0.0,
+      "appropriateGuardrailRatePct": null,
+      "citationUrls": [
+        "https://airbnb.com/rooms/51063928",
+        "https://bookings-sanjuanpm.escapia.com/Unit/Details/210545",
+        "https://careers.evolvevacationrental.com/vacation-rentals/us/wa/port-angeles/473376",
+        "https://casago.com/rentals/1048031/",
+        "https://casago.com/rentals/1048156/?adults=1",
+        "https://casago.com/rentals/1048161/?adults=1",
+        "https://expedia.fr/Port-Angeles-Hotel-Cozy-Cabin.h103360675.Description-Hotel",
+        "https://hichee.com/listings/1139430",
+        "https://nz.trip.com/hotels/port-angeles-hotel-detail-109659251/inviting-lake-sutherland-home-kayaks-and-view",
+        "https://vacasa.ca/unit/74737",
+        "https://vrbo.com/350667",
+        "https://vrbo.com/4175674",
+        "https://vrentals.vacationrentaldesk.com/DeceptionPassGetaway.html",
+        "https://vrentals.vacationrentaldesk.com/EaglesEyeBeachHouse.html",
+        "https://www.airbnb.co.uk/rooms/2488378",
+        "https://www.airbnb.co.uk/rooms/26755327",
+        "https://www.airbnb.co.uk/rooms/46781019",
+        "https://www.airbnb.co.uk/rooms/8608616",
+        "https://www.airbnb.com.au/rooms/22468427",
+        "https://www.airbnb.com.au/rooms/2488378",
+        "https://www.airbnb.com.au/rooms/26755327",
+        "https://www.airbnb.com/lake-sutherland-wa/stays/kayak",
+        "https://www.airbnb.gy/rooms/3695778",
+        "https://www.expedia.com/Port-Angeles-Hotels-Cozy-Cabin.h103360675.Hotel-Information",
+        "https://www.expedia.it/Port-Angeles-Hotel-Cozy-Cabin.h103360675.Informazioni-Hotel",
+        "https://www.fairly.com/listing/68657841",
+        "https://www.travelocity.com/Port-Angeles-Hotels-Cozy-Cabin.h103360675.Hotel-Information",
+        "https://www.travelocity.com/es/Lake-Sutherland-Hoteles.0-l553248635976196792-0.Guia-Viajes-Filter-Hoteles",
+        "https://www.vacasa.ca/unit/60759",
+        "https://www.vacasa.com/unit/109842",
+        "https://www.vacasa.com/unit/113602",
+        "https://www.vacasa.com/unit/39901",
+        "https://www.vacasa.com/unit/48384",
+        "https://www.vacasa.com/unit/86569",
+        "https://www.vacasa.com/unit/86949",
+        "https://www.vrbo.com/en-gb/p3246489vb",
+        "https://www.vrbo.com/en-gb/p3909918vb"
+      ]
+    }
+  },
+  "providerNotes": {
+    "chatgpt": "Free; Temporary, Unpersonalized, Think off, Web search. Default underlying model not exposed. Three scored answers, four load errors, 33 blocked after recurrent failures. Two earlier interrupted attempts preserved separately; no completed answer discarded.",
+    "claude": "Existing Free account; Sonnet 5.5 Medium; fresh incognito chats, web search enabled. Seven scored answers; one complete supplementary answer excluded after capture metadata loss; 32 blocked by free quota.",
+    "gemini": "Not rerun in this access follow-up. Preserve the separate October 27 baseline; these rows are not zeros or an access-failure claim.",
+    "muse": "Awaiting access by owner choice."
+  },
+  "citationMethod": "Only fully captured response sources enter the citation-rate denominator. Partial captures retain affirmative observed links. This conservative rule includes unresolved image-source controls.",
+  "inventoryError": "ChatGPT dock sample 1 recommended retired Reflection Point and linked its old Enchanted Havens URL. Brand mention true; active-home rank null; retired-property error true. One current-inventory claim incorrect and eight descriptive claims unverified; do not substitute facts from active Reflection Haven.",
+  "limitations": [
+    "Tiny partial samples; no stable rank or improvement claim.",
+    "No cross-provider aggregate rate. Compare matched prompts, samples, models and modes only.",
+    "Private analytics and account/verification information are excluded from this public artifact.",
+    "No authoritative reservation or realized USD revenue evidence collected."
+  ],
+  "searchSetup": "Owner-approved Google and Bing verification completed; sitemap submitted. Reporting/recrawling pending. Private evidence retained separately."
+}

@@ -43,5 +43,13 @@
     "productionBuild": "passed; 83 routes",
     "lint": "0 errors, 2 pre-existing unused-variable warnings in lib/owner-inquiries.ts"
   },
-  "release": "Review only; no merge or production deployment performed for workstreams 7\u20138."
+  "release": "Review only; no merge or production deployment performed for workstreams 7\u20138.",
+  "followUpValidation": {
+    "checkedAt": "2026-10-28",
+    "scope": "Benchmark scorer and evidence documentation only; earlier application checks above were not repeated.",
+    "pythonScorerTests": 9,
+    "result": "passed",
+    "scoreSchemaVersion": 2,
+    "jsonEvidence": "October 28 run scored successfully with all 160 planned rows retained."
+  }
 }
